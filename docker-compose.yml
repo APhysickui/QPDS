@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - DEBUG=false
+      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=postgresql://qpds:qpds_password@postgres:5432/qpds
+    depends_on:
+      - redis
+      - postgres
+    volumes:
+      - ./backend:/app/backend
+    networks:
+      - qpds-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:5000
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - qpds-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - qpds-network
+    volumes:
+      - redis-data:/data
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=qpds
+      - POSTGRES_PASSWORD=qpds_password
+      - POSTGRES_DB=qpds
+    ports:
+      - "5432:5432"
+    networks:
+      - qpds-network
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+networks:
+  qpds-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  postgres-data:

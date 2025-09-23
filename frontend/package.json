@@ -1,0 +1,35 @@
+{
+  "name": "qpds-frontend",
+  "version": "1.0.0",
+  "description": "Quantitative Poker Decision System Frontend",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "lint": "eslint --ext .js,.vue src"
+  },
+  "dependencies": {
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.4",
+    "vuex": "^4.1.0",
+    "axios": "^1.4.0",
+    "socket.io-client": "^4.6.1",
+    "chart.js": "^4.3.0",
+    "vue-chartjs": "^5.2.0",
+    "@vueuse/core": "^10.2.1",
+    "element-plus": "^2.3.8"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "vite": "^4.4.4",
+    "vitest": "^0.34.1",
+    "eslint": "^8.45.0",
+    "eslint-plugin-vue": "^9.15.1",
+    "sass": "^1.64.0",
+    "tailwindcss": "^3.3.3",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.27"
+  }
+}
