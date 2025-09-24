@@ -134,12 +134,8 @@ jobs:
 
     - name: Run benchmarks
       run: |
-        pytest tests/ -v --benchmark-only --benchmark-autosave
-
-    - name: Ensure benchmark output file
-      run: |
         mkdir -p .benchmarks
-        if [ ! -f .benchmarks/results.json ]; then echo '{}' > .benchmarks/results.json; fi
+        pytest tests/ -v --benchmark-only --benchmark-autosave --benchmark-json=.benchmarks/results.json
 
     - name: Store benchmark results
       uses: benchmark-action/github-action-benchmark@v1
