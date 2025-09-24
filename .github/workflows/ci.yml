@@ -138,7 +138,17 @@ jobs:
         pytest tests/ -v --benchmark-only --benchmark-autosave --benchmark-json=.benchmarks/results.json || true
         if [ ! -s .benchmarks/results.json ]; then echo '{"benchmarks": []}' > .benchmarks/results.json; fi
 
+    - name: Check benchmark data
+      id: benchmark_check
+      run: |
+        if grep -q '"benchmarks": \[[^]]' .benchmarks/results.json; then
+          echo "has_data=true" >> $GITHUB_OUTPUT
+        else
+          echo "has_data=false" >> $GITHUB_OUTPUT
+        fi
+
     - name: Store benchmark results
+      if: steps.benchmark_check.outputs.has_data == 'true'
       uses: benchmark-action/github-action-benchmark@v1
       with:
         tool: 'pytest'
