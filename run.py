@@ -46,11 +46,15 @@ def main():
     print("📦 Installing dependencies...")
     subprocess.run([python, "-m", "pip", "install", "-q", "-r", "requirements.txt"], check=True)
 
+    port = os.environ.get("PORT", "5000")
+    env = os.environ.copy()
+    env["PORT"] = port
+
     print()
     print("🚀 Starting QPDS Backend...")
     print("=" * 50)
-    print("API: http://localhost:5000")
-    print("Health Check: http://localhost:5000/health")
+    print(f"API: http://localhost:{port}")
+    print(f"Health Check: http://localhost:{port}/health")
     print()
     print("Open frontend/index.html in your browser to use the UI")
     print("Press Ctrl+C to stop the server")
@@ -58,7 +62,7 @@ def main():
 
     # Start the backend
     try:
-        subprocess.run([python, "-m", "backend.api.app"])
+        subprocess.run([python, "-m", "backend.api.app"], env=env)
     except KeyboardInterrupt:
         print("\n👋 QPDS stopped")
 
