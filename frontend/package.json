@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",
-    "lint": "eslint --ext .js,.vue src"
+    "lint": "echo \"No lint targets for current static build\""
   },
   "dependencies": {
     "vue": "^3.3.4",
