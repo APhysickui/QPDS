@@ -19,6 +19,18 @@ from core import (
     DecisionEngine, Decision
 )
 
+
+class InvalidCardError(ValueError):
+    """Raised when provided cards violate Texas Hold'em rules"""
+
+
+REQUIRED_BOARD_CARDS = {
+    Street.PREFLOP: 0,
+    Street.FLOP: 3,
+    Street.TURN: 4,
+    Street.RIVER: 5,
+}
+
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app)
@@ -39,7 +51,36 @@ decision_engine = DecisionEngine(factor_engine)
 
 def parse_cards(card_strings: List[str]) -> List[Card]:
     """Parse card strings into Card objects"""
-    return [Card.from_string(card_str) for card_str in card_strings]
+    cards = []
+    for raw in card_strings:
+        card_str = (raw or "").strip()
+        if len(card_str) < 2:
+            raise InvalidCardError(f"Invalid card format: '{raw}'")
+
+        try:
+            card = Card.from_string(card_str)
+        except (KeyError, IndexError, ValueError):
+            raise InvalidCardError(f"Invalid card format: '{raw}'")
+
+        cards.append(card)
+
+    return cards
+
+
+def validate_unique_cards(cards: List[Card]):
+    """Ensure no duplicate cards are present"""
+    if len(cards) != len(set(cards)):
+        raise InvalidCardError("Duplicate cards detected in input")
+
+
+def validate_board_for_street(board_size: int, street: Street):
+    """Ensure community cards match the selected street"""
+    required = REQUIRED_BOARD_CARDS.get(street, 0)
+    if board_size != required:
+        street_name = street.name.capitalize()
+        raise InvalidCardError(
+            f"{street_name} requires exactly {required} community cards, received {board_size}"
+        )
 
 
 def parse_position(position_str: str) -> Position:
@@ -108,6 +149,8 @@ def evaluate_hand():
             'tiebreakers': values[:5]
         }), 200
 
+    except InvalidCardError as exc:
+        return jsonify({'error': str(exc)}), 400
     except Exception as e:
         logger.error(f"Error evaluating hand: {e}")
         return jsonify({'error': str(e)}), 500
@@ -130,8 +173,18 @@ def get_equity():
     try:
         data = request.json
 
-        hero_cards = parse_cards(data.get('hero_cards', []))
-        board = parse_cards(data.get('board', []))
+        hero_card_strings = data.get('hero_cards', [])
+        board_strings = data.get('board', [])
+
+        if len(hero_card_strings) != 2:
+            raise InvalidCardError("Texas Hold'em requires exactly two hero cards")
+        if len(board_strings) > 5:
+            raise InvalidCardError("Community cards cannot exceed five")
+
+        hero_cards = parse_cards(hero_card_strings)
+        board = parse_cards(board_strings)
+
+        validate_unique_cards(hero_cards + board)
         num_opponents = data.get('num_opponents', 1)
         iterations = data.get('iterations', 10000)
 
@@ -156,6 +209,8 @@ def get_equity():
             'board': [str(c) for c in board]
         }), 200
 
+    except InvalidCardError as exc:
+        return jsonify({'error': str(exc)}), 400
     except Exception as e:
         logger.error(f"Error calculating equity: {e}")
         return jsonify({'error': str(e)}), 500
@@ -186,9 +241,23 @@ def get_factors():
     try:
         data = request.json
 
-        # Parse game state
-        hero_cards = parse_cards(data.get('hero_cards', []))
-        board = parse_cards(data.get('board', []))
+        # Parse core inputs
+        hero_card_strings = data.get('hero_cards', [])
+        board_strings = data.get('board', [])
+        position = parse_position(data.get('position', 'BTN'))
+        street = parse_street(data.get('street', 'PREFLOP'))
+
+        if len(hero_card_strings) != 2:
+            raise InvalidCardError("Texas Hold'em requires exactly two hero cards")
+        if len(board_strings) > 5:
+            raise InvalidCardError("Community cards cannot exceed five")
+
+        validate_board_for_street(len(board_strings), street)
+
+        hero_cards = parse_cards(hero_card_strings)
+        board = parse_cards(board_strings)
+
+        validate_unique_cards(hero_cards + board)
 
         villain_range = None
         if 'villain_range' in data and data['villain_range']:
@@ -201,8 +270,8 @@ def get_factors():
             to_call=float(data.get('to_call', 0)),
             hero_stack=float(data.get('hero_stack', 1000)),
             villain_stack=float(data.get('villain_stack', 1000)),
-            hero_position=parse_position(data.get('position', 'BTN')),
-            street=parse_street(data.get('street', 'FLOP')),
+            hero_position=position,
+            street=street,
             num_opponents=data.get('num_opponents', 1),
             villain_range=villain_range
         )
@@ -214,6 +283,8 @@ def get_factors():
 
         return jsonify(factors.to_dict()), 200
 
+    except InvalidCardError as exc:
+        return jsonify({'error': str(exc)}), 400
     except Exception as e:
         logger.error(f"Error calculating factors: {e}")
         return jsonify({'error': str(e)}), 500
@@ -245,9 +316,23 @@ def get_recommendation():
     try:
         data = request.json
 
-        # Parse game state
-        hero_cards = parse_cards(data.get('hero_cards', []))
-        board = parse_cards(data.get('board', []))
+        # Parse inputs with validation
+        hero_card_strings = data.get('hero_cards', [])
+        board_strings = data.get('board', [])
+        position = parse_position(data.get('position', 'BTN'))
+        street = parse_street(data.get('street', 'PREFLOP'))
+
+        if len(hero_card_strings) != 2:
+            raise InvalidCardError("Texas Hold'em requires exactly two hero cards")
+        if len(board_strings) > 5:
+            raise InvalidCardError("Community cards cannot exceed five")
+
+        validate_board_for_street(len(board_strings), street)
+
+        hero_cards = parse_cards(hero_card_strings)
+        board = parse_cards(board_strings)
+
+        validate_unique_cards(hero_cards + board)
 
         villain_range = None
         if 'villain_range' in data and data['villain_range']:
@@ -260,8 +345,8 @@ def get_recommendation():
             to_call=float(data.get('to_call', 0)),
             hero_stack=float(data.get('hero_stack', 1000)),
             villain_stack=float(data.get('villain_stack', 1000)),
-            hero_position=parse_position(data.get('position', 'BTN')),
-            street=parse_street(data.get('street', 'FLOP')),
+            hero_position=position,
+            street=street,
             num_opponents=data.get('num_opponents', 1),
             villain_range=villain_range
         )
@@ -288,6 +373,8 @@ def get_recommendation():
             'all_factors': factors.to_dict()
         }), 200
 
+    except InvalidCardError as exc:
+        return jsonify({'error': str(exc)}), 400
     except Exception as e:
         logger.error(f"Error getting recommendation: {e}")
         return jsonify({'error': str(e)}), 500

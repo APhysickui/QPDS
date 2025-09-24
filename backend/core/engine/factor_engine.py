@@ -204,7 +204,52 @@ class FactorEngine:
     def _calculate_hand_strength(self, game_state: GameState) -> float:
         """Calculate normalized hand strength"""
         all_cards = game_state.hero_cards + game_state.board
+        if len(all_cards) < 5:
+            return self._estimate_partial_strength(game_state)
         return self.evaluator.get_hand_strength(all_cards)
+
+    def _estimate_partial_strength(self, game_state: GameState) -> float:
+        """Estimate hand strength when fewer than 5 cards are known"""
+        hole_cards = game_state.hero_cards
+
+        if len(hole_cards) != 2:
+            return 0.0
+
+        # Preflop heuristic based on pair strength, connectivity, and suits
+        ranks = sorted([card.rank for card in hole_cards], reverse=True)
+        high, low = ranks
+        suited = hole_cards[0].suit == hole_cards[1].suit
+        gap = high - low
+
+        if high == low:  # Pocket pair
+            # Base between 0.5 (22) and ~0.95 (AA)
+            normalized = (high - 2) / 12  # 0 for deuces, 1 for aces
+            strength = 0.5 + normalized * 0.45
+            return min(0.98, max(0.45, strength))
+
+        # Non-pair hands
+        strength = 0.18  # Baseline for unconnected, offsuit trash
+        strength += (high / 14) * 0.45
+        strength += (low / 14) * 0.22
+
+        if suited:
+            strength += 0.07
+
+        if gap == 1:
+            strength += 0.08
+        elif gap == 2:
+            strength += 0.05
+        elif gap == 3:
+            strength += 0.03
+        elif gap > 3:
+            strength -= min(0.02 * (gap - 3), 0.12)
+
+        if high == 14:
+            strength += 0.05
+        if high >= 13 and low >= 10:
+            strength += 0.03
+
+        return min(0.9, max(0.05, strength))
 
     def _calculate_equity(self, game_state: GameState) -> float:
         """Calculate equity against opponent range"""

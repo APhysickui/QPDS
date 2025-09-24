@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QPDS - Quantitative Poker Decision System</title>
     <style>
+        :root {
+            color-scheme: light;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,597 +17,1391 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background: radial-gradient(circle at top left, #374785, #243B55 40%, #141E30 120%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 24px;
+            color: #f7f9fc;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        .app {
+            max-width: 1280px;
+            margin: 0 auto 40px auto;
         }
 
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .card h2 {
-            color: #2a5298;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .input-group input,
-        .input-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .input-group input:focus,
-        .input-group select:focus {
-            outline: none;
-            border-color: #2a5298;
-            box-shadow: 0 0 0 2px rgba(42, 82, 152, 0.1);
-        }
-
-        .card-input-container {
+        .app-header {
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 26px;
         }
 
-        .card-input {
-            width: 60px;
-            text-align: center;
+        .title-block h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .title-block p {
+            margin-top: 6px;
+            font-size: 1.05rem;
+            opacity: 0.85;
+        }
+
+        .lang-toggle {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.14);
+            color: #0b132b;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .lang-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background: rgba(10, 20, 40, 0.74);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .panel h2 {
+            font-size: 1.35rem;
+            margin-bottom: 16px;
+            color: #f0f4ff;
+        }
+
+        .lesson-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .lesson-item {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 14px 16px;
+            border-left: 4px solid rgba(142, 197, 252, 0.9);
+        }
+
+        .lesson-item strong {
+            display: block;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+
+        .lesson-item span {
+            font-size: 0.92rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .section {
+            margin-bottom: 18px;
+        }
+
+        .section h3 {
+            font-size: 1.05rem;
+            margin-bottom: 10px;
+            color: #d6e4ff;
             text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .stage-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .stage-options label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            font-size: 0.92rem;
+        }
+
+        .stage-options input[type="radio"] {
+            accent-color: #8ec5fc;
+        }
+
+        .stage-options label.active {
+            background: rgba(142, 197, 252, 0.22);
+            border: 1px solid rgba(160, 210, 255, 0.6);
+        }
+
+        .card-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            gap: 10px;
+        }
+
+        .card-slot {
+            position: relative;
+            border: 2px dashed rgba(255, 255, 255, 0.16);
+            border-radius: 12px;
+            min-height: 94px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: border 0.2s ease, background 0.2s ease;
+        }
+
+        .card-slot[data-disabled="true"] {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .card-slot[data-selected="true"] {
+            border-color: rgba(142, 197, 252, 0.9);
+            background: rgba(142, 197, 252, 0.12);
+        }
+
+        .card-slot .card-label {
+            position: absolute;
+            top: 6px;
+            left: 8px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .card-slot .remove-tag {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .card-slot[data-filled="true"] {
+            border-style: solid;
+            border-color: rgba(160, 210, 255, 0.7);
+            background: rgba(255, 255, 255, 0.12);
+            color: #0b132b;
+            font-weight: 600;
+        }
+
+        .card-slot[data-filled="true"] .remove-tag {
+            cursor: pointer;
+        }
+
+        .inputs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        label.field-label {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 0.85rem;
+            opacity: 0.85;
+            letter-spacing: 0.04em;
+        }
+
+        input[type="number"],
+        input[type="text"],
+        select {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 10px;
+            padding: 10px 12px;
+            color: #f7f9fc;
+            font-size: 0.95rem;
+        }
+
+        input::placeholder,
+        select option {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 10px;
+        }
+
+        .slider-row span {
+            font-size: 0.82rem;
+            opacity: 0.75;
+        }
+
+        .slider-row strong {
+            font-size: 0.95rem;
+            color: #f1f5ff;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            accent-color: #8ec5fc;
         }
 
         .button-group {
             display: flex;
-            gap: 10px;
+            flex-wrap: wrap;
+            gap: 12px;
             margin-top: 20px;
         }
 
-        .btn {
-            flex: 1;
-            padding: 12px 24px;
-            background: #2a5298;
-            color: white;
+        .button-group button {
+            flex: 1 1 180px;
+            padding: 12px;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            color: #0b132b;
+            background: linear-gradient(135deg, #8ec5fc, #e0c3fc);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .btn:hover {
-            background: #1e3c72;
+        .button-group button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 12px 24px rgba(142, 197, 252, 0.35);
         }
 
-        .btn:active {
-            transform: translateY(0);
+        .button-group .ghost {
+            background: rgba(255, 255, 255, 0.12);
+            color: #f7f9fc;
+            border: 1px solid rgba(255, 255, 255, 0.18);
         }
 
-        .btn-secondary {
-            background: #6c757d;
+        .deck-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
         }
 
-        .btn-secondary:hover {
-            background: #5a6268;
+        .deck-grid {
+            display: grid;
+            gap: 6px;
         }
 
-        .results {
-            background: #f8f9fa;
-            border-radius: 5px;
-            padding: 15px;
-            margin-top: 15px;
-            min-height: 100px;
+        .deck-row {
+            display: grid;
+            grid-template-columns: repeat(13, minmax(36px, 1fr));
+            gap: 6px;
         }
 
-        .results h3 {
-            color: #2a5298;
-            margin-bottom: 10px;
+        .card-button {
+            border: none;
+            border-radius: 8px;
+            padding: 10px 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s ease, filter 0.15s ease;
+            background: rgba(255, 255, 255, 0.15);
+            color: #0b132b;
         }
 
-        .result-item {
-            margin: 8px 0;
-            padding: 8px;
-            background: white;
-            border-radius: 3px;
-            border-left: 3px solid #2a5298;
+        .card-button[data-suit="hearts"],
+        .card-button[data-suit="diamonds"] {
+            color: #b22234;
         }
 
-        .result-item strong {
-            color: #2a5298;
+        .card-button[data-suit="spades"],
+        .card-button[data-suit="clubs"] {
+            color: #102a43;
+        }
+
+        .card-button:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.08);
+        }
+
+        .card-button[data-used="true"] {
+            opacity: 0.35;
+            cursor: not-allowed;
+            filter: grayscale(0.4);
+        }
+
+        .analysis-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .result-banner {
+            background: linear-gradient(135deg, rgba(142, 197, 252, 0.32), rgba(224, 195, 252, 0.38));
+            border-radius: 16px;
+            padding: 18px;
+            text-align: center;
+            color: #0b132b;
+        }
+
+        .result-banner .action-label {
+            font-size: 0.9rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            opacity: 0.75;
+        }
+
+        .result-banner .action-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+
+        .result-banner .confidence {
+            font-size: 0.9rem;
+            margin-top: 6px;
+            opacity: 0.7;
+        }
+
+        .explanation-box {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 0.92rem;
+            line-height: 1.55;
         }
 
         .factors-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 10px;
-            margin-top: 10px;
         }
 
-        .factor-item {
-            padding: 10px;
-            background: white;
-            border-radius: 5px;
-            border-left: 3px solid #28a745;
+        .factor-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 14px;
         }
 
-        .factor-item .factor-name {
-            font-weight: bold;
-            color: #495057;
-            font-size: 12px;
+        .factor-card .factor-name {
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
-            margin-bottom: 4px;
+            opacity: 0.7;
         }
 
-        .factor-item .factor-value {
-            color: #2a5298;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .recommendation-box {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 15px;
-            text-align: center;
-        }
-
-        .recommendation-box .action {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        .recommendation-box .explanation {
-            opacity: 0.95;
-            font-size: 1.1rem;
-        }
-
-        .slider-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .slider {
-            flex: 1;
-            -webkit-appearance: none;
-            appearance: none;
-            height: 8px;
-            border-radius: 5px;
-            background: linear-gradient(to right, #28a745 0%, #ffc107 50%, #dc3545 100%);
-            outline: none;
-        }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: white;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-
-        .slider::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: white;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-
-        .slider-value {
-            font-weight: bold;
-            color: #2a5298;
-            min-width: 30px;
+        .factor-card .factor-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 6px;
+            color: #f0f4ff;
         }
 
         .loading {
             display: none;
-            text-align: center;
-            padding: 20px;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.8);
         }
 
         .loading.active {
-            display: block;
+            display: flex;
         }
 
         .spinner {
-            border: 3px solid rgba(42, 82, 152, 0.1);
+            border: 4px solid rgba(255, 255, 255, 0.15);
+            border-top: 4px solid #8ec5fc;
             border-radius: 50%;
-            border-top: 3px solid #2a5298;
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             animation: spin 1s linear infinite;
-            margin: 0 auto;
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            to { transform: rotate(360deg); }
         }
 
-        .error-message {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 12px;
-            border-radius: 5px;
-            margin-top: 10px;
-            border: 1px solid #f5c6cb;
+        .error-box {
+            background: rgba(214, 69, 65, 0.2);
+            border: 1px solid rgba(214, 69, 65, 0.45);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 0.9rem;
+            line-height: 1.45;
+            display: none;
+        }
+
+        .error-box.active {
+            display: block;
+        }
+
+        @media (max-width: 1024px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .deck-panel {
+                order: 3;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 16px;
+            }
+
+            .app-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .button-group button {
+                flex: 1 1 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🎯 QPDS</h1>
-            <p>Quantitative Poker Decision System - AI-Powered Poker Analytics</p>
-        </div>
+    <div class="app">
+        <header class="app-header">
+            <div class="title-block">
+                <h1 data-i18n="title">QPDS</h1>
+                <p data-i18n="subtitle">量化德州扑克决策辅助系统</p>
+            </div>
+            <button id="langToggle" class="lang-toggle">English</button>
+        </header>
 
-        <div class="main-content">
-            <div class="card">
-                <h2>📊 Game State</h2>
+        <div class="layout">
+            <section class="panel" id="lessonPanel">
+                <h2 data-i18n="lesson.heading">无限注德州扑克：规则速览</h2>
+                <div class="lesson-list">
+                    <div class="lesson-item">
+                        <strong data-i18n="lesson.goal.title">核心目标</strong>
+                        <span data-i18n="lesson.goal.copy">通过摊牌赢得最大成手牌，或让所有对手弃牌，夺取底池。</span>
+                    </div>
+                    <div class="lesson-item">
+                        <strong data-i18n="lesson.structure.title">一局流程</strong>
+                        <span data-i18n="lesson.structure.copy">两张底牌起手，盲注做底，公共牌依次翻牌圈、转牌圈、河牌圈亮出，最多四轮下注。</span>
+                    </div>
+                    <div class="lesson-item">
+                        <strong data-i18n="lesson.position.title">位置与信息</strong>
+                        <span data-i18n="lesson.position.copy">按钮位最后行动优势最大，盲注位置翻牌后需率先行动。</span>
+                    </div>
+                    <div class="lesson-item">
+                        <strong data-i18n="lesson.strategy.title">量化思维</strong>
+                        <span data-i18n="lesson.strategy.copy">胜率、底池赔率、风险偏好共同驱动决策，保持纪律，避免情绪化。</span>
+                    </div>
+                </div>
+            </section>
 
-                <div class="input-group">
-                    <label>Your Cards (e.g., As Kh)</label>
-                    <div class="card-input-container">
-                        <input type="text" class="card-input" id="hero1" placeholder="As" value="As">
-                        <input type="text" class="card-input" id="hero2" placeholder="Kh" value="Kh">
+            <section class="panel" id="statePanel">
+                <div class="section">
+                    <h2 data-i18n="state.heading">牌局设置</h2>
+                    <div class="stage-options" id="streetOptions">
+                        <label data-street="PREFLOP" class="active">
+                            <input type="radio" name="street" value="PREFLOP" checked>
+                            <span data-i18n="streets.PREFLOP">翻前 (Preflop)</span>
+                        </label>
+                        <label data-street="FLOP">
+                            <input type="radio" name="street" value="FLOP">
+                            <span data-i18n="streets.FLOP">翻牌圈 (Flop)</span>
+                        </label>
+                        <label data-street="TURN">
+                            <input type="radio" name="street" value="TURN">
+                            <span data-i18n="streets.TURN">转牌圈 (Turn)</span>
+                        </label>
+                        <label data-street="RIVER">
+                            <input type="radio" name="street" value="RIVER">
+                            <span data-i18n="streets.RIVER">河牌圈 (River)</span>
+                        </label>
                     </div>
                 </div>
 
-                <div class="input-group">
-                    <label>Community Cards</label>
-                    <div class="card-input-container">
-                        <input type="text" class="card-input" id="board1" placeholder="Flop 1">
-                        <input type="text" class="card-input" id="board2" placeholder="Flop 2">
-                        <input type="text" class="card-input" id="board3" placeholder="Flop 3">
-                        <input type="text" class="card-input" id="board4" placeholder="Turn">
-                        <input type="text" class="card-input" id="board5" placeholder="River">
+                <div class="section">
+                    <h3 data-i18n="state.hero">你的底牌</h3>
+                    <div class="card-slots" id="heroSlots"></div>
+                </div>
+
+                <div class="section">
+                    <h3 data-i18n="state.board">公共牌</h3>
+                    <div class="card-slots" id="boardSlots"></div>
+                </div>
+
+                <div class="section">
+                    <h3 data-i18n="state.parameters">筹码与参数</h3>
+                    <div class="inputs-grid">
+                        <label class="field-label" data-i18n="fields.pot">
+                            底池大小
+                            <input type="number" id="potInput" min="0" step="0.01" value="100" data-i18n-placeholder="placeholders.pot">
+                        </label>
+                        <label class="field-label" data-i18n="fields.toCall">
+                            需要跟注
+                            <input type="number" id="toCallInput" min="0" step="0.01" value="10" data-i18n-placeholder="placeholders.toCall">
+                        </label>
+                        <label class="field-label" data-i18n="fields.heroStack">
+                            你的筹码
+                            <input type="number" id="heroStackInput" min="0" step="0.01" value="500" data-i18n-placeholder="placeholders.heroStack">
+                        </label>
+                        <label class="field-label" data-i18n="fields.villainStack">
+                            对手筹码
+                            <input type="number" id="villainStackInput" min="0" step="0.01" value="500" data-i18n-placeholder="placeholders.villainStack">
+                        </label>
+                        <label class="field-label" data-i18n="fields.position">
+                            你的位置
+                            <select id="positionSelect"></select>
+                        </label>
+                        <label class="field-label" data-i18n="fields.villainRange">
+                            对手范围
+                            <input type="text" id="rangeInput" data-i18n-placeholder="placeholders.villainRange" placeholder="AA,KK,QQ,AKs">
+                        </label>
                     </div>
-                </div>
 
-                <div class="input-group">
-                    <label>Pot Size ($)</label>
-                    <input type="number" id="pot" placeholder="100" value="100">
-                </div>
-
-                <div class="input-group">
-                    <label>Amount to Call ($)</label>
-                    <input type="number" id="toCall" placeholder="20" value="20">
-                </div>
-
-                <div class="input-group">
-                    <label>Your Stack ($)</label>
-                    <input type="number" id="heroStack" placeholder="500" value="500">
-                </div>
-
-                <div class="input-group">
-                    <label>Opponent Stack ($)</label>
-                    <input type="number" id="villainStack" placeholder="500" value="500">
-                </div>
-
-                <div class="input-group">
-                    <label>Position</label>
-                    <select id="position">
-                        <option value="BTN">Button (BTN)</option>
-                        <option value="CO">Cutoff (CO)</option>
-                        <option value="HJ">Hijack (HJ)</option>
-                        <option value="MP2">Middle Position</option>
-                        <option value="UTG">Under the Gun</option>
-                        <option value="SB">Small Blind</option>
-                        <option value="BB">Big Blind</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label>Street</label>
-                    <select id="street">
-                        <option value="PREFLOP">Preflop</option>
-                        <option value="FLOP">Flop</option>
-                        <option value="TURN">Turn</option>
-                        <option value="RIVER">River</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label>Opponent Range (Optional)</label>
-                    <input type="text" id="range" placeholder="e.g., AA,KK,QQ,AKs">
-                </div>
-
-                <div class="input-group">
-                    <label>Risk Preference</label>
-                    <div class="slider-container">
-                        <span>Conservative</span>
-                        <input type="range" class="slider" id="risk" min="0" max="10" value="5">
-                        <span>Aggressive</span>
-                        <span class="slider-value" id="riskValue">5</span>
+                    <div class="slider-row">
+                        <span data-i18n="risk.conservative">保守</span>
+                        <input type="range" id="riskSlider" min="0" max="10" value="5">
+                        <span data-i18n="risk.aggressive">激进</span>
+                        <strong id="riskValue">5</strong>
                     </div>
                 </div>
 
                 <div class="button-group">
-                    <button class="btn" onclick="getRecommendation()">Get Recommendation</button>
-                    <button class="btn btn-secondary" onclick="calculateEquity()">Calculate Equity</button>
+                    <button id="recommendButton" data-i18n="buttons.recommend">获取决策建议</button>
+                    <button id="equityButton" data-i18n="buttons.equity">仅计算胜率</button>
+                    <button id="resetButton" class="ghost" data-i18n="buttons.reset">重置牌面</button>
                 </div>
-            </div>
 
-            <div class="card">
-                <h2>🎲 Analysis Results</h2>
+                <div class="error-box" id="errorBox"></div>
+            </section>
 
+            <section class="panel deck-panel" id="deckPanel">
+                <div>
+                    <h2 data-i18n="deck.heading">牌堆 (点击选择卡牌)</h2>
+                    <p data-i18n="deck.hint" style="font-size:0.9rem;opacity:0.75;line-height:1.5;margin-top:6px;">
+                        先点击空槽再点选卡牌；已选卡牌会自动灰化，点击槽位右上角可清除。
+                    </p>
+                </div>
+                <div class="deck-grid" id="deckGrid"></div>
+            </section>
+
+            <section class="panel analysis-panel" id="analysisPanel">
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
-                    <p>Analyzing...</p>
+                    <span data-i18n="loading">正在为你量化牌局...</span>
                 </div>
 
-                <div id="recommendation" style="display: none;">
-                    <div class="recommendation-box">
-                        <div class="action" id="actionResult">-</div>
-                        <div class="explanation" id="explanation">-</div>
-                    </div>
+                <div class="result-banner" id="resultBanner" style="display: none;">
+                    <div class="action-label" data-i18n="result.action">推荐行动</div>
+                    <div class="action-value" id="actionValue">-</div>
+                    <div class="confidence" id="confidenceValue"></div>
                 </div>
 
-                <div class="results" id="results">
-                    <h3>Factors</h3>
-                    <div class="factors-grid" id="factorsGrid">
-                        <div class="factor-item">
-                            <div class="factor-name">Equity</div>
-                            <div class="factor-value">-</div>
-                        </div>
-                        <div class="factor-item">
-                            <div class="factor-name">Pot Odds</div>
-                            <div class="factor-value">-</div>
-                        </div>
-                        <div class="factor-item">
-                            <div class="factor-name">Hand Strength</div>
-                            <div class="factor-value">-</div>
-                        </div>
-                        <div class="factor-item">
-                            <div class="factor-name">Position</div>
-                            <div class="factor-value">-</div>
-                        </div>
-                    </div>
-                </div>
+                <div class="explanation-box" id="explanationBox" style="display: none;"></div>
 
-                <div id="error" class="error-message" style="display: none;"></div>
-            </div>
+                <div>
+                    <h3 data-i18n="factors.heading">关键因子</h3>
+                    <div class="factors-grid" id="factorsGrid"></div>
+                </div>
+            </section>
         </div>
     </div>
 
     <script>
         const API_URL = 'http://localhost:8080';
 
-        // Update risk slider value display
-        document.getElementById('risk').addEventListener('input', function(e) {
-            document.getElementById('riskValue').textContent = e.target.value;
-        });
+        const translations = {
+            en: {
+                title: 'QPDS',
+                subtitle: 'Quantitative Poker Decision System',
+                lesson: {
+                    heading: 'No-Limit Texas Hold\'em Essentials',
+                    goal: {
+                        title: 'The Goal',
+                        copy: 'Win chips either by showing the strongest five-card hand at showdown or by making everyone else fold.'
+                    },
+                    structure: {
+                        title: 'Hand Structure',
+                        copy: 'Two private cards per player, blinds create the pot, and up to four betting rounds across flop, turn, and river community cards.'
+                    },
+                    position: {
+                        title: 'Position & Information',
+                        copy: 'Button acts last post-flop and has the most information; blinds must act first on later streets.'
+                    },
+                    strategy: {
+                        title: 'Quant Thinking',
+                        copy: 'Equity, pot odds, and your risk slider drive disciplined, data-backed decisions.'
+                    }
+                },
+                state: {
+                    heading: 'Game State',
+                    hero: 'Your Hole Cards',
+                    board: 'Community Cards',
+                    parameters: 'Stacks & Inputs'
+                },
+                streets: {
+                    PREFLOP: 'Preflop',
+                    FLOP: 'Flop',
+                    TURN: 'Turn',
+                    RIVER: 'River'
+                },
+                fields: {
+                    pot: 'Pot Size',
+                    toCall: 'Bet to Call',
+                    heroStack: 'Your Stack',
+                    villainStack: 'Villain Stack',
+                    position: 'Your Position',
+                    villainRange: 'Villain Range'
+                },
+                placeholders: {
+                    pot: 'e.g. 100',
+                    toCall: 'e.g. 20',
+                    heroStack: 'e.g. 500',
+                    villainStack: 'e.g. 500',
+                    villainRange: 'AA,KK,QQ,AKs'
+                },
+                risk: {
+                    conservative: 'Conservative',
+                    aggressive: 'Aggressive'
+                },
+                buttons: {
+                    recommend: 'Get Recommendation',
+                    equity: 'Equity Only',
+                    reset: 'Reset Cards'
+                },
+                deck: {
+                    heading: 'Deck (click to pick cards)',
+                    hint: 'Click an empty slot then choose a card. Used cards grey out; use the ✕ tag to clear a slot.'
+                },
+                loading: 'Crunching the hand for you...',
+                result: {
+                    action: 'Recommended Action'
+                },
+                factors: {
+                    heading: 'Key Factors',
+                    names: {
+                        equity: 'Equity',
+                        pot_odds: 'Pot Odds',
+                        hand_strength: 'Hand Strength',
+                        position_factor: 'Position',
+                        stack_to_pot_ratio: 'SPR',
+                        fold_equity: 'Fold Equity',
+                        outs: 'Outs',
+                        board_wetness: 'Board Texture'
+                    }
+                },
+                errors: {
+                    missingCards: 'Please select two unique hole cards before running an analysis.',
+                    boardRequirement: 'Please provide the correct number of community cards for the selected street.'
+                }
+            },
+            zh: {
+                title: 'QPDS',
+                subtitle: '量化德州扑克决策辅助系统',
+                lesson: {
+                    heading: '无限注德州扑克：规则速览',
+                    goal: {
+                        title: '核心目标',
+                        copy: '通过摊牌拿下最大牌力，或迫使所有对手弃牌，赢取底池筹码。'
+                    },
+                    structure: {
+                        title: '完整流程',
+                        copy: '每位玩家起手两张底牌，盲注注入底池，公共牌依次翻牌圈、转牌圈、河牌圈亮出，最多四轮下注。'
+                    },
+                    position: {
+                        title: '位置与信息',
+                        copy: '按钮位翻牌后最后行动，信息优势最大；盲注位置翻牌后需要优先行动。'
+                    },
+                    strategy: {
+                        title: '量化思维',
+                        copy: '胜率、底池赔率、风险偏好共同驱动理性决策，保持纪律避免情绪波动。'
+                    }
+                },
+                state: {
+                    heading: '牌局设置',
+                    hero: '你的底牌',
+                    board: '公共牌',
+                    parameters: '筹码与参数'
+                },
+                streets: {
+                    PREFLOP: '翻前 (Preflop)',
+                    FLOP: '翻牌圈 (Flop)',
+                    TURN: '转牌圈 (Turn)',
+                    RIVER: '河牌圈 (River)'
+                },
+                fields: {
+                    pot: '底池大小',
+                    toCall: '需要跟注',
+                    heroStack: '你的筹码',
+                    villainStack: '对手筹码',
+                    position: '你的位置',
+                    villainRange: '对手范围'
+                },
+                placeholders: {
+                    pot: '例如 100',
+                    toCall: '例如 20',
+                    heroStack: '例如 500',
+                    villainStack: '例如 500',
+                    villainRange: 'AA,KK,QQ,AKs'
+                },
+                risk: {
+                    conservative: '保守',
+                    aggressive: '激进'
+                },
+                buttons: {
+                    recommend: '获取决策建议',
+                    equity: '仅计算胜率',
+                    reset: '重置牌面'
+                },
+                deck: {
+                    heading: '牌堆（点击选牌）',
+                    hint: '先点击空槽再选择卡牌；被选中的卡牌会灰掉，点击槽位右上角的✕即可清除。'
+                },
+                loading: '正在为你量化牌局...',
+                result: {
+                    action: '推荐行动'
+                },
+                factors: {
+                    heading: '关键因子',
+                    names: {
+                        equity: '胜率 (Equity)',
+                        pot_odds: '底池赔率',
+                        hand_strength: '牌力评分',
+                        position_factor: '位置优势',
+                        stack_to_pot_ratio: 'SPR',
+                        fold_equity: '弃牌率',
+                        outs: '补牌数',
+                        board_wetness: '公共牌协调度'
+                    }
+                },
+                errors: {
+                    missingCards: '请先选择两张唯一底牌，再进行分析。',
+                    boardRequirement: '当前阶段需要匹配数量的公共牌，请补全或调整阶段。'
+                }
+            }
+        };
 
-        function getGameState() {
-            const hero1 = document.getElementById('hero1').value;
-            const hero2 = document.getElementById('hero2').value;
-            const board = [
-                document.getElementById('board1').value,
-                document.getElementById('board2').value,
-                document.getElementById('board3').value,
-                document.getElementById('board4').value,
-                document.getElementById('board5').value
-            ].filter(v => v);
+        const positionLabels = {
+            BTN: { en: 'Button (BTN)', zh: '按钮位 (BTN)' },
+            CO: { en: 'Cutoff (CO)', zh: '截断位 (CO)' },
+            HJ: { en: 'Hijack (HJ)', zh: '劫持位 (HJ)' },
+            MP2: { en: 'Middle Position', zh: '中间位' },
+            UTG: { en: 'Under the Gun (UTG)', zh: '枪口位 (UTG)' },
+            SB: { en: 'Small Blind (SB)', zh: '小盲位 (SB)' },
+            BB: { en: 'Big Blind (BB)', zh: '大盲位 (BB)' }
+        };
 
+        const streetBoardCounts = {
+            PREFLOP: 0,
+            FLOP: 3,
+            TURN: 4,
+            RIVER: 5
+        };
+
+        const actionLabels = {
+            en: {
+                fold: 'Fold',
+                check: 'Check',
+                call: 'Call',
+                raise: 'Raise',
+                all_in: 'All-in'
+            },
+            zh: {
+                fold: '弃牌',
+                check: '过牌',
+                call: '跟注',
+                raise: '加注',
+                all_in: '全下'
+            }
+        };
+
+        const suits = [
+            { key: 'spades', symbol: '♠', code: 's' },
+            { key: 'hearts', symbol: '♥', code: 'h' },
+            { key: 'diamonds', symbol: '♦', code: 'd' },
+            { key: 'clubs', symbol: '♣', code: 'c' }
+        ];
+
+        const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
+
+        const state = {
+            language: 'zh',
+            heroCards: [null, null],
+            board: [null, null, null, null, null],
+            street: 'PREFLOP',
+            selectedSlot: null,
+            position: 'BTN',
+            lastResult: null
+        };
+
+        const deckGrid = document.getElementById('deckGrid');
+        const heroSlots = document.getElementById('heroSlots');
+        const boardSlots = document.getElementById('boardSlots');
+        const streetOptions = document.getElementById('streetOptions');
+        const positionSelect = document.getElementById('positionSelect');
+        const riskSlider = document.getElementById('riskSlider');
+        const riskValue = document.getElementById('riskValue');
+        const langToggle = document.getElementById('langToggle');
+        const loadingIndicator = document.getElementById('loading');
+        const actionValue = document.getElementById('actionValue');
+        const confidenceValue = document.getElementById('confidenceValue');
+        const resultBanner = document.getElementById('resultBanner');
+        const explanationBox = document.getElementById('explanationBox');
+        const factorsGrid = document.getElementById('factorsGrid');
+        const errorBox = document.getElementById('errorBox');
+
+        function t(key) {
+            const parts = key.split('.');
+            let cursor = translations[state.language];
+            for (const part of parts) {
+                if (cursor && part in cursor) {
+                    cursor = cursor[part];
+                } else {
+                    return key;
+                }
+            }
+            return cursor;
+        }
+
+        function translatePage() {
+            document.documentElement.lang = state.language;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                const text = t(key);
+                if (typeof text === 'string') {
+                    el.textContent = text;
+                }
+            });
+
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                const text = t(key);
+                if (typeof text === 'string') {
+                    el.setAttribute('placeholder', text);
+                }
+            });
+
+            // Re-translate stage labels
+            streetOptions.querySelectorAll('label').forEach(label => {
+                const street = label.getAttribute('data-street');
+                const span = label.querySelector('span');
+                if (span) {
+                    span.textContent = t(`streets.${street}`);
+                }
+            });
+
+            // Rebuild position select options
+            const selected = positionSelect.value;
+            positionSelect.innerHTML = '';
+            Object.entries(positionLabels).forEach(([value, labels]) => {
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = labels[state.language];
+                if (value === selected) {
+                    option.selected = true;
+                }
+                positionSelect.appendChild(option);
+            });
+
+            langToggle.textContent = state.language === 'en' ? '中文' : 'English';
+
+            if (state.lastResult) {
+                const snapshot = state.lastResult;
+                if (snapshot.kind === 'recommendation') {
+                    showRecommendation(snapshot.data);
+                } else if (snapshot.kind === 'equity') {
+                    showEquityOnly(snapshot.data);
+                }
+            }
+        }
+
+        function buildDeck() {
+            deckGrid.innerHTML = '';
+            suits.forEach(suit => {
+                const row = document.createElement('div');
+                row.className = 'deck-row';
+                ranks.forEach(rank => {
+                    const cardCode = `${rank}${suit.code}`;
+                    const button = document.createElement('button');
+                    button.className = 'card-button';
+                    button.dataset.card = `${rank}${suit.code}`;
+                    button.dataset.suit = suit.key;
+                    button.innerHTML = `${rank}${suit.symbol}`;
+                    button.addEventListener('click', () => onDeckCardSelected(cardCode));
+                    row.appendChild(button);
+                });
+                deckGrid.appendChild(row);
+            });
+            updateDeckAvailability();
+        }
+
+        function createSlotElement(type, index, cardCode) {
+            const slot = document.createElement('div');
+            slot.className = 'card-slot';
+            slot.dataset.type = type;
+            slot.dataset.index = index;
+            const disabled = type === 'board' && index >= streetBoardCounts[state.street];
+            slot.dataset.disabled = disabled ? 'true' : 'false';
+            if (disabled) {
+                return slot;
+            }
+
+            const label = document.createElement('span');
+            label.className = 'card-label';
+            label.textContent = type === 'hero' ? `P${index + 1}` : `B${index + 1}`;
+            slot.appendChild(label);
+
+            if (cardCode) {
+                slot.dataset.filled = 'true';
+                slot.textContent = cardCode.toUpperCase();
+                slot.appendChild(label);
+
+                const tag = document.createElement('div');
+                tag.className = 'remove-tag';
+                tag.textContent = '✕';
+                tag.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    clearSlot(type, index);
+                });
+                slot.appendChild(tag);
+            } else {
+                slot.dataset.filled = 'false';
+                slot.appendChild(label);
+            }
+
+            if (state.selectedSlot && state.selectedSlot.type === type && state.selectedSlot.index === index) {
+                slot.dataset.selected = 'true';
+            }
+
+            slot.addEventListener('click', () => onSlotClick(type, index));
+            return slot;
+        }
+
+        function renderSlots() {
+            heroSlots.innerHTML = '';
+            state.heroCards.forEach((card, index) => {
+                heroSlots.appendChild(createSlotElement('hero', index, card));
+            });
+
+            boardSlots.innerHTML = '';
+            state.board.forEach((card, index) => {
+                boardSlots.appendChild(createSlotElement('board', index, card));
+            });
+        }
+
+        function onSlotClick(type, index) {
+            const disabled = type === 'board' && index >= streetBoardCounts[state.street];
+            if (disabled) {
+                return;
+            }
+
+            const currentCard = type === 'hero' ? state.heroCards[index] : state.board[index];
+            if (currentCard) {
+                clearSlot(type, index);
+                return;
+            }
+
+            state.selectedSlot = { type, index };
+            renderSlots();
+        }
+
+        function clearSlot(type, index) {
+            if (type === 'hero') {
+                state.heroCards[index] = null;
+            } else {
+                state.board[index] = null;
+            }
+            if (state.selectedSlot && state.selectedSlot.type === type && state.selectedSlot.index === index) {
+                state.selectedSlot = null;
+            }
+            updateDeckAvailability();
+            renderSlots();
+        }
+
+        function isCardUsed(cardCode) {
+            const allCards = [...state.heroCards, ...state.board];
+            return allCards.includes(cardCode.toLowerCase());
+        }
+
+        function findNextAvailableSlot() {
+            for (let i = 0; i < state.heroCards.length; i += 1) {
+                if (!state.heroCards[i]) {
+                    return { type: 'hero', index: i };
+                }
+            }
+            const allowedBoard = streetBoardCounts[state.street];
+            for (let i = 0; i < allowedBoard; i += 1) {
+                if (!state.board[i]) {
+                    return { type: 'board', index: i };
+                }
+            }
+            return null;
+        }
+
+        function onDeckCardSelected(cardCode) {
+            if (isCardUsed(cardCode)) {
+                return;
+            }
+
+            let targetSlot = state.selectedSlot;
+            if (!targetSlot) {
+                targetSlot = findNextAvailableSlot();
+            }
+            if (!targetSlot) {
+                return;
+            }
+
+            if (targetSlot.type === 'hero') {
+                state.heroCards[targetSlot.index] = cardCode.toLowerCase();
+            } else {
+                state.board[targetSlot.index] = cardCode.toLowerCase();
+            }
+
+            state.selectedSlot = findNextAvailableSlot();
+            updateDeckAvailability();
+            renderSlots();
+        }
+
+        function updateDeckAvailability() {
+            const used = new Set([...state.heroCards, ...state.board].filter(Boolean));
+            deckGrid.querySelectorAll('.card-button').forEach(button => {
+                const code = (button.dataset.card || '').toLowerCase();
+                button.dataset.used = used.has(code) ? 'true' : 'false';
+            });
+        }
+
+        function onStreetChange(value) {
+            state.street = value;
+            // Trim board cards beyond allowed count
+            const allowed = streetBoardCounts[value];
+            state.board = state.board.map((card, index) => (index < allowed ? card : null));
+            if (state.selectedSlot && state.selectedSlot.type === 'board' && state.selectedSlot.index >= allowed) {
+                state.selectedSlot = null;
+            }
+            renderSlots();
+        }
+
+        function resetBoardSelections() {
+            state.heroCards = [null, null];
+            state.board = [null, null, null, null, null];
+            state.street = 'PREFLOP';
+            state.selectedSlot = null;
+            streetOptions.querySelectorAll('label').forEach(label => {
+                label.classList.toggle('active', label.getAttribute('data-street') === 'PREFLOP');
+                label.querySelector('input').checked = label.getAttribute('data-street') === 'PREFLOP';
+            });
+            renderSlots();
+            updateDeckAvailability();
+            clearResult();
+            showError('');
+        }
+
+        function gatherGameState() {
             return {
-                hero_cards: [hero1, hero2].filter(v => v),
-                board: board,
-                pot_size: parseFloat(document.getElementById('pot').value) || 0,
-                to_call: parseFloat(document.getElementById('toCall').value) || 0,
-                hero_stack: parseFloat(document.getElementById('heroStack').value) || 1000,
-                villain_stack: parseFloat(document.getElementById('villainStack').value) || 1000,
-                position: document.getElementById('position').value,
-                street: document.getElementById('street').value,
-                villain_range: document.getElementById('range').value || null,
-                risk_preference: parseInt(document.getElementById('risk').value)
+                hero_cards: state.heroCards.filter(Boolean).map(card => card.toUpperCase()),
+                board: state.board.filter((card, index) => index < streetBoardCounts[state.street] && card).map(card => card.toUpperCase()),
+                pot_size: parseFloat(document.getElementById('potInput').value) || 0,
+                to_call: parseFloat(document.getElementById('toCallInput').value) || 0,
+                hero_stack: parseFloat(document.getElementById('heroStackInput').value) || 0,
+                villain_stack: parseFloat(document.getElementById('villainStackInput').value) || 0,
+                position: positionSelect.value,
+                street: state.street,
+                villain_range: document.getElementById('rangeInput').value || null,
+                risk_preference: parseFloat(riskSlider.value) || 5
             };
         }
 
         function showLoading() {
-            document.getElementById('loading').classList.add('active');
-            document.getElementById('recommendation').style.display = 'none';
-            document.getElementById('error').style.display = 'none';
+            loadingIndicator.classList.add('active');
+            resultBanner.style.display = 'none';
+            explanationBox.style.display = 'none';
+            factorsGrid.innerHTML = '';
         }
 
         function hideLoading() {
-            document.getElementById('loading').classList.remove('active');
+            loadingIndicator.classList.remove('active');
         }
 
-        function showError(message) {
-            document.getElementById('error').textContent = message;
-            document.getElementById('error').style.display = 'block';
-            hideLoading();
+        function clearResult() {
+            resultBanner.style.display = 'none';
+            explanationBox.style.display = 'none';
+            factorsGrid.innerHTML = '';
+            state.lastResult = null;
         }
 
-        async function getRecommendation() {
-            showLoading();
-
-            try {
-                const gameState = getGameState();
-
-                const response = await fetch(`${API_URL}/api/get_recommendation`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(gameState)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                // Display recommendation
-                document.getElementById('actionResult').textContent = data.action.toUpperCase();
-                if (data.amount > 0 && data.action === 'raise') {
-                    document.getElementById('actionResult').textContent += ` $${data.amount.toFixed(2)}`;
-                }
-                document.getElementById('explanation').textContent = data.explanation;
-                document.getElementById('recommendation').style.display = 'block';
-
-                // Display factors
-                displayFactors(data.all_factors);
-
-                hideLoading();
-            } catch (error) {
-                showError(`Error: ${error.message}. Make sure the backend is running.`);
+        function formatFactorValue(key, value) {
+            if (value === null || value === undefined) {
+                return '-';
             }
-        }
-
-        async function calculateEquity() {
-            showLoading();
-
-            try {
-                const gameState = getGameState();
-
-                const response = await fetch(`${API_URL}/api/get_equity`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        hero_cards: gameState.hero_cards,
-                        board: gameState.board,
-                        villain_range: gameState.villain_range,
-                        num_opponents: 1,
-                        iterations: 10000
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                // Display equity
-                document.getElementById('actionResult').textContent = `${data.win_percentage.toFixed(1)}%`;
-                document.getElementById('explanation').textContent = `Win probability against opponent range`;
-                document.getElementById('recommendation').style.display = 'block';
-
-                hideLoading();
-            } catch (error) {
-                showError(`Error: ${error.message}. Make sure the backend is running.`);
+            if (['equity', 'pot_odds', 'hand_strength', 'position_factor', 'fold_equity', 'board_wetness', 'draw_probability'].includes(key)) {
+                return `${(value * 100).toFixed(1)}%`;
             }
+            if (key === 'outs') {
+                return `${Math.round(value)}`;
+            }
+            return `${Number(value).toFixed(2)}`;
         }
 
         function displayFactors(factors) {
-            if (!factors) return;
-
-            const factorsGrid = document.getElementById('factorsGrid');
+            if (!factors) {
+                return;
+            }
+            const keys = ['equity', 'pot_odds', 'hand_strength', 'position_factor', 'stack_to_pot_ratio', 'fold_equity', 'outs', 'board_wetness'];
             factorsGrid.innerHTML = '';
+            keys.forEach(key => {
+                if (factors[key] === undefined) {
+                    return;
+                }
+                const card = document.createElement('div');
+                card.className = 'factor-card';
 
-            const importantFactors = [
-                { key: 'equity', name: 'Equity', format: 'percent' },
-                { key: 'pot_odds', name: 'Pot Odds', format: 'percent' },
-                { key: 'hand_strength', name: 'Hand Strength', format: 'percent' },
-                { key: 'position_factor', name: 'Position', format: 'percent' },
-                { key: 'stack_to_pot_ratio', name: 'SPR', format: 'number' },
-                { key: 'fold_equity', name: 'Fold Equity', format: 'percent' },
-                { key: 'outs', name: 'Outs', format: 'integer' },
-                { key: 'board_wetness', name: 'Board Wetness', format: 'percent' }
-            ];
+                const name = document.createElement('div');
+                name.className = 'factor-name';
+                const factorName = translations[state.language].factors.names[key] || key;
+                name.textContent = factorName;
 
-            importantFactors.forEach(factor => {
-                if (factors[factor.key] !== undefined) {
-                    const div = document.createElement('div');
-                    div.className = 'factor-item';
+                const value = document.createElement('div');
+                value.className = 'factor-value';
+                value.textContent = formatFactorValue(key, factors[key]);
 
-                    let value = factors[factor.key];
-                    if (factor.format === 'percent') {
-                        value = (value * 100).toFixed(1) + '%';
-                    } else if (factor.format === 'number') {
-                        value = value.toFixed(2);
-                    } else if (factor.format === 'integer') {
-                        value = Math.round(value);
-                    }
+                card.appendChild(name);
+                card.appendChild(value);
+                factorsGrid.appendChild(card);
+            });
+        }
 
-                    div.innerHTML = `
-                        <div class="factor-name">${factor.name}</div>
-                        <div class="factor-value">${value}</div>
-                    `;
+        function translateAction(action) {
+            if (!action) {
+                return '-';
+            }
+            const key = action.toLowerCase();
+            return actionLabels[state.language][key] || action.toUpperCase();
+        }
 
-                    factorsGrid.appendChild(div);
+        function showRecommendation(data) {
+            state.lastResult = { kind: 'recommendation', data };
+            const actionText = translateAction(data.action);
+            if (data.amount && data.action && data.action.toLowerCase() === 'raise' && Number(data.amount) > 0) {
+                actionValue.textContent = `${actionText} ${Number(data.amount).toFixed(2)}`;
+            } else {
+                actionValue.textContent = actionText;
+            }
+
+            if (typeof data.confidence === 'number') {
+                confidenceValue.textContent = `${(data.confidence * 100).toFixed(1)}% ${state.language === 'zh' ? '置信度' : 'confidence'}`;
+            } else {
+                confidenceValue.textContent = '';
+            }
+
+            resultBanner.style.display = 'block';
+
+            if (data.explanation) {
+                explanationBox.textContent = data.explanation;
+                explanationBox.style.display = 'block';
+            } else {
+                explanationBox.style.display = 'none';
+            }
+
+            displayFactors(data.all_factors || data.factors_used);
+        }
+
+        function showEquityOnly(data) {
+            state.lastResult = { kind: 'equity', data };
+            const percent = data.win_percentage ? data.win_percentage.toFixed(1) : (data.equity ? (data.equity * 100).toFixed(1) : '-');
+            actionValue.textContent = `${percent}%`;
+            confidenceValue.textContent = '';
+            resultBanner.style.display = 'block';
+            explanationBox.textContent = state.language === 'zh' ? '当前手牌对输入范围的胜率' : 'Win probability versus the selected range';
+            explanationBox.style.display = 'block';
+        }
+
+        function showError(message) {
+            if (!message) {
+                errorBox.textContent = '';
+                errorBox.classList.remove('active');
+                return;
+            }
+            errorBox.textContent = message;
+            errorBox.classList.add('active');
+        }
+
+        function validateBeforeRequest() {
+            if (state.heroCards.filter(Boolean).length !== 2) {
+                showError(t('errors.missingCards'));
+                return false;
+            }
+            const requiredBoard = streetBoardCounts[state.street];
+            if (state.board.filter(Boolean).length !== requiredBoard) {
+                showError(t('errors.boardRequirement'));
+                return false;
+            }
+            showError('');
+            return true;
+        }
+
+        async function request(endpoint, payload) {
+            const response = await fetch(`${API_URL}${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                const message = errorData.error || `HTTP ${response.status}`;
+                throw new Error(message);
+            }
+            return response.json();
+        }
+
+        function localizeBackendMessage(message) {
+            if (state.language === 'zh') {
+                if (message.includes('exactly two hero cards')) {
+                    return '德州扑克规则要求你必须持有两张不同的底牌。';
+                }
+                if (message.includes('Duplicate cards')) {
+                    return '出现重复卡牌，请重新选择。';
+                }
+                if (message.includes('community cards cannot exceed five')) {
+                    return '公共牌最多只能有五张。';
+                }
+                if (message.includes('requires exactly')) {
+                    return '当前阶段的公共牌数量不匹配，请核对阶段和牌面。';
+                }
+            }
+            return message;
+        }
+
+        async function handleRecommendation() {
+            if (!validateBeforeRequest()) {
+                return;
+            }
+            showLoading();
+            try {
+                const payload = gatherGameState();
+                const data = await request('/api/get_recommendation', payload);
+                showRecommendation(data);
+            } catch (error) {
+                showError(localizeBackendMessage(error.message));
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function handleEquityOnly() {
+            if (state.heroCards.filter(Boolean).length !== 2) {
+                showError(t('errors.missingCards'));
+                return;
+            }
+            showLoading();
+            try {
+                const payload = gatherGameState();
+                const data = await request('/api/get_equity', {
+                    hero_cards: payload.hero_cards,
+                    board: payload.board,
+                    villain_range: payload.villain_range,
+                    num_opponents: 1,
+                    iterations: 10000
+                });
+                showEquityOnly(data);
+            } catch (error) {
+                showError(localizeBackendMessage(error.message));
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function initPositionSelect() {
+            Object.entries(positionLabels).forEach(([value, labels]) => {
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = labels[state.language];
+                positionSelect.appendChild(option);
+            });
+            positionSelect.value = state.position;
+        }
+
+        function initStreetOptions() {
+            streetOptions.addEventListener('change', (event) => {
+                if (event.target && event.target.name === 'street') {
+                    const value = event.target.value;
+                    streetOptions.querySelectorAll('label').forEach(label => {
+                        label.classList.toggle('active', label.getAttribute('data-street') === value);
+                    });
+                    onStreetChange(value);
                 }
             });
         }
 
-        // Test API connection on load
-        window.onload = async function() {
-            try {
-                const response = await fetch(`${API_URL}/health`);
-                if (!response.ok) {
-                    console.error('Backend is not responding');
-                }
-            } catch (error) {
-                console.error('Cannot connect to backend:', error);
-                showError('Cannot connect to backend. Please ensure the Flask server is running (python backend/api/app.py)');
-            }
-        };
+        function initDeckAndSlots() {
+            renderSlots();
+            buildDeck();
+        }
+
+        function initLanguageToggle() {
+            langToggle.addEventListener('click', () => {
+                state.language = state.language === 'en' ? 'zh' : 'en';
+                translatePage();
+                renderSlots();
+            });
+        }
+
+        function initButtons() {
+            document.getElementById('recommendButton').addEventListener('click', handleRecommendation);
+            document.getElementById('equityButton').addEventListener('click', handleEquityOnly);
+            document.getElementById('resetButton').addEventListener('click', resetBoardSelections);
+        }
+
+        function initRiskSlider() {
+            riskSlider.addEventListener('input', () => {
+                riskValue.textContent = riskSlider.value;
+            });
+        }
+
+        function initHealthCheck() {
+            fetch(`${API_URL}/health`).catch(() => {
+                showError(state.language === 'zh' ? '后台服务未连接，请先运行 Python 后端 (python backend/api/app.py)。' : 'Cannot reach backend. Please run the Flask API (python backend/api/app.py).');
+            });
+        }
+
+        function bootstrap() {
+            initStreetOptions();
+            initPositionSelect();
+            initDeckAndSlots();
+            initButtons();
+            initRiskSlider();
+            initLanguageToggle();
+            translatePage();
+            initHealthCheck();
+        }
+
+        bootstrap();
     </script>
 </body>
 </html>
