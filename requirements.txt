@@ -1,7 +1,7 @@
 # Core dependencies
 numpy==1.24.3
 pandas==2.0.3
-scipy==1.11.1
+scipy==1.10.1
 
 # Web framework
 Flask==2.3.2
