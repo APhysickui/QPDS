@@ -5,6 +5,7 @@ scipy==1.10.1
 
 # Web framework
 Flask==2.3.2
+Werkzeug==2.3.7
 flask-cors==4.0.0
 flask-socketio==5.3.4
 
