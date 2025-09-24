@@ -381,10 +381,32 @@
             margin-top: 8px;
         }
 
-        .result-banner .confidence {
-            font-size: 0.9rem;
-            margin-top: 6px;
-            opacity: 0.7;
+        .result-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+            text-align: left;
+        }
+
+        .result-detail {
+            background: rgba(255, 255, 255, 0.18);
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .result-detail span {
+            display: block;
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            opacity: 0.65;
+            text-transform: uppercase;
+        }
+
+        .result-detail strong {
+            display: block;
+            margin-top: 4px;
+            font-size: 1.05rem;
         }
 
         .explanation-box {
@@ -419,6 +441,33 @@
             font-weight: 600;
             margin-top: 6px;
             color: #f0f4ff;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
+        }
+
+        .summary-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .summary-item span {
+            display: block;
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            opacity: 0.65;
+            text-transform: uppercase;
+        }
+
+        .summary-item strong {
+            display: block;
+            margin-top: 4px;
+            font-size: 1.05rem;
+            color: #f1f5ff;
         }
 
         .loading {
@@ -557,28 +606,28 @@
                 <div class="section">
                     <h3 data-i18n="state.parameters">筹码与参数</h3>
                     <div class="inputs-grid">
-                        <label class="field-label" data-i18n="fields.pot">
-                            底池大小
+                        <label class="field-label">
+                            <span data-i18n="fields.pot">底池大小</span>
                             <input type="number" id="potInput" min="0" step="0.01" value="100" data-i18n-placeholder="placeholders.pot">
                         </label>
-                        <label class="field-label" data-i18n="fields.toCall">
-                            需要跟注
+                        <label class="field-label">
+                            <span data-i18n="fields.toCall">需要跟注</span>
                             <input type="number" id="toCallInput" min="0" step="0.01" value="10" data-i18n-placeholder="placeholders.toCall">
                         </label>
-                        <label class="field-label" data-i18n="fields.heroStack">
-                            你的筹码
+                        <label class="field-label">
+                            <span data-i18n="fields.heroStack">你的筹码</span>
                             <input type="number" id="heroStackInput" min="0" step="0.01" value="500" data-i18n-placeholder="placeholders.heroStack">
                         </label>
-                        <label class="field-label" data-i18n="fields.villainStack">
-                            对手筹码
+                        <label class="field-label">
+                            <span data-i18n="fields.villainStack">对手筹码</span>
                             <input type="number" id="villainStackInput" min="0" step="0.01" value="500" data-i18n-placeholder="placeholders.villainStack">
                         </label>
-                        <label class="field-label" data-i18n="fields.position">
-                            你的位置
+                        <label class="field-label">
+                            <span data-i18n="fields.position">你的位置</span>
                             <select id="positionSelect"></select>
                         </label>
-                        <label class="field-label" data-i18n="fields.villainRange">
-                            对手范围
+                        <label class="field-label">
+                            <span data-i18n="fields.villainRange">对手范围</span>
                             <input type="text" id="rangeInput" data-i18n-placeholder="placeholders.villainRange" placeholder="AA,KK,QQ,AKs">
                         </label>
                     </div>
@@ -619,10 +668,24 @@
                 <div class="result-banner" id="resultBanner" style="display: none;">
                     <div class="action-label" data-i18n="result.action">推荐行动</div>
                     <div class="action-value" id="actionValue">-</div>
-                    <div class="confidence" id="confidenceValue"></div>
+                    <div class="result-details">
+                        <div class="result-detail">
+                            <span data-i18n="result.confidence">置信度</span>
+                            <strong id="confidenceValue">-</strong>
+                        </div>
+                        <div class="result-detail">
+                            <span data-i18n="result.ev">预期盈利</span>
+                            <strong id="evValue">-</strong>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="explanation-box" id="explanationBox" style="display: none;"></div>
+
+                <div>
+                    <h3 data-i18n="summary.heading">当前输入概览</h3>
+                    <div class="summary-grid" id="summaryGrid"></div>
+                </div>
 
                 <div>
                     <h3 data-i18n="factors.heading">关键因子</h3>
@@ -634,6 +697,24 @@
 
     <script>
         const API_URL = 'http://localhost:8080';
+
+        let deckGrid;
+        let heroSlots;
+        let boardSlots;
+        let streetOptions;
+        let positionSelect;
+        let riskSlider;
+        let riskValue;
+        let langToggle;
+        let loadingIndicator;
+        let actionValue;
+        let confidenceValue;
+        let evValue;
+        let resultBanner;
+        let explanationBox;
+        let factorsGrid;
+        let errorBox;
+        let summaryGrid;
 
         const translations = {
             en: {
@@ -678,6 +759,18 @@
                     position: 'Your Position',
                     villainRange: 'Villain Range'
                 },
+                summary: {
+                    heading: 'Current Inputs',
+                    items: {
+                        pot: 'Pot Size',
+                        toCall: 'Bet to Call',
+                        heroStack: 'Your Stack',
+                        villainStack: 'Villain Stack',
+                        street: 'Street',
+                        position: 'Position',
+                        risk: 'Risk Preference'
+                    }
+                },
                 placeholders: {
                     pot: 'e.g. 100',
                     toCall: 'e.g. 20',
@@ -700,7 +793,9 @@
                 },
                 loading: 'Crunching the hand for you...',
                 result: {
-                    action: 'Recommended Action'
+                    action: 'Recommended Action',
+                    confidence: 'Confidence',
+                    ev: 'Expected Value'
                 },
                 factors: {
                     heading: 'Key Factors',
@@ -712,7 +807,11 @@
                         stack_to_pot_ratio: 'SPR',
                         fold_equity: 'Fold Equity',
                         outs: 'Outs',
-                        board_wetness: 'Board Texture'
+                        board_wetness: 'Board Texture',
+                        effective_stack: 'Effective Stack',
+                        draw_probability: 'Draw Probability',
+                        implied_odds: 'Implied Odds',
+                        pot_commitment: 'Pot Commitment'
                     }
                 },
                 errors: {
@@ -762,6 +861,18 @@
                     position: '你的位置',
                     villainRange: '对手范围'
                 },
+                summary: {
+                    heading: '当前输入概览',
+                    items: {
+                        pot: '底池大小',
+                        toCall: '跟注金额',
+                        heroStack: '你的筹码',
+                        villainStack: '对手筹码',
+                        street: '当前阶段',
+                        position: '你的位置',
+                        risk: '风险偏好'
+                    }
+                },
                 placeholders: {
                     pot: '例如 100',
                     toCall: '例如 20',
@@ -784,7 +895,9 @@
                 },
                 loading: '正在为你量化牌局...',
                 result: {
-                    action: '推荐行动'
+                    action: '推荐行动',
+                    confidence: '置信度',
+                    ev: '期望值'
                 },
                 factors: {
                     heading: '关键因子',
@@ -796,7 +909,11 @@
                         stack_to_pot_ratio: 'SPR',
                         fold_equity: '弃牌率',
                         outs: '补牌数',
-                        board_wetness: '公共牌协调度'
+                        board_wetness: '公共牌协调度',
+                        effective_stack: '有效筹码',
+                        draw_probability: '听牌命中率',
+                        implied_odds: '隐含赔率',
+                        pot_commitment: '底池投入度'
                     }
                 },
                 errors: {
@@ -810,7 +927,12 @@
             BTN: { en: 'Button (BTN)', zh: '按钮位 (BTN)' },
             CO: { en: 'Cutoff (CO)', zh: '截断位 (CO)' },
             HJ: { en: 'Hijack (HJ)', zh: '劫持位 (HJ)' },
-            MP2: { en: 'Middle Position', zh: '中间位' },
+            LJ: { en: 'Lojack (LJ)', zh: '劫匪位 (LJ)' },
+            MP3: { en: 'Middle Position 3', zh: '中间位3' },
+            MP2: { en: 'Middle Position 2', zh: '中间位2' },
+            MP1: { en: 'Middle Position 1', zh: '中间位1' },
+            UTG2: { en: 'UTG +2', zh: '枪口+2' },
+            UTG1: { en: 'UTG +1', zh: '枪口+1' },
             UTG: { en: 'Under the Gun (UTG)', zh: '枪口位 (UTG)' },
             SB: { en: 'Small Blind (SB)', zh: '小盲位 (SB)' },
             BB: { en: 'Big Blind (BB)', zh: '大盲位 (BB)' }
@@ -859,21 +981,27 @@
             lastResult: null
         };
 
-        const deckGrid = document.getElementById('deckGrid');
-        const heroSlots = document.getElementById('heroSlots');
-        const boardSlots = document.getElementById('boardSlots');
-        const streetOptions = document.getElementById('streetOptions');
-        const positionSelect = document.getElementById('positionSelect');
-        const riskSlider = document.getElementById('riskSlider');
-        const riskValue = document.getElementById('riskValue');
-        const langToggle = document.getElementById('langToggle');
-        const loadingIndicator = document.getElementById('loading');
-        const actionValue = document.getElementById('actionValue');
-        const confidenceValue = document.getElementById('confidenceValue');
-        const resultBanner = document.getElementById('resultBanner');
-        const explanationBox = document.getElementById('explanationBox');
-        const factorsGrid = document.getElementById('factorsGrid');
-        const errorBox = document.getElementById('errorBox');
+        window.addEventListener('DOMContentLoaded', () => {
+            deckGrid = document.getElementById('deckGrid');
+            heroSlots = document.getElementById('heroSlots');
+            boardSlots = document.getElementById('boardSlots');
+            streetOptions = document.getElementById('streetOptions');
+            positionSelect = document.getElementById('positionSelect');
+            riskSlider = document.getElementById('riskSlider');
+            riskValue = document.getElementById('riskValue');
+            langToggle = document.getElementById('langToggle');
+            loadingIndicator = document.getElementById('loading');
+            actionValue = document.getElementById('actionValue');
+            confidenceValue = document.getElementById('confidenceValue');
+            evValue = document.getElementById('evValue');
+            resultBanner = document.getElementById('resultBanner');
+            explanationBox = document.getElementById('explanationBox');
+            factorsGrid = document.getElementById('factorsGrid');
+            errorBox = document.getElementById('errorBox');
+            summaryGrid = document.getElementById('summaryGrid');
+
+            bootstrap();
+        });
 
         function t(key) {
             const parts = key.split('.');
@@ -929,6 +1057,8 @@
             });
 
             langToggle.textContent = state.language === 'en' ? '中文' : 'English';
+
+            refreshSummary();
 
             if (state.lastResult) {
                 const snapshot = state.lastResult;
@@ -1012,6 +1142,8 @@
             state.board.forEach((card, index) => {
                 boardSlots.appendChild(createSlotElement('board', index, card));
             });
+
+            refreshSummary();
         }
 
         function onSlotClick(type, index) {
@@ -1151,6 +1283,8 @@
             resultBanner.style.display = 'none';
             explanationBox.style.display = 'none';
             factorsGrid.innerHTML = '';
+            confidenceValue.textContent = '-';
+            evValue.textContent = '-';
             state.lastResult = null;
         }
 
@@ -1158,7 +1292,7 @@
             if (value === null || value === undefined) {
                 return '-';
             }
-            if (['equity', 'pot_odds', 'hand_strength', 'position_factor', 'fold_equity', 'board_wetness', 'draw_probability'].includes(key)) {
+            if (['equity', 'pot_odds', 'hand_strength', 'position_factor', 'fold_equity', 'board_wetness', 'draw_probability', 'implied_odds', 'pot_commitment'].includes(key)) {
                 return `${(value * 100).toFixed(1)}%`;
             }
             if (key === 'outs') {
@@ -1171,7 +1305,20 @@
             if (!factors) {
                 return;
             }
-            const keys = ['equity', 'pot_odds', 'hand_strength', 'position_factor', 'stack_to_pot_ratio', 'fold_equity', 'outs', 'board_wetness'];
+            const keys = [
+                'equity',
+                'pot_odds',
+                'hand_strength',
+                'position_factor',
+                'stack_to_pot_ratio',
+                'fold_equity',
+                'outs',
+                'board_wetness',
+                'draw_probability',
+                'implied_odds',
+                'effective_stack',
+                'pot_commitment'
+            ];
             factorsGrid.innerHTML = '';
             keys.forEach(key => {
                 if (factors[key] === undefined) {
@@ -1195,6 +1342,53 @@
             });
         }
 
+        function getNumericValue(id) {
+            const el = document.getElementById(id);
+            if (!el) {
+                return 0;
+            }
+            return parseFloat(el.value) || 0;
+        }
+
+        function formatChips(amount) {
+            const fixed = Number(amount).toFixed(2);
+            return fixed.replace(/\.00$/, '');
+        }
+
+        function refreshSummary() {
+            if (!summaryGrid) {
+                return;
+            }
+
+            const summaryLabels = translations[state.language].summary.items;
+            const summaryData = [
+                { key: 'pot', value: formatChips(getNumericValue('potInput')) },
+                { key: 'toCall', value: formatChips(getNumericValue('toCallInput')) },
+                { key: 'heroStack', value: formatChips(getNumericValue('heroStackInput')) },
+                { key: 'villainStack', value: formatChips(getNumericValue('villainStackInput')) },
+                { key: 'street', value: t(`streets.${state.street}`) },
+                { key: 'position', value: positionLabels[state.position][state.language] },
+                { key: 'risk', value: `${riskSlider ? riskSlider.value : 5}/10` }
+            ];
+
+            summaryGrid.innerHTML = '';
+
+            summaryData.forEach(({ key, value }) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'summary-item';
+
+                const label = document.createElement('span');
+                label.textContent = summaryLabels[key] || key;
+
+                const strong = document.createElement('strong');
+                strong.textContent = value;
+
+                wrapper.appendChild(label);
+                wrapper.appendChild(strong);
+                summaryGrid.appendChild(wrapper);
+            });
+        }
+
         function translateAction(action) {
             if (!action) {
                 return '-';
@@ -1207,15 +1401,21 @@
             state.lastResult = { kind: 'recommendation', data };
             const actionText = translateAction(data.action);
             if (data.amount && data.action && data.action.toLowerCase() === 'raise' && Number(data.amount) > 0) {
-                actionValue.textContent = `${actionText} ${Number(data.amount).toFixed(2)}`;
+                actionValue.textContent = `${actionText} ${formatChips(data.amount)}`;
             } else {
                 actionValue.textContent = actionText;
             }
 
             if (typeof data.confidence === 'number') {
-                confidenceValue.textContent = `${(data.confidence * 100).toFixed(1)}% ${state.language === 'zh' ? '置信度' : 'confidence'}`;
+                confidenceValue.textContent = `${(data.confidence * 100).toFixed(1)}%`;
             } else {
-                confidenceValue.textContent = '';
+                confidenceValue.textContent = '-';
+            }
+
+            if (typeof data.expected_value === 'number') {
+                evValue.textContent = formatChips(data.expected_value);
+            } else {
+                evValue.textContent = '-';
             }
 
             resultBanner.style.display = 'block';
@@ -1228,16 +1428,20 @@
             }
 
             displayFactors(data.all_factors || data.factors_used);
+            refreshSummary();
         }
 
         function showEquityOnly(data) {
             state.lastResult = { kind: 'equity', data };
             const percent = data.win_percentage ? data.win_percentage.toFixed(1) : (data.equity ? (data.equity * 100).toFixed(1) : '-');
             actionValue.textContent = `${percent}%`;
-            confidenceValue.textContent = '';
+            confidenceValue.textContent = '-';
+            evValue.textContent = '-';
             resultBanner.style.display = 'block';
             explanationBox.textContent = state.language === 'zh' ? '当前手牌对输入范围的胜率' : 'Win probability versus the selected range';
             explanationBox.style.display = 'block';
+            factorsGrid.innerHTML = '';
+            refreshSummary();
         }
 
         function showError(message) {
@@ -1345,6 +1549,11 @@
                 positionSelect.appendChild(option);
             });
             positionSelect.value = state.position;
+
+            positionSelect.addEventListener('change', () => {
+                state.position = positionSelect.value;
+                refreshSummary();
+            });
         }
 
         function initStreetOptions() {
@@ -1364,6 +1573,16 @@
             buildDeck();
         }
 
+        function initNumericInputs() {
+            ['potInput', 'toCallInput', 'heroStackInput', 'villainStackInput'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) {
+                    return;
+                }
+                el.addEventListener('input', refreshSummary);
+            });
+        }
+
         function initLanguageToggle() {
             langToggle.addEventListener('click', () => {
                 state.language = state.language === 'en' ? 'zh' : 'en';
@@ -1381,7 +1600,11 @@
         function initRiskSlider() {
             riskSlider.addEventListener('input', () => {
                 riskValue.textContent = riskSlider.value;
+                refreshSummary();
             });
+
+            riskValue.textContent = riskSlider.value;
+            refreshSummary();
         }
 
         function initHealthCheck() {
@@ -1395,13 +1618,12 @@
             initPositionSelect();
             initDeckAndSlots();
             initButtons();
+            initNumericInputs();
             initRiskSlider();
             initLanguageToggle();
             translatePage();
             initHealthCheck();
         }
-
-        bootstrap();
     </script>
 </body>
 </html>

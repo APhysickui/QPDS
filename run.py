@@ -35,9 +35,16 @@ def main():
         pip = os.path.join(venv_path, "bin", "pip")
         python = os.path.join(venv_path, "bin", "python")
 
+    if not os.path.exists(pip):
+        print("📦 Bootstrapping pip inside virtual environment...")
+        subprocess.run([python, "-m", "ensurepip", "--upgrade"], check=True)
+
+    print("🚀 Upgrading pip...")
+    subprocess.run([python, "-m", "pip", "install", "--upgrade", "pip"], check=True)
+
     # Install requirements
     print("📦 Installing dependencies...")
-    subprocess.run([pip, "install", "-q", "-r", "requirements.txt"])
+    subprocess.run([python, "-m", "pip", "install", "-q", "-r", "requirements.txt"], check=True)
 
     print()
     print("🚀 Starting QPDS Backend...")

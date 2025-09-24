@@ -276,53 +276,66 @@ class EquityCalculator:
         """Calculate equity using Monte Carlo simulation"""
         wins = 0
         ties = 0
+        trials = 0
 
-        # Filter villain range if provided
+        precomputed_range = None
         if villain_range:
             villain_range.remove_conflicting_cards(hero_cards + board)
-            villain_hands = list(villain_range.get_hands())
-            if not villain_hands:
+            precomputed_range = list(villain_range.get_hands())
+            if not precomputed_range:
                 return 1.0
-        else:
-            villain_hands = None
 
         for _ in range(iterations):
-            # Deal random board completion
             sim_deck = available_deck.copy()
             random.shuffle(sim_deck)
 
+            villain_hands_only = []
+
+            if precomputed_range is not None:
+                range_candidates = precomputed_range.copy()
+                used_cards = set()
+                success = True
+
+                for _ in range(num_opponents):
+                    valid_hands = [
+                        hand for hand in range_candidates
+                        if all(card not in used_cards for card in hand)
+                    ]
+                    if not valid_hands:
+                        success = False
+                        break
+                    chosen = random.choice(valid_hands)
+                    villain_hands_only.append(list(chosen))
+                    used_cards.update(chosen)
+                    range_candidates.remove(chosen)
+
+                if not success:
+                    continue
+
+                # Remove villain cards from the deck to avoid reusing them on the board
+                sim_deck = [card for card in sim_deck if card not in used_cards]
+            else:
+                needed_cards = num_opponents * 2
+                if len(sim_deck) < needed_cards:
+                    continue
+                sampled = sim_deck[:needed_cards]
+                villain_hands_only = [
+                    sampled[i * 2:(i + 1) * 2] for i in range(num_opponents)
+                ]
+                sim_deck = sim_deck[needed_cards:]
+
             cards_needed = 5 - len(board)
+            if len(sim_deck) < cards_needed:
+                continue
+
             board_completion = sim_deck[:cards_needed]
             full_board = board + board_completion
 
             hero_hand = hero_cards + full_board
+            villain_hands_sim = [hand + full_board for hand in villain_hands_only]
 
-            # Deal villain hands
-            remaining_deck = sim_deck[cards_needed:]
-            villain_hands_sim = []
+            trials += 1
 
-            for opp in range(num_opponents):
-                if villain_hands:
-                    # Select from range
-                    valid_hands = [h for h in villain_hands
-                                  if all(c not in board_completion for c in h)]
-                    if not valid_hands:
-                        continue
-                    villain_hand = random.choice(valid_hands)
-                else:
-                    # Random villain hand
-                    if len(remaining_deck) < 2:
-                        continue
-                    villain_hand = remaining_deck[:2]
-                    remaining_deck = remaining_deck[2:]
-
-                villain_hands_sim.append(list(villain_hand) + full_board)
-
-            if not villain_hands_sim:
-                wins += 1
-                continue
-
-            # Evaluate hands
             hero_beats_all = True
             hero_ties_best = False
 
@@ -340,7 +353,10 @@ class EquityCalculator:
             elif hero_ties_best:
                 ties += 1
 
-        return (wins + ties * 0.5) / iterations
+        if trials == 0:
+            return 0.5
+
+        return (wins + ties * 0.5) / trials
 
     def _create_cache_key(
         self,
@@ -352,7 +368,15 @@ class EquityCalculator:
         """Create a cache key for the equity calculation"""
         hero_str = ''.join(sorted(str(c) for c in hero_cards))
         board_str = ''.join(sorted(str(c) for c in board))
-        range_str = str(sorted(villain_range.get_hands())) if villain_range else "random"
+
+        if villain_range:
+            range_strings = sorted(
+                ''.join(sorted(str(card) for card in hand))
+                for hand in villain_range.get_hands()
+            )
+            range_str = '|'.join(range_strings)
+        else:
+            range_str = "random"
 
         key_str = f"{hero_str}|{board_str}|{range_str}|{num_opponents}"
         return hashlib.md5(key_str.encode()).hexdigest()

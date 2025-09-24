@@ -52,8 +52,8 @@ class TestEquityCalculator:
             iterations=5000
         )
 
-        # Flush draw should have about 35-40% equity
-        assert 0.30 < equity < 0.45
+        # Nut flush draw + overcards should hover just below 50% equity
+        assert 0.45 < equity < 0.52
 
     def test_set_vs_overpair(self):
         """Test set vs overpair on flop"""
@@ -82,8 +82,8 @@ class TestEquityCalculator:
             iterations=5000
         )
 
-        # AKs should have lower equity against 3 opponents
-        assert equity < 0.35
+        # AKs should drop well below heads-up equity yet stay above bust-anything ranges
+        assert 0.35 < equity < 0.45
 
 
 class TestRange:
