@@ -46,7 +46,7 @@ def main():
     print("📦 Installing dependencies...")
     subprocess.run([python, "-m", "pip", "install", "-q", "-r", "requirements.txt"], check=True)
 
-    port = os.environ.get("PORT", "5000")
+    port = os.environ.get("PORT", "8080")
     env = os.environ.copy()
     env["PORT"] = port
 

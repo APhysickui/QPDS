@@ -40,7 +40,7 @@ python3 run.py
 脚本会：
 1. 检查/创建虚拟环境 `venv/`
 2. 自动安装 `requirements.txt`
-3. 启动后端 API（默认 http://localhost:5000 ）
+3. 启动后端 API（默认 http://localhost:8080 ）
 
 随后在浏览器打开 `frontend/index.html` 即可使用界面。脚本运行的终端窗口保持开启，按 `Ctrl+C` 可随时停止。
 
