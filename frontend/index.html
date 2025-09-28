@@ -33,6 +33,13 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 26px;
+            position: relative;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 12px;
+            align-items: center;
         }
 
         .title-block h1 {
@@ -95,6 +102,282 @@
             border-radius: 12px;
             padding: 14px 16px;
             border-left: 4px solid rgba(142, 197, 252, 0.9);
+        }
+
+        .game-manual-btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.14);
+            color: #f7f9fc;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .game-manual-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #374785, #243B55);
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            margin: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            color: #f7f9fc;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #f7f9fc;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .manual-section {
+            margin-bottom: 24px;
+        }
+
+        .manual-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: #8ec5fc;
+        }
+
+        .manual-section p, .manual-section li {
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .manual-section ul {
+            padding-left: 20px;
+        }
+
+        .hand-rankings {
+            display: grid;
+            gap: 12px;
+        }
+
+        .hand-rank {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hand-rank-name {
+            font-weight: 600;
+        }
+
+        .hand-rank-example {
+            font-family: monospace;
+            color: #8ec5fc;
+        }
+
+        .position-categories {
+            margin: 16px 0;
+        }
+
+        .position-category {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-left: 4px solid #8ec5fc;
+        }
+
+        .position-category h4 {
+            margin: 0 0 12px 0;
+            color: #8ec5fc;
+            font-size: 1.1rem;
+        }
+
+        .position-category ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .position-category li {
+            margin-bottom: 8px;
+        }
+
+        .position-tips {
+            background: rgba(142, 197, 252, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .position-tips h4 {
+            margin: 0 0 12px 0;
+            color: #8ec5fc;
+        }
+
+        .position-tips ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .position-tips li {
+            margin-bottom: 8px;
+        }
+
+        .beginner-tip {
+            background: linear-gradient(135deg, rgba(142, 197, 252, 0.15), rgba(68, 189, 50, 0.1));
+            border: 2px solid rgba(142, 197, 252, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 5px rgba(142, 197, 252, 0.3); }
+            to { box-shadow: 0 0 20px rgba(142, 197, 252, 0.6); }
+        }
+
+        .beginner-tip h3 {
+            margin: 0 0 12px 0;
+            color: #8ec5fc;
+            font-size: 1.2rem;
+        }
+
+        .beginner-steps {
+            margin: 12px 0;
+            padding-left: 20px;
+            line-height: 1.6;
+        }
+
+        .beginner-steps li {
+            margin-bottom: 8px;
+            color: #f0f4ff;
+        }
+
+        .dismiss-tip {
+            background: rgba(142, 197, 252, 0.2);
+            border: 1px solid rgba(142, 197, 252, 0.4);
+            color: #f0f4ff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .dismiss-tip:hover {
+            background: rgba(142, 197, 252, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .beginner-tip.hidden {
+            display: none;
+        }
+
+        .hand-categories {
+            margin: 16px 0;
+        }
+
+        .hand-category {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .hand-category.premium {
+            border-left: 4px solid #4CAF50;
+        }
+
+        .hand-category.strong {
+            border-left: 4px solid #FF9800;
+        }
+
+        .hand-category.speculative {
+            border-left: 4px solid #2196F3;
+        }
+
+        .hand-category h4 {
+            margin: 0 0 12px 0;
+            font-size: 1rem;
+        }
+
+        .hand-examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .hand-example {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #8ec5fc;
+        }
+
+        .hand-tips {
+            background: rgba(142, 197, 252, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+        }
+
+        .hand-tips p {
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.5;
         }
 
         .lesson-item strong {
@@ -544,12 +827,31 @@
                 <h1 data-i18n="title">QPDS</h1>
                 <p data-i18n="subtitle">量化德州扑克决策辅助系统</p>
             </div>
-            <button id="langToggle" class="lang-toggle">English</button>
+            <div class="header-buttons">
+                <button class="game-manual-btn" id="gameManualBtn" data-i18n="buttons.gameManual">🃏 游戏手册</button>
+                <button id="langToggle" class="lang-toggle">English</button>
+            </div>
         </header>
 
         <div class="layout">
             <section class="panel" id="lessonPanel">
                 <h2 data-i18n="lesson.heading">无限注德州扑克：规则速览</h2>
+
+                <div class="beginner-tip" id="beginnerTip">
+                    <h3 data-i18n="beginner.title">🚀 新手快速入门</h3>
+                    <div class="tip-content">
+                        <p data-i18n="beginner.intro">第一次使用？按以下步骤开始：</p>
+                        <ol class="beginner-steps">
+                            <li data-i18n="beginner.step1">选择底牌：点击左边"你的底牌"区域的空槽，然后从下方牌堆选择两张牌</li>
+                            <li data-i18n="beginner.step2">设置阶段：选择当前游戏阶段（建议新手从"翻前"开始）</li>
+                            <li data-i18n="beginner.step3">输入参数：设置底池100、跟注20、双方筹码各500</li>
+                            <li data-i18n="beginner.step4">选择位置：如不确定选择"按钮位(BTN)"</li>
+                            <li data-i18n="beginner.step5">获取建议：点击"获取决策建议"查看推荐行动</li>
+                        </ol>
+                        <button class="dismiss-tip" id="dismissTip" data-i18n="beginner.dismiss">我知道了</button>
+                    </div>
+                </div>
+
                 <div class="lesson-list">
                     <div class="lesson-item">
                         <strong data-i18n="lesson.goal.title">核心目标</strong>
@@ -695,6 +997,200 @@
         </div>
     </div>
 
+    <!-- 游戏手册模态框 -->
+    <div class="modal-overlay" id="gameManualModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" data-i18n="manual.title">德州扑克游戏手册</h2>
+                <button class="modal-close" id="closeManualBtn">&times;</button>
+            </div>
+
+            <div class="manual-section">
+                <h3 data-i18n="manual.basicRules">基本规则</h3>
+                <p data-i18n="manual.basicRulesText">德州扑克（Texas Hold'em）是一种流行的扑克变体，每位玩家发2张底牌，通过与5张公共牌结合组成最佳的5张牌型。</p>
+            </div>
+
+            <div class="manual-section">
+                <h3 data-i18n="manual.gameFlow">游戏流程</h3>
+                <ul>
+                    <li><strong data-i18n="manual.preflop">翻前（Pre-flop）</strong>：<span data-i18n="manual.preflopDesc">每位玩家获得2张底牌，根据牌力决定跟注、加注或弃牌</span></li>
+                    <li><strong data-i18n="manual.flop">翻牌（Flop）</strong>：<span data-i18n="manual.flopDesc">发出前3张公共牌，进行新一轮下注</span></li>
+                    <li><strong data-i18n="manual.turn">转牌（Turn）</strong>：<span data-i18n="manual.turnDesc">发出第4张公共牌，继续下注</span></li>
+                    <li><strong data-i18n="manual.river">河牌（River）</strong>：<span data-i18n="manual.riverDesc">发出第5张公共牌，最后一轮下注</span></li>
+                    <li><strong data-i18n="manual.showdown">摊牌（Showdown）</strong>：<span data-i18n="manual.showdownDesc">比较牌型大小，最大牌型获胜</span></li>
+                </ul>
+            </div>
+
+            <div class="manual-section">
+                <h3 data-i18n="manual.handRankings">牌型排名（从大到小）</h3>
+                <div class="hand-rankings">
+                    <div class="hand-rank">
+                        <span class="hand-rank-name" data-i18n="manual.royalFlush">皇家同花顺</span>
+                        <span class="hand-rank-example">A♠ K♠ Q♠ J♠ 10♠</span>
+                    </div>
+                    <div class="hand-rank">
+                        <span class="hand-rank-name" data-i18n="manual.straightFlush">同花顺</span>
+                        <span class="hand-rank-example">9♥ 8♥ 7♥ 6♥ 5♥</span>
+                    </div>
+                    <div class="hand-rank">
+                        <span class="hand-rank-name" data-i18n="manual.fourOfKind">四条</span>
+                        <span class="hand-rank-example">K♣ K♦ K♥ K♠ 3♦</span>
+                    </div>
+                    <div class="hand-rank">
+                        <span class="hand-rank-name" data-i18n="manual.fullHouse">葫芦</span>
+                        <span class="hand-rank-example">Q♠ Q♥ Q♦ 7♣ 7♠</span>
+                    </div>
+                    <div class="hand-rank">
+                        <span class="hand-rank-name" data-i18n="manual.flush">同花</span>
+                        <span class="hand-rank-example">A♦ J♦ 9♦ 6♦ 2♦</span>
+                    </div>
+                    <div class="hand-rank">
+                        <span class="hand-rank-name" data-i18n="manual.straight">顺子</span>
+                        <span class="hand-rank-example">10♠ 9♥ 8♦ 7♣ 6♠</span>
+                    </div>
+                    <div class="hand-rank">
+                        <span class="hand-rank-name" data-i18n="manual.threeOfKind">三条</span>
+                        <span class="hand-rank-example">8♣ 8♦ 8♥ K♠ 4♦</span>
+                    </div>
+                    <div class="hand-rank">
+                        <span class="hand-rank-name" data-i18n="manual.twoPair">两对</span>
+                        <span class="hand-rank-example">A♠ A♥ 5♣ 5♦ 9♠</span>
+                    </div>
+                    <div class="hand-rank">
+                        <span class="hand-rank-name" data-i18n="manual.onePair">一对</span>
+                        <span class="hand-rank-example">J♦ J♠ 10♥ 8♣ 3♦</span>
+                    </div>
+                    <div class="hand-rank">
+                        <span class="hand-rank-name" data-i18n="manual.highCard">高牌</span>
+                        <span class="hand-rank-example">A♠ K♦ Q♥ 8♣ 5♠</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="manual-section">
+                <h3 data-i18n="manual.keyConcepts">关键概念</h3>
+                <ul>
+                    <li><strong data-i18n="manual.potOdds">底池赔率（Pot Odds）</strong>：<span data-i18n="manual.potOddsDesc">当前跟注所需筹码与底池大小的比例</span></li>
+                    <li><strong data-i18n="manual.impliedOdds">隐含赔率（Implied Odds）</strong>：<span data-i18n="manual.impliedOddsDesc">考虑后续可能赢得筹码的赔率</span></li>
+                    <li><strong data-i18n="manual.position">位置（Position）</strong>：<span data-i18n="manual.positionDesc">相对于庄家位置，后位置有信息优势</span></li>
+                    <li><strong data-i18n="manual.spr">筹码-底池比（SPR）</strong>：<span data-i18n="manual.sprDesc">有效筹码除以底池大小</span></li>
+                    <li><strong data-i18n="manual.draws">听牌（Draw）</strong>：<span data-i18n="manual.drawsDesc">需要特定牌才能成牌的牌型</span></li>
+                </ul>
+            </div>
+
+            <div class="manual-section">
+                <h3 data-i18n="manual.positions">位置详解</h3>
+                <p data-i18n="manual.positionsIntro">在德州扑克中，你相对于庄家按钮的位置决定了行动顺序，是影响策略的关键因素：</p>
+
+                <div class="position-categories">
+                    <div class="position-category">
+                        <h4 data-i18n="manual.earlyPositions">前位（Early Position）- 最先行动</h4>
+                        <ul>
+                            <li><strong data-i18n="manual.utg">UTG（枪口位）</strong>：<span data-i18n="manual.utgDesc">翻前第一个行动，信息最少，需要最强的牌</span></li>
+                            <li><strong data-i18n="manual.utg1">UTG+1</strong>：<span data-i18n="manual.utg1Desc">第二个行动位置，仍然需要较强手牌</span></li>
+                            <li><strong data-i18n="manual.utg2">UTG+2</strong>：<span data-i18n="manual.utg2Desc">可以略微放宽手牌要求</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="position-category">
+                        <h4 data-i18n="manual.middlePositions">中位（Middle Position）</h4>
+                        <ul>
+                            <li><strong data-i18n="manual.mp1">MP1（中间位1）</strong>：<span data-i18n="manual.mp1Desc">可以玩更多边际手牌</span></li>
+                            <li><strong data-i18n="manual.mp2">MP2（中间位2）</strong>：<span data-i18n="manual.mp2Desc">位置开始变得有利</span></li>
+                            <li><strong data-i18n="manual.mp3">MP3（中间位3）</strong>：<span data-i18n="manual.mp3Desc">接近晚位的优势</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="position-category">
+                        <h4 data-i18n="manual.latePositions">后位（Late Position）- 信息优势</h4>
+                        <ul>
+                            <li><strong data-i18n="manual.lj">LJ（劫匪位）</strong>：<span data-i18n="manual.ljDesc">可以观察前面玩家行动后决策</span></li>
+                            <li><strong data-i18n="manual.hj">HJ（劫持位）</strong>：<span data-i18n="manual.hjDesc">非常有利的位置，可以偷盲</span></li>
+                            <li><strong data-i18n="manual.co">CO（截断位）</strong>：<span data-i18n="manual.coDesc">仅次于按钮位的优势位置</span></li>
+                            <li><strong data-i18n="manual.btn">BTN（按钮位）</strong>：<span data-i18n="manual.btnDesc">翻后永远最后行动，最佳位置</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="position-category">
+                        <h4 data-i18n="manual.blindPositions">盲注位（Blind Positions）</h4>
+                        <ul>
+                            <li><strong data-i18n="manual.sb">SB（小盲位）</strong>：<span data-i18n="manual.sbDesc">翻后第一个行动，位置最差但已投入一半大盲</span></li>
+                            <li><strong data-i18n="manual.bb">BB（大盲位）</strong>：<span data-i18n="manual.bbDesc">翻前最后行动，翻后第二个行动</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="position-tips">
+                    <h4 data-i18n="manual.positionStrategy">位置策略要点</h4>
+                    <ul>
+                        <li data-i18n="manual.tip1">前位需要更强的起手牌，因为后面还有很多玩家要行动</li>
+                        <li data-i18n="manual.tip2">后位可以玩更多投机性手牌，观察对手行动后再决策</li>
+                        <li data-i18n="manual.tip3">按钮位是最有利位置，可以用更宽的范围加注和偷盲</li>
+                        <li data-i18n="manual.tip4">盲注位置翻后不利，但翻前已有投入要考虑底池赔率</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="manual-section">
+                <h3 data-i18n="manual.strategies">常用策略概念</h3>
+                <ul>
+                    <li><strong data-i18n="manual.tag">紧凶（TAG）</strong>：<span data-i18n="manual.tagDesc">只玩强牌但玩得激进</span></li>
+                    <li><strong data-i18n="manual.lag">松凶（LAG）</strong>：<span data-i18n="manual.lagDesc">玩较多牌型且激进下注</span></li>
+                    <li><strong data-i18n="manual.valueBet">价值下注</strong>：<span data-i18n="manual.valueBetDesc">有强牌时下注获取价值</span></li>
+                    <li><strong data-i18n="manual.bluff">诈唬（Bluff）</strong>：<span data-i18n="manual.bluffDesc">用弱牌下注迫使对手弃牌</span></li>
+                    <li><strong data-i18n="manual.semiBluff">半诈唬</strong>：<span data-i18n="manual.semiBluffDesc">用听牌下注，既可能成牌也可能让对手弃牌</span></li>
+                </ul>
+            </div>
+
+            <div class="manual-section">
+                <h3 data-i18n="manual.startingHands">新手起手牌建议</h3>
+                <p data-i18n="manual.startingHandsIntro">作为新手，建议只玩以下强牌，避免复杂决策：</p>
+
+                <div class="hand-categories">
+                    <div class="hand-category premium">
+                        <h4 data-i18n="manual.premiumHands">顶级强牌（任何位置都可以玩）</h4>
+                        <div class="hand-examples">
+                            <span class="hand-example">AA</span>
+                            <span class="hand-example">KK</span>
+                            <span class="hand-example">QQ</span>
+                            <span class="hand-example">AKs</span>
+                            <span class="hand-example">AKo</span>
+                        </div>
+                    </div>
+
+                    <div class="hand-category strong">
+                        <h4 data-i18n="manual.strongHands">强牌（中后位可以玩）</h4>
+                        <div class="hand-examples">
+                            <span class="hand-example">JJ</span>
+                            <span class="hand-example">TT</span>
+                            <span class="hand-example">99</span>
+                            <span class="hand-example">AQs</span>
+                            <span class="hand-example">AQo</span>
+                            <span class="hand-example">AJs</span>
+                            <span class="hand-example">KQs</span>
+                        </div>
+                    </div>
+
+                    <div class="hand-category speculative">
+                        <h4 data-i18n="manual.speculativeHands">投机牌（仅后位考虑）</h4>
+                        <div class="hand-examples">
+                            <span class="hand-example">88-22</span>
+                            <span class="hand-example">ATs</span>
+                            <span class="hand-example">A9s-A2s</span>
+                            <span class="hand-example">KJs</span>
+                            <span class="hand-example">QJs</span>
+                            <span class="hand-example">JTs</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hand-tips">
+                    <p data-i18n="manual.handTips">💡 "s"表示同花色，"o"表示不同花色。新手建议：前位只玩顶级强牌，后位可以适当放宽。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const API_URL = 'http://localhost:8080';
 
@@ -720,6 +1216,16 @@
             en: {
                 title: 'QPDS',
                 subtitle: 'Quantitative Poker Decision System',
+                beginner: {
+                    title: '🚀 Quick Start Guide',
+                    intro: 'First time using? Follow these steps:',
+                    step1: 'Select hole cards: Click empty slots under "Your Hole Cards", then choose two cards from deck below',
+                    step2: 'Set stage: Choose current game stage (beginners should start with "Preflop")',
+                    step3: 'Input parameters: Set pot 100, to call 20, both stacks 500',
+                    step4: 'Choose position: If unsure, select "Button (BTN)"',
+                    step5: 'Get recommendation: Click "Get Recommendation" to see suggested action',
+                    dismiss: 'Got it!'
+                },
                 lesson: {
                     heading: 'No-Limit Texas Hold\'em Essentials',
                     goal: {
@@ -785,7 +1291,8 @@
                 buttons: {
                     recommend: 'Get Recommendation',
                     equity: 'Equity Only',
-                    reset: 'Reset Cards'
+                    reset: 'Reset Cards',
+                    gameManual: '🃏 Game Manual'
                 },
                 deck: {
                     heading: 'Deck (click to pick cards)',
@@ -817,11 +1324,111 @@
                 errors: {
                     missingCards: 'Please select two unique hole cards before running an analysis.',
                     boardRequirement: 'Please provide the correct number of community cards for the selected street.'
+                },
+                manual: {
+                    title: 'Texas Hold\'em Game Manual',
+                    basicRules: 'Basic Rules',
+                    basicRulesText: 'Texas Hold\'em is a popular poker variant where each player receives 2 hole cards and combines them with 5 community cards to form the best possible 5-card hand.',
+                    gameFlow: 'Game Flow',
+                    preflop: 'Pre-flop',
+                    preflopDesc: 'Each player receives 2 hole cards, decide to call, raise or fold based on hand strength',
+                    flop: 'Flop',
+                    flopDesc: 'First 3 community cards are dealt, new betting round begins',
+                    turn: 'Turn',
+                    turnDesc: '4th community card is dealt, continue betting',
+                    river: 'River',
+                    riverDesc: '5th community card is dealt, final betting round',
+                    showdown: 'Showdown',
+                    showdownDesc: 'Compare hand rankings, highest hand wins',
+                    handRankings: 'Hand Rankings (High to Low)',
+                    royalFlush: 'Royal Flush',
+                    straightFlush: 'Straight Flush',
+                    fourOfKind: 'Four of a Kind',
+                    fullHouse: 'Full House',
+                    flush: 'Flush',
+                    straight: 'Straight',
+                    threeOfKind: 'Three of a Kind',
+                    twoPair: 'Two Pair',
+                    onePair: 'One Pair',
+                    highCard: 'High Card',
+                    keyConcepts: 'Key Concepts',
+                    potOdds: 'Pot Odds',
+                    potOddsDesc: 'Ratio of current bet to pot size',
+                    impliedOdds: 'Implied Odds',
+                    impliedOddsDesc: 'Considering potential future winnings',
+                    position: 'Position',
+                    positionDesc: 'Relative to dealer button, later position has information advantage',
+                    spr: 'Stack-to-Pot Ratio (SPR)',
+                    sprDesc: 'Effective stack divided by pot size',
+                    draws: 'Draws',
+                    drawsDesc: 'Hands that need specific cards to improve',
+                    positions: 'Position Guide',
+                    positionsIntro: 'In Texas Hold\'em, your position relative to the dealer button determines action order and is crucial for strategy:',
+                    earlyPositions: 'Early Position - Act First',
+                    utg: 'UTG (Under the Gun)',
+                    utgDesc: 'First to act preflop, least information, need strongest hands',
+                    utg1: 'UTG+1',
+                    utg1Desc: 'Second position to act, still need strong hands',
+                    utg2: 'UTG+2',
+                    utg2Desc: 'Can slightly widen hand requirements',
+                    middlePositions: 'Middle Position',
+                    mp1: 'MP1 (Middle Position 1)',
+                    mp1Desc: 'Can play more marginal hands',
+                    mp2: 'MP2 (Middle Position 2)',
+                    mp2Desc: 'Position starts becoming favorable',
+                    mp3: 'MP3 (Middle Position 3)',
+                    mp3Desc: 'Approaching late position advantages',
+                    latePositions: 'Late Position - Information Advantage',
+                    lj: 'LJ (Lojack)',
+                    ljDesc: 'Can observe early position actions before deciding',
+                    hj: 'HJ (Hijack)',
+                    hjDesc: 'Very favorable position, can steal blinds',
+                    co: 'CO (Cutoff)',
+                    coDesc: 'Second best position after button',
+                    btn: 'BTN (Button)',
+                    btnDesc: 'Always acts last post-flop, best position',
+                    blindPositions: 'Blind Positions',
+                    sb: 'SB (Small Blind)',
+                    sbDesc: 'Acts first post-flop, worst position but half big blind invested',
+                    bb: 'BB (Big Blind)',
+                    bbDesc: 'Acts last preflop, second post-flop',
+                    positionStrategy: 'Position Strategy Tips',
+                    tip1: 'Early position needs stronger starting hands as many players act after you',
+                    tip2: 'Late position can play more speculative hands, observe opponents first',
+                    tip3: 'Button is most profitable position, can raise and steal with wider range',
+                    tip4: 'Blind positions are disadvantaged post-flop but consider pot odds with investment',
+                    strategies: 'Common Strategy Concepts',
+                    tag: 'Tight-Aggressive (TAG)',
+                    tagDesc: 'Play strong hands aggressively',
+                    lag: 'Loose-Aggressive (LAG)',
+                    lagDesc: 'Play more hands aggressively',
+                    valueBet: 'Value Bet',
+                    valueBetDesc: 'Bet strong hands for value',
+                    bluff: 'Bluff',
+                    bluffDesc: 'Bet weak hands to make opponents fold',
+                    semiBluff: 'Semi-bluff',
+                    semiBluffDesc: 'Bet drawing hands that can improve or make opponents fold',
+                    startingHands: 'Starting Hands Guide',
+                    startingHandsIntro: 'As a beginner, stick to these strong hands to avoid complex decisions:',
+                    premiumHands: 'Premium Hands (Play from any position)',
+                    strongHands: 'Strong Hands (Play from middle/late position)',
+                    speculativeHands: 'Speculative Hands (Late position only)',
+                    handTips: '💡 "s" means suited, "o" means offsuit. Beginner tip: Early position = premium hands only, late position = more flexibility.'
                 }
             },
             zh: {
                 title: 'QPDS',
                 subtitle: '量化德州扑克决策辅助系统',
+                beginner: {
+                    title: '🚀 新手快速入门',
+                    intro: '第一次使用？按以下步骤开始：',
+                    step1: '选择底牌：点击左边"你的底牌"区域的空槽，然后从下方牌堆选择两张牌',
+                    step2: '设置阶段：选择当前游戏阶段（建议新手从"翻前"开始）',
+                    step3: '输入参数：设置底池100、跟注20、双方筹码各500',
+                    step4: '选择位置：如不确定选择"按钮位(BTN)"',
+                    step5: '获取建议：点击"获取决策建议"查看推荐行动',
+                    dismiss: '我知道了'
+                },
                 lesson: {
                     heading: '无限注德州扑克：规则速览',
                     goal: {
@@ -887,7 +1494,8 @@
                 buttons: {
                     recommend: '获取决策建议',
                     equity: '仅计算胜率',
-                    reset: '重置牌面'
+                    reset: '重置牌面',
+                    gameManual: '🃏 游戏手册'
                 },
                 deck: {
                     heading: '牌堆（点击选牌）',
@@ -919,6 +1527,96 @@
                 errors: {
                     missingCards: '请先选择两张唯一底牌，再进行分析。',
                     boardRequirement: '当前阶段需要匹配数量的公共牌，请补全或调整阶段。'
+                },
+                manual: {
+                    title: '德州扑克游戏手册',
+                    basicRules: '基本规则',
+                    basicRulesText: '德州扑克（Texas Hold\'em）是一种流行的扑克变体，每位玩家发2张底牌，通过与5张公共牌结合组成最佳的5张牌型。',
+                    gameFlow: '游戏流程',
+                    preflop: '翻前（Pre-flop）',
+                    preflopDesc: '每位玩家获得2张底牌，根据牌力决定跟注、加注或弃牌',
+                    flop: '翻牌（Flop）',
+                    flopDesc: '发出前3张公共牌，进行新一轮下注',
+                    turn: '转牌（Turn）',
+                    turnDesc: '发出第4张公共牌，继续下注',
+                    river: '河牌（River）',
+                    riverDesc: '发出第5张公共牌，最后一轮下注',
+                    showdown: '摊牌（Showdown）',
+                    showdownDesc: '比较牌型大小，最大牌型获胜',
+                    handRankings: '牌型排名（从大到小）',
+                    royalFlush: '皇家同花顺',
+                    straightFlush: '同花顺',
+                    fourOfKind: '四条',
+                    fullHouse: '葫芦',
+                    flush: '同花',
+                    straight: '顺子',
+                    threeOfKind: '三条',
+                    twoPair: '两对',
+                    onePair: '一对',
+                    highCard: '高牌',
+                    keyConcepts: '关键概念',
+                    potOdds: '底池赔率（Pot Odds）',
+                    potOddsDesc: '当前跟注所需筹码与底池大小的比例',
+                    impliedOdds: '隐含赔率（Implied Odds）',
+                    impliedOddsDesc: '考虑后续可能赢得筹码的赔率',
+                    position: '位置（Position）',
+                    positionDesc: '相对于庄家位置，后位置有信息优势',
+                    spr: '筹码-底池比（SPR）',
+                    sprDesc: '有效筹码除以底池大小',
+                    draws: '听牌（Draw）',
+                    drawsDesc: '需要特定牌才能成牌的牌型',
+                    positions: '位置详解',
+                    positionsIntro: '在德州扑克中，你相对于庄家按钮的位置决定了行动顺序，是影响策略的关键因素：',
+                    earlyPositions: '前位（Early Position）- 最先行动',
+                    utg: 'UTG（枪口位）',
+                    utgDesc: '翻前第一个行动，信息最少，需要最强的牌',
+                    utg1: 'UTG+1',
+                    utg1Desc: '第二个行动位置，仍然需要较强手牌',
+                    utg2: 'UTG+2',
+                    utg2Desc: '可以略微放宽手牌要求',
+                    middlePositions: '中位（Middle Position）',
+                    mp1: 'MP1（中间位1）',
+                    mp1Desc: '可以玩更多边际手牌',
+                    mp2: 'MP2（中间位2）',
+                    mp2Desc: '位置开始变得有利',
+                    mp3: 'MP3（中间位3）',
+                    mp3Desc: '接近晚位的优势',
+                    latePositions: '后位（Late Position）- 信息优势',
+                    lj: 'LJ（劫匪位）',
+                    ljDesc: '可以观察前面玩家行动后决策',
+                    hj: 'HJ（劫持位）',
+                    hjDesc: '非常有利的位置，可以偷盲',
+                    co: 'CO（截断位）',
+                    coDesc: '仅次于按钮位的优势位置',
+                    btn: 'BTN（按钮位）',
+                    btnDesc: '翻后永远最后行动，最佳位置',
+                    blindPositions: '盲注位（Blind Positions）',
+                    sb: 'SB（小盲位）',
+                    sbDesc: '翻后第一个行动，位置最差但已投入一半大盲',
+                    bb: 'BB（大盲位）',
+                    bbDesc: '翻前最后行动，翻后第二个行动',
+                    positionStrategy: '位置策略要点',
+                    tip1: '前位需要更强的起手牌，因为后面还有很多玩家要行动',
+                    tip2: '后位可以玩更多投机性手牌，观察对手行动后再决策',
+                    tip3: '按钮位是最有利位置，可以用更宽的范围加注和偷盲',
+                    tip4: '盲注位置翻后不利，但翻前已有投入要考虑底池赔率',
+                    strategies: '常用策略概念',
+                    tag: '紧凶（TAG）',
+                    tagDesc: '只玩强牌但玩得激进',
+                    lag: '松凶（LAG）',
+                    lagDesc: '玩较多牌型且激进下注',
+                    valueBet: '价值下注',
+                    valueBetDesc: '有强牌时下注获取价值',
+                    bluff: '诈唬（Bluff）',
+                    bluffDesc: '用弱牌下注迫使对手弃牌',
+                    semiBluff: '半诈唬',
+                    semiBluffDesc: '用听牌下注，既可能成牌也可能让对手弃牌',
+                    startingHands: '新手起手牌建议',
+                    startingHandsIntro: '作为新手，建议只玩以下强牌，避免复杂决策：',
+                    premiumHands: '顶级强牌（任何位置都可以玩）',
+                    strongHands: '强牌（中后位可以玩）',
+                    speculativeHands: '投机牌（仅后位考虑）',
+                    handTips: '💡 "s"表示同花色，"o"表示不同花色。新手建议：前位只玩顶级强牌，后位可以适当放宽。'
                 }
             }
         };
@@ -999,6 +1697,50 @@
             factorsGrid = document.getElementById('factorsGrid');
             errorBox = document.getElementById('errorBox');
             summaryGrid = document.getElementById('summaryGrid');
+
+            // 游戏手册相关元素
+            const gameManualBtn = document.getElementById('gameManualBtn');
+            const gameManualModal = document.getElementById('gameManualModal');
+            const closeManualBtn = document.getElementById('closeManualBtn');
+
+            // 新手提示相关元素
+            const beginnerTip = document.getElementById('beginnerTip');
+            const dismissTip = document.getElementById('dismissTip');
+
+            // 检查是否是第一次访问
+            const hasVisited = localStorage.getItem('qpds_visited');
+            if (hasVisited) {
+                beginnerTip.classList.add('hidden');
+            }
+
+            // 新手提示关闭事件
+            dismissTip.addEventListener('click', () => {
+                beginnerTip.classList.add('hidden');
+                localStorage.setItem('qpds_visited', 'true');
+            });
+
+            // 游戏手册事件监听
+            gameManualBtn.addEventListener('click', () => {
+                gameManualModal.classList.add('show');
+            });
+
+            closeManualBtn.addEventListener('click', () => {
+                gameManualModal.classList.remove('show');
+            });
+
+            // 点击模态框背景关闭
+            gameManualModal.addEventListener('click', (e) => {
+                if (e.target === gameManualModal) {
+                    gameManualModal.classList.remove('show');
+                }
+            });
+
+            // ESC键关闭模态框
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && gameManualModal.classList.contains('show')) {
+                    gameManualModal.classList.remove('show');
+                }
+            });
 
             bootstrap();
         });
