@@ -34,6 +34,25 @@ QPDS/
 
 ## ⚙️ 快速开始
 
+### 获取代码
+
+**选项1：Fork 项目（推荐用于开发）**
+1. 点击页面右上角的 ⭐ **Star** 按钮收藏项目
+2. 点击 🍴 **Fork** 按钮将项目 fork 到你的 GitHub 账户
+3. 克隆你的 fork 到本地：
+```bash
+git clone https://github.com/你的用户名/QPDS.git
+cd QPDS
+```
+
+**选项2：直接下载**
+```bash
+git clone https://github.com/原作者用户名/QPDS.git
+cd QPDS
+```
+
+### 启动服务
+
 ### 方式一：一键启动（推荐）
 ```bash
 python3 run.py
