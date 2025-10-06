@@ -1,7 +1,7 @@
 services:
   - type: web
     name: qpds-backend
-    env: python3
+    env: python
     region: oregon
     plan: free
     buildCommand: pip install --upgrade pip && pip install -r requirements.txt

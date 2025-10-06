@@ -41,6 +41,7 @@ Render 会根据项目根目录的 `render.yaml` 自动创建服务。
 2. 选择关联刚才推送代码的 GitHub 仓库，并选定部署分支（默认为 `main`）。
 3. Render 会读取 `render.yaml`，展示预配置：
    - 服务类型：Web Service
+   - 运行环境：Python（`env: python`）
    - 构建命令：`pip install --upgrade pip && pip install -r requirements.txt`
    - 启动命令：`gunicorn backend.api.app:app`
    - 健康检查路径：`/health`
