@@ -42,6 +42,27 @@
             align-items: center;
         }
 
+        .settings-btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.14);
+            color: #0b132b;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .settings-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .api-status {
+            font-size: 0.85rem;
+            color: rgba(247, 249, 252, 0.9);
+        }
+
         .title-block h1 {
             font-size: 2.6rem;
             font-weight: 700;
@@ -829,7 +850,9 @@
             </div>
             <div class="header-buttons">
                 <button class="game-manual-btn" id="gameManualBtn" data-i18n="buttons.gameManual">🃏 游戏手册</button>
+                <button id="apiConfigBtn" class="settings-btn" data-i18n="buttons.apiConfig">⚙️ API</button>
                 <button id="langToggle" class="lang-toggle">English</button>
+                <span class="api-status" id="apiStatusLabel"></span>
             </div>
         </header>
 
@@ -1192,7 +1215,60 @@
     </div>
 
     <script>
-        const API_URL = 'http://localhost:8080';
+        const API_STORAGE_KEY = 'qpds.apiBaseUrl';
+        const API_QUERY_PARAM = 'api';
+        const LOCAL_API_URL = 'http://localhost:8080';
+        const GITHUB_DEFAULT_API_URL = 'https://qpds-backend.onrender.com';
+
+        function sanitizeApiUrl(url) {
+            if (!url) {
+                return null;
+            }
+            try {
+                const parsed = new URL(url);
+                if (!['http:', 'https:'].includes(parsed.protocol)) {
+                    return null;
+                }
+                return parsed.origin;
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function resolveDefaultApiUrl() {
+            if (window.location.hostname.endsWith('github.io')) {
+                return GITHUB_DEFAULT_API_URL;
+            }
+            const override = sanitizeApiUrl(window.API_BASE_URL);
+            if (override) {
+                return override;
+            }
+            return LOCAL_API_URL;
+        }
+
+        function resolveApiUrl({ skipQuery = false } = {}) {
+            if (!skipQuery) {
+                const params = new URLSearchParams(window.location.search);
+                const fromQuery = sanitizeApiUrl(params.get(API_QUERY_PARAM));
+                if (fromQuery) {
+                    params.delete(API_QUERY_PARAM);
+                    const nextQuery = params.toString();
+                    const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ''}${window.location.hash}`;
+                    window.history.replaceState({}, '', nextUrl);
+                    localStorage.setItem(API_STORAGE_KEY, fromQuery);
+                    return fromQuery;
+                }
+            }
+
+            const stored = sanitizeApiUrl(localStorage.getItem(API_STORAGE_KEY));
+            if (stored) {
+                return stored;
+            }
+
+            return resolveDefaultApiUrl();
+        }
+
+        let API_URL = resolveApiUrl();
 
         let deckGrid;
         let heroSlots;
@@ -1202,6 +1278,8 @@
         let riskSlider;
         let riskValue;
         let langToggle;
+        let apiConfigBtn;
+        let apiStatusLabel;
         let loadingIndicator;
         let actionValue;
         let confidenceValue;
@@ -1292,7 +1370,19 @@
                     recommend: 'Get Recommendation',
                     equity: 'Equity Only',
                     reset: 'Reset Cards',
-                    gameManual: '🃏 Game Manual'
+                    gameManual: '🃏 Game Manual',
+                    apiConfig: '⚙️ API'
+                },
+                status: {
+                    apiLabel: 'API',
+                    checking: 'checking…',
+                    connected: 'online',
+                    failed: 'unreachable'
+                },
+                prompts: {
+                    apiBase: 'Enter backend API base URL (https://your-service.onrender.com)',
+                    apiBaseInvalid: 'Please enter a valid http(s) URL.',
+                    apiBaseCleared: 'API base reset to default.'
                 },
                 deck: {
                     heading: 'Deck (click to pick cards)',
@@ -1495,7 +1585,19 @@
                     recommend: '获取决策建议',
                     equity: '仅计算胜率',
                     reset: '重置牌面',
-                    gameManual: '🃏 游戏手册'
+                    gameManual: '🃏 游戏手册',
+                    apiConfig: '⚙️ API配置'
+                },
+                status: {
+                    apiLabel: '后端',
+                    checking: '检测中…',
+                    connected: '已连接',
+                    failed: '无法连接'
+                },
+                prompts: {
+                    apiBase: '请输入后端 API 地址（例如 https://your-service.onrender.com）',
+                    apiBaseInvalid: '请输入合法的 http(s) 地址。',
+                    apiBaseCleared: '已恢复默认接口地址。'
                 },
                 deck: {
                     heading: '牌堆（点击选牌）',
@@ -1676,7 +1778,8 @@
             street: 'PREFLOP',
             selectedSlot: null,
             position: 'BTN',
-            lastResult: null
+            lastResult: null,
+            apiStatus: 'idle'
         };
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -1688,6 +1791,8 @@
             riskSlider = document.getElementById('riskSlider');
             riskValue = document.getElementById('riskValue');
             langToggle = document.getElementById('langToggle');
+            apiConfigBtn = document.getElementById('apiConfigBtn');
+            apiStatusLabel = document.getElementById('apiStatusLabel');
             loadingIndicator = document.getElementById('loading');
             actionValue = document.getElementById('actionValue');
             confidenceValue = document.getElementById('confidenceValue');
@@ -1810,6 +1915,85 @@
                     showEquityOnly(snapshot.data);
                 }
             }
+
+            updateApiStatusLabel();
+        }
+
+        function getStatusCopy() {
+            const fallback = {
+                apiLabel: 'API',
+                checking: 'checking…',
+                connected: 'online',
+                failed: 'unreachable'
+            };
+            return (translations[state.language] && translations[state.language].status) || fallback;
+        }
+
+        function updateApiStatusLabel(statusOverride) {
+            if (!apiStatusLabel) {
+                return;
+            }
+            const copy = getStatusCopy();
+            const status = statusOverride || state.apiStatus;
+            let suffix = '';
+            if (status === 'checking') {
+                suffix = copy.checking;
+            } else if (status === 'ok') {
+                suffix = copy.connected;
+            } else if (status === 'error') {
+                suffix = copy.failed;
+            }
+
+            const parts = [`${copy.apiLabel}: ${API_URL}`];
+            if (suffix) {
+                parts.push(`(${suffix})`);
+            }
+            apiStatusLabel.textContent = parts.join(' ');
+        }
+
+        function getBackendUnavailableMessage() {
+            if (state.language === 'zh') {
+                return `无法连接后端服务：${API_URL}。请启动本地 Flask 后端，或点击“⚙️ API配置”按钮设置已部署的地址。`;
+            }
+            return `Cannot reach backend service at ${API_URL}. Start the local Flask backend or use the ⚙️ API button to point to your deployed service.`;
+        }
+
+        function initApiConfig() {
+            if (!apiConfigBtn) {
+                return;
+            }
+            apiConfigBtn.addEventListener('click', () => {
+                const promptMessage = t('prompts.apiBase');
+                const input = window.prompt(promptMessage, API_URL);
+                if (input === null) {
+                    return;
+                }
+
+                const trimmed = input.trim();
+                if (!trimmed) {
+                    localStorage.removeItem(API_STORAGE_KEY);
+                    API_URL = resolveApiUrl({ skipQuery: true });
+                    state.apiStatus = 'idle';
+                    updateApiStatusLabel();
+                    window.alert(t('prompts.apiBaseCleared'));
+                    initHealthCheck({ silent: true });
+                    return;
+                }
+
+                const sanitized = sanitizeApiUrl(trimmed);
+                if (!sanitized) {
+                    window.alert(t('prompts.apiBaseInvalid'));
+                    return;
+                }
+
+                API_URL = sanitized;
+                localStorage.setItem(API_STORAGE_KEY, API_URL);
+                state.apiStatus = 'checking';
+                updateApiStatusLabel('checking');
+                initHealthCheck();
+            });
+
+            updateApiStatusLabel();
         }
 
         function buildDeck() {
@@ -2211,19 +2395,34 @@
         }
 
         async function request(endpoint, payload) {
-            const response = await fetch(`${API_URL}${endpoint}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            });
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                const message = errorData.error || `HTTP ${response.status}`;
-                throw new Error(message);
+            try {
+                const response = await fetch(`${API_URL}${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    state.apiStatus = 'ok';
+                    updateApiStatusLabel('ok');
+                    const errorData = await response.json().catch(() => ({}));
+                    const message = errorData.error || `HTTP ${response.status}`;
+                    throw new Error(message);
+                }
+
+                state.apiStatus = 'ok';
+                updateApiStatusLabel('ok');
+                return response.json();
+            } catch (error) {
+                if (error instanceof TypeError || error.message === 'Failed to fetch') {
+                    state.apiStatus = 'error';
+                    updateApiStatusLabel('error');
+                    throw new Error(getBackendUnavailableMessage());
+                }
+                throw error;
             }
-            return response.json();
         }
 
         function localizeBackendMessage(message) {
@@ -2349,13 +2548,33 @@
             refreshSummary();
         }
 
-        function initHealthCheck() {
-            fetch(`${API_URL}/health`).catch(() => {
-                showError(state.language === 'zh' ? '后台服务未连接，请先运行 Python 后端 (python backend/api/app.py)。' : 'Cannot reach backend. Please run the Flask API (python backend/api/app.py).');
-            });
+        function initHealthCheck(options = {}) {
+            const { silent = false } = options;
+            state.apiStatus = 'checking';
+            updateApiStatusLabel('checking');
+
+            return fetch(`${API_URL}/health`)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Health check failed');
+                    }
+                    state.apiStatus = 'ok';
+                    updateApiStatusLabel('ok');
+                    if (!silent) {
+                        showError('');
+                    }
+                })
+                .catch(() => {
+                    state.apiStatus = 'error';
+                    updateApiStatusLabel('error');
+                    if (!silent) {
+                        showError(getBackendUnavailableMessage());
+                    }
+                });
         }
 
         function bootstrap() {
+            initApiConfig();
             initStreetOptions();
             initPositionSelect();
             initDeckAndSlots();

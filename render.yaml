@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: qpds-backend
+    env: python
+    runtime: python3
+    region: oregon
+    plan: free
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: gunicorn backend.api.app:app
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.13
