@@ -576,6 +576,68 @@
             line-height: 1.5;
         }
 
+        .cheatsheet {
+            margin-top: 22px;
+            padding: 18px 20px;
+            border-radius: 18px;
+            background: rgba(25, 23, 60, 0.65);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+        }
+
+        .cheatsheet h3 {
+            font-size: 1.02rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cheatsheet h3::before {
+            content: '♣';
+            font-size: 1.2rem;
+            color: var(--accent-cyan);
+            text-shadow: 0 0 10px rgba(100, 244, 255, 0.55);
+        }
+
+        .cheatsheet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+        }
+
+        .cheatsheet-card {
+            background: rgba(20, 18, 48, 0.72);
+            border-radius: 14px;
+            padding: 16px;
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+        }
+
+        .cheatsheet-label {
+            font-size: 0.9rem;
+            color: var(--accent-purple);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 10px;
+        }
+
+        .cheatsheet-card ul {
+            margin: 0;
+            padding-left: 18px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .cheatsheet-card li {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            line-height: 1.45;
+        }
+
         .section {
             margin-bottom: 18px;
         }
@@ -1256,6 +1318,44 @@
                         <span data-i18n="lesson.strategy.copy">胜率、底池赔率、风险偏好共同驱动决策，保持纪律，避免情绪化。</span>
                     </div>
                 </div>
+
+                <div class="cheatsheet">
+                    <h3 data-i18n="lesson.cheatsheet.title">牌桌速查宝典</h3>
+                    <div class="cheatsheet-grid">
+                        <div class="cheatsheet-card">
+                            <div class="cheatsheet-label" data-i18n="lesson.cheatsheet.preflop">翻前口令</div>
+                            <ul>
+                                <li data-i18n="lesson.cheatsheet.preflop1">按钮位 3x 开局，宽松偷盲</li>
+                                <li data-i18n="lesson.cheatsheet.preflop2">前位紧凶：顶级对子 + 强同花连牌</li>
+                                <li data-i18n="lesson.cheatsheet.preflop3">大盲防守：赔率 ≥ 3:1 才跟注</li>
+                            </ul>
+                        </div>
+                        <div class="cheatsheet-card">
+                            <div class="cheatsheet-label" data-i18n="lesson.cheatsheet.flop">翻牌读牌</div>
+                            <ul>
+                                <li data-i18n="lesson.cheatsheet.flop1">干燥板：中等对子可持续下注</li>
+                                <li data-i18n="lesson.cheatsheet.flop2">湿润板：优先保护，减小下注尺度</li>
+                                <li data-i18n="lesson.cheatsheet.flop3">中顺/同花听牌：计算补牌 ×4 概率</li>
+                            </ul>
+                        </div>
+                        <div class="cheatsheet-card">
+                            <div class="cheatsheet-label" data-i18n="lesson.cheatsheet.turn">转牌决策</div>
+                            <ul>
+                                <li data-i18n="lesson.cheatsheet.turn1">SPR &lt; 1.5：牌力够强可直接投入</li>
+                                <li data-i18n="lesson.cheatsheet.turn2">对手加注 => 评估范围优势是否反转</li>
+                                <li data-i18n="lesson.cheatsheet.turn3">半诈唬需保证弃牌率 × 底池 ≥ 成本</li>
+                            </ul>
+                        </div>
+                        <div class="cheatsheet-card">
+                            <div class="cheatsheet-label" data-i18n="lesson.cheatsheet.river">河牌执行</div>
+                            <ul>
+                                <li data-i18n="lesson.cheatsheet.river1">价值下注：能被更差的牌跟注？</li>
+                                <li data-i18n="lesson.cheatsheet.river2">精准诈唬：代表强牌 + 阻断对手关键牌</li>
+                                <li data-i18n="lesson.cheatsheet.river3">错过听牌 → 权衡弃牌率 / 摊牌价值</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <section class="panel" id="statePanel">
@@ -1811,6 +1911,25 @@
                     strategy: {
                         title: 'Quant Thinking',
                         copy: 'Equity, pot odds, and your risk slider drive disciplined, data-backed decisions.'
+                    },
+                    cheatsheet: {
+                        title: 'Quick Ringside Cheatsheet',
+                        preflop: 'Preflop Riff',
+                        preflop1: 'Button: open 3x with wider range, steal blinds aggressively.',
+                        preflop2: 'Early position: premium pairs + strong suited connectors only.',
+                        preflop3: 'Big blind defense: call only if pot odds ≥ 3:1.',
+                        flop: 'Flop Reading',
+                        flop1: 'Dry boards: continue betting with middle pairs to deny equity.',
+                        flop2: 'Wet boards: protect your made hands, size down to control pot.',
+                        flop3: 'Strong draws: count outs ×4 to estimate hit probability.',
+                        turn: 'Turn Decisions',
+                        turn1: 'SPR < 1.5: strong hands can commit stacks.',
+                        turn2: 'Facing raises: reassess range advantage before stacking off.',
+                        turn3: 'Semi-bluff only if fold equity × pot ≥ risked chips.',
+                        river: 'River Execution',
+                        river1: 'Value bets: only if worse hands can call you.',
+                        river2: 'Bluffs: tell a coherent story and block villain’s top combos.',
+                        river3: 'Missed draws: balance fold equity vs showdown value.'
                     }
                 },
                 state: {
@@ -2086,6 +2205,25 @@
                     strategy: {
                         title: '量化思维',
                         copy: '胜率、底池赔率、风险偏好共同驱动理性决策，保持纪律避免情绪波动。'
+                    },
+                    cheatsheet: {
+                        title: '牌桌速查宝典',
+                        preflop: '翻前口令',
+                        preflop1: '按钮位开局 3 倍盲注，用宽范围偷盲',
+                        preflop2: '前位紧凶：仅顶级对子 + 强同花连牌',
+                        preflop3: '大盲防守：只有牌价 ≥ 3:1 才考虑跟注',
+                        flop: '翻牌读牌',
+                        flop1: '干燥牌面：中等对子可持续下注压榨超对',
+                        flop2: '湿润牌面：优先保护成手，适度缩小下注尺度',
+                        flop3: '中顺/同花听牌：补牌数 ×4 ≈ 翻牌后命中率',
+                        turn: '转牌决策',
+                        turn1: 'SPR < 1.5：强牌可直接推满投入',
+                        turn2: '遭遇加注：判断范围优势是否反转',
+                        turn3: '半诈唬：确保弃牌率 × 底池 ≥ 本轮成本',
+                        river: '河牌执行',
+                        river1: '价值下注：确保更弱的牌愿意跟注',
+                        river2: '精准诈唬：讲出强牌故事并阻断对手顶牌',
+                        river3: '错过听牌：衡量弃牌率和摊牌价值再决定'
                     }
                 },
                 state: {
