@@ -107,54 +107,63 @@
         .header-art {
             position: absolute;
             inset: -40px -80px auto auto;
-            width: 320px;
-            height: 220px;
+            width: 360px;
+            height: 240px;
             pointer-events: none;
             display: flex;
             justify-content: flex-end;
             align-items: flex-start;
-            gap: 16px;
-            transform: rotate(-8deg);
+            gap: 18px;
+            transform: rotate(-6deg);
             opacity: 0.75;
+            flex-wrap: wrap;
         }
 
         .chip {
-            width: 110px;
-            height: 110px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
-            background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.4), rgba(179, 98, 255, 0.85));
+            background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.32), rgba(179, 98, 255, 0.82));
             border: 6px double rgba(255, 255, 255, 0.55);
             display: flex;
             align-items: center;
             justify-content: center;
             color: #fff;
-            font-size: 2.4rem;
+            font-size: 2.1rem;
             text-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
             box-shadow: var(--chip-shadow);
             animation: chipFloat 6s ease-in-out infinite;
         }
 
-        .chip:nth-child(2) {
-            width: 80px;
-            height: 80px;
-            border-width: 4px;
-            background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.35), rgba(100, 244, 255, 0.72));
-            animation-delay: 1.5s;
-            font-size: 1.8rem;
+        .chip-ace {
+            width: 120px;
+            height: 120px;
+            font-size: 2.4rem;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.45), rgba(100, 244, 255, 0.82));
+            animation-delay: 0.5s;
         }
 
-        .chip:nth-child(3) {
-            width: 62px;
-            height: 62px;
-            border-width: 3px;
-            background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.28), rgba(247, 197, 72, 0.78));
-            animation-delay: 2.5s;
-            font-size: 1.4rem;
+        .chip-heart {
+            background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.35), rgba(255, 126, 219, 0.78));
+            border-width: 5px;
+            animation-delay: 1.5s;
+        }
+
+        .chip-diamond {
+            background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.32), rgba(247, 197, 72, 0.8));
+            border-width: 4px;
+            animation-delay: 2.3s;
+        }
+
+        .chip-club {
+            background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.3), rgba(179, 98, 255, 0.75));
+            border-width: 4px;
+            animation-delay: 3.1s;
         }
 
         @keyframes chipFloat {
             0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-12px) rotate(4deg); }
+            50% { transform: translateY(-14px) rotate(4deg); }
         }
 
         .settings-btn,
@@ -1181,9 +1190,10 @@
                 <span class="api-status" id="apiStatusLabel"></span>
             </div>
             <div class="header-art" aria-hidden="true">
-                <div class="chip">♠</div>
-                <div class="chip">♥</div>
-                <div class="chip">♦</div>
+                <div class="chip chip-ace">A♠</div>
+                <div class="chip chip-heart">♥</div>
+                <div class="chip chip-diamond">♦</div>
+                <div class="chip chip-club">♣</div>
             </div>
         </header>
 
