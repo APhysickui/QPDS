@@ -3,7 +3,7 @@ Decision Engine Module
 Makes poker decisions based on calculated factors and EV
 """
 
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple, Optional, Any
 from dataclasses import dataclass
 from enum import Enum
 import numpy as np
@@ -29,6 +29,7 @@ class Decision:
     expected_value: float  # Expected value of action
     explanation: str  # Human-readable explanation
     factors_used: Dict[str, float]  # Key factors that influenced decision
+    opponent_profile: Optional[Dict[str, Any]] = None  # Hydrated opponent readback
 
 
 class DecisionEngine:
@@ -67,6 +68,7 @@ class DecisionEngine:
         """
         # Calculate all factors
         factors = self.factor_engine.calculate_factors(game_state, opponent_stats)
+        opponent_profile = self.factor_engine.get_latest_opponent_profile()
 
         # Calculate EVs for different actions
         ev_fold = 0  # Folding always has EV of 0
@@ -75,7 +77,10 @@ class DecisionEngine:
 
         # Apply risk adjustment
         risk_adj = self._calculate_risk_adjustment()
-        required_equity = factors.pot_odds + risk_adj
+        range_adjustment = (0.5 - factors.range_advantage) * 0.05
+        psychology_adjustment = (factors.psychological_pressure - 0.5) * 0.04
+        required_equity = factors.pot_odds + risk_adj + range_adjustment + psychology_adjustment
+        required_equity = min(0.95, max(0.05, required_equity))
 
         # Decision logic
         decision = self._determine_action(
@@ -85,6 +90,9 @@ class DecisionEngine:
         # Add confidence based on factor strength
         decision.confidence = self._calculate_confidence(factors, decision.action)
 
+        if opponent_profile:
+            decision.opponent_profile = opponent_profile.to_dict()
+
         return decision
 
     def _calculate_call_ev(self, game_state: GameState, factors: Factors) -> float:
@@ -92,6 +100,10 @@ class DecisionEngine:
         # Basic EV formula: equity * (pot + call) - call
         pot_after_call = game_state.pot_size + game_state.to_call
         ev = factors.equity * pot_after_call - game_state.to_call
+
+        # Psychological and range adjustments
+        ev += (0.5 - factors.range_advantage) * game_state.to_call * 0.25
+        ev -= factors.psychological_pressure * game_state.to_call * 0.1
 
         # Adjust for implied odds on draws
         if factors.outs > 4:  # Significant draw
@@ -107,12 +119,17 @@ class DecisionEngine:
         # Can't raise more than stack
         raise_size = min(raise_size, game_state.hero_stack)
 
-        # EV = fold_equity * pot + (1 - fold_equity) * equity * final_pot - raise_size
+        # Adjust fold equity for board and range dynamics
+        adjusted_fold_equity = factors.fold_equity
+        adjusted_fold_equity *= max(0.4, 1 - factors.range_advantage * 0.3)
+        adjusted_fold_equity *= max(0.45, 1 - factors.board_pressure * 0.25)
+        adjusted_fold_equity *= 1 - factors.bluff_tendency * 0.15
+
         pot_if_called = game_state.pot_size + raise_size * 2
         ev_if_called = factors.equity * pot_if_called - raise_size
 
-        ev = factors.fold_equity * game_state.pot_size + \
-             (1 - factors.fold_equity) * ev_if_called
+        ev = adjusted_fold_equity * game_state.pot_size + \
+             (1 - adjusted_fold_equity) * ev_if_called
 
         # Bonus for position
         if factors.position_factor > 0.7:
@@ -169,7 +186,9 @@ class DecisionEngine:
                 factors_used={
                     'hand_strength': factors.hand_strength,
                     'equity': factors.equity,
-                    'position': factors.position_factor
+                    'position': factors.position_factor,
+                    'opponent_range_advantage': factors.range_advantage,
+                    'board_pressure': factors.board_pressure
                 }
             )
 
@@ -188,7 +207,8 @@ class DecisionEngine:
                         factors_used={
                             'outs': factors.outs,
                             'fold_equity': factors.fold_equity,
-                            'implied_odds': factors.implied_odds
+                            'implied_odds': factors.implied_odds,
+                            'opponent_bluff_tendency': factors.bluff_tendency
                         }
                     )
                 else:
@@ -197,13 +217,14 @@ class DecisionEngine:
                         amount=game_state.to_call,
                         confidence=0.75,
                         expected_value=ev_call,
-                        explanation=f"Calling with draw ({factors.outs} outs, implied odds: {factors.implied_odds:.1%})",
-                        factors_used={
-                            'outs': factors.outs,
-                            'implied_odds': factors.implied_odds,
-                            'pot_odds': factors.pot_odds
-                        }
-                    )
+                    explanation=f"Calling with draw ({factors.outs} outs, implied odds: {factors.implied_odds:.1%})",
+                    factors_used={
+                        'outs': factors.outs,
+                        'implied_odds': factors.implied_odds,
+                        'pot_odds': factors.pot_odds,
+                        'opponent_aggression': factors.opponent_aggression
+                    }
+                )
 
         # Standard equity-based decision
         if factors.equity >= required_equity:
@@ -221,7 +242,8 @@ class DecisionEngine:
                     factors_used={
                         'equity': factors.equity,
                         'ev_raise': ev_raise,
-                        'position': factors.position_factor
+                        'position': factors.position_factor,
+                        'psychological_pressure': factors.psychological_pressure
                     }
                 )
             else:
@@ -235,7 +257,8 @@ class DecisionEngine:
                     factors_used={
                         'equity': factors.equity,
                         'pot_odds': factors.pot_odds,
-                        'required_equity': required_equity
+                        'required_equity': required_equity,
+                        'opponent_classification': factors.opponent_classification
                     }
                 )
 
@@ -249,7 +272,8 @@ class DecisionEngine:
                 explanation=f"Checking with insufficient equity ({factors.equity:.1%} < {required_equity:.1%})",
                 factors_used={
                     'equity': factors.equity,
-                    'required_equity': required_equity
+                    'required_equity': required_equity,
+                    'opponent_pressure': factors.board_pressure
                 }
             )
         else:
@@ -262,7 +286,8 @@ class DecisionEngine:
                 factors_used={
                     'equity': factors.equity,
                     'pot_odds': factors.pot_odds,
-                    'required_equity': required_equity
+                    'required_equity': required_equity,
+                    'opponent_pressure': factors.range_advantage
                 }
             )
 
@@ -276,11 +301,11 @@ class DecisionEngine:
         pot = game_state.pot_size + game_state.to_call
 
         if raise_type == 'value':
-            # Value bet sizing - typically 50-100% pot
-            multiplier = 0.5 + factors.board_wetness * 0.5
+            # Value bet sizing - scale with texture and opponent pressure
+            multiplier = 0.45 + factors.board_wetness * 0.35 + factors.betting_pressure * 0.2
         elif raise_type == 'bluff':
-            # Bluff sizing - typically 60-75% pot
-            multiplier = 0.6 + factors.fold_equity * 0.15
+            # Bluff sizing - balance fold equity与风险
+            multiplier = 0.55 + (1 - factors.range_advantage) * 0.25 + (1 - factors.bluff_tendency) * 0.1
         else:
             # Standard sizing - 66% pot
             multiplier = 0.66
@@ -291,7 +316,7 @@ class DecisionEngine:
         effective_stack = min(game_state.hero_stack, game_state.villain_stack)
 
         # Don't raise too small
-        min_raise = game_state.to_call * 2.5
+        min_raise = game_state.to_call * 2.5 if game_state.to_call else pot * 0.35
         raise_amount = max(raise_amount, min_raise)
 
         # Don't raise more than effective stack
@@ -311,14 +336,17 @@ class DecisionEngine:
         elif factors.equity > 0.4:
             base_confidence += 0.1
 
-        # Position advantage increases confidence
-        base_confidence += factors.position_factor * 0.1
+        # Position and psychological dynamics
+        base_confidence += factors.position_factor * 0.08
+        base_confidence += (1 - factors.psychological_pressure) * 0.05
 
         # Clear pot odds situation increases confidence
         if action == Action.FOLD and factors.equity < factors.pot_odds * 0.8:
             base_confidence += 0.2
         elif action in [Action.CALL, Action.RAISE] and factors.equity > factors.pot_odds * 1.2:
             base_confidence += 0.2
+
+        base_confidence = max(0.05, base_confidence)
 
         return min(0.95, base_confidence)
 

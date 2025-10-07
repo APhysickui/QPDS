@@ -4,12 +4,13 @@ Calculates all quantitative factors for decision making
 """
 
 from typing import Dict, List, Optional, Tuple, Any
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 import numpy as np
 from enum import Enum
 
 from ..evaluator import HandEvaluator, Card
 from ..calculator import EquityCalculator, Range
+from .opponent_model import OpponentModel, OpponentInsights
 
 
 class Position(Enum):
@@ -84,6 +85,14 @@ class Factors:
     # Opponent factors
     opponent_aggression: float  # [0, 1] - Opponent's aggression level
     opponent_tightness: float   # [0, 1] - How tight opponent plays
+    betting_pressure: float     # [0, 1] - Bet sizing pressure exerted
+    board_pressure: float       # [0, 1] - Pressure created by board texture vs range
+    range_advantage: float      # [0, 1] - Opponent range advantage estimation
+    psychological_pressure: float  # [0, 1] - Momentum/stack pressure
+    bluff_tendency: float       # [0, 1] - Estimated bluff frequency
+    opponent_classification: str  # Human-readable archetype
+    opponent_summary: str        # Short summary string
+    opponent_notes: List[str] = field(default_factory=list)
 
     # Meta factors
     street: int                # Current street (0-3)
@@ -111,6 +120,11 @@ class Factors:
             self.fold_equity,
             self.opponent_aggression,
             self.opponent_tightness,
+            self.betting_pressure,
+            self.board_pressure,
+            self.range_advantage,
+            self.psychological_pressure,
+            self.bluff_tendency,
             self.street / 3.0,  # Normalize street
             self.pot_commitment
         ])
@@ -132,6 +146,8 @@ class FactorEngine:
         """
         self.evaluator = evaluator or HandEvaluator()
         self.equity_calculator = equity_calculator or EquityCalculator(self.evaluator)
+        self._opponent_model = OpponentModel()
+        self._latest_opponent_insights: Optional[OpponentInsights] = None
 
     def calculate_factors(
         self,
@@ -168,13 +184,26 @@ class FactorEngine:
         draw_prob = self._calculate_draw_probability(outs, game_state.street)
 
         # Implied odds
+        opponent_insights = self._opponent_model.evaluate(
+            opponent_stats=opponent_stats,
+            previous_actions=game_state.previous_actions,
+            board_analysis=board_analysis,
+            hero_equity=equity,
+            hero_hand_strength=hand_strength,
+            pot_size=game_state.pot_size,
+            hero_stack=game_state.hero_stack,
+            villain_stack=game_state.villain_stack,
+            street=game_state.street,
+        )
+        self._latest_opponent_insights = opponent_insights
+
         implied_odds = self._calculate_implied_odds(
-            game_state, draw_prob, opponent_stats
+            game_state, draw_prob, opponent_insights
         )
 
         # Opponent factors
         opp_aggression, opp_tightness, fold_equity = self._analyze_opponent(
-            opponent_stats, game_state
+            opponent_insights, game_state
         )
 
         # Meta factors
@@ -197,6 +226,14 @@ class FactorEngine:
             fold_equity=fold_equity,
             opponent_aggression=opp_aggression,
             opponent_tightness=opp_tightness,
+            betting_pressure=opponent_insights.betting_pressure,
+            board_pressure=opponent_insights.board_pressure,
+            range_advantage=opponent_insights.range_advantage,
+            psychological_pressure=opponent_insights.psychological_pressure,
+            bluff_tendency=opponent_insights.bluff_tendency,
+            opponent_classification=opponent_insights.classification,
+            opponent_summary=opponent_insights.summary,
+            opponent_notes=opponent_insights.notes,
             street=game_state.street.value,
             pot_commitment=pot_commitment
         )
@@ -376,18 +413,18 @@ class FactorEngine:
         self,
         game_state: GameState,
         draw_probability: float,
-        opponent_stats: Optional[Dict]
+        opponent_insights: OpponentInsights
     ) -> float:
         """Calculate implied odds"""
         if draw_probability == 0:
             return self._calculate_pot_odds(game_state)
 
         # Estimate future bets based on opponent stats
-        future_bet_multiplier = 0.5  # Default conservative estimate
+        aggression = opponent_insights.aggression_index
+        betting_pressure = opponent_insights.betting_pressure
 
-        if opponent_stats:
-            aggression = opponent_stats.get('aggression', 0.5)
-            future_bet_multiplier = 0.3 + aggression * 0.7
+        future_bet_multiplier = 0.25 + aggression * 0.4 + betting_pressure * 0.35
+        future_bet_multiplier = min(1.5, max(0.1, future_bet_multiplier))
 
         expected_future_bets = game_state.pot_size * future_bet_multiplier
 
@@ -400,27 +437,36 @@ class FactorEngine:
 
     def _analyze_opponent(
         self,
-        opponent_stats: Optional[Dict],
+        opponent_insights: OpponentInsights,
         game_state: GameState
     ) -> Tuple[float, float, float]:
         """Analyze opponent and estimate fold equity"""
-        if opponent_stats is None:
-            # Default values for unknown opponent
-            return 0.5, 0.5, 0.3
+        insights = opponent_insights
 
-        aggression = opponent_stats.get('aggression', 0.5)
-        tightness = opponent_stats.get('tightness', 0.5)
+        aggression = insights.aggression_index
+        tightness = insights.tightness_index
 
-        # Estimate fold equity based on opponent tendencies
-        fold_equity = tightness * 0.6  # Tighter players fold more
+        fold_equity = (
+            (1 - aggression) * 0.35 +
+            tightness * 0.35 +
+            (1 - insights.betting_pressure) * 0.2 +
+            (1 - insights.psychological_pressure) * 0.1
+        )
 
-        # Adjust for position
-        if game_state.hero_position.value > 5:  # Late position
-            fold_equity *= 1.2
+        # Adjust for hero position advantage
+        if game_state.hero_position.value > 5:
+            fold_equity *= 1.15
+        elif game_state.hero_position.value < 1:
+            fold_equity *= 0.9
 
-        # Adjust for street
-        if game_state.street == Street.RIVER:
-            fold_equity *= 0.7  # Less folding on river
+        # Adjust for board favouring opponent
+        fold_equity *= max(0.4, 1 - insights.board_pressure * 0.5)
+
+        # Adjust for street (less folding later)
+        if game_state.street == Street.TURN:
+            fold_equity *= 0.9
+        elif game_state.street == Street.RIVER:
+            fold_equity *= 0.75
 
         fold_equity = min(1.0, max(0.0, fold_equity))
 
@@ -439,3 +485,7 @@ class FactorEngine:
             return 0
 
         return min(1.0, total_investment / total_pot)
+
+    def get_latest_opponent_profile(self) -> Optional[OpponentInsights]:
+        """Expose cached opponent insight for downstream consumers."""
+        return self._latest_opponent_insights

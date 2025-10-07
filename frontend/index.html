@@ -16,11 +16,11 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: radial-gradient(circle at top left, #374785, #243B55 40%, #141E30 120%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #334155 100%);
             min-height: 100vh;
-            padding: 24px;
-            color: #f7f9fc;
+            padding: 32px 28px 56px;
+            color: #edf2ff;
         }
 
         .app {
@@ -93,23 +93,23 @@
 
         .layout {
             display: grid;
-            grid-template-columns: 1.1fr 0.9fr;
-            gap: 20px;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+            gap: 28px;
         }
 
         .panel {
-            background: rgba(10, 20, 40, 0.74);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 22px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+            background: linear-gradient(165deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.94));
+            backdrop-filter: blur(14px);
+            border-radius: 20px;
+            padding: 26px;
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            box-shadow: 0 24px 48px rgba(15, 23, 42, 0.45);
         }
 
         .panel h2 {
-            font-size: 1.35rem;
-            margin-bottom: 16px;
-            color: #f0f4ff;
+            font-size: 1.42rem;
+            margin-bottom: 18px;
+            color: #e0f2fe;
         }
 
         .lesson-list {
@@ -728,35 +728,39 @@
         }
 
         .factor-card {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 14px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 14px;
+            padding: 16px;
+            border: 1px solid rgba(148, 163, 184, 0.14);
+            box-shadow: inset 0 0 0 1px rgba(34, 211, 238, 0.04);
         }
 
         .factor-card .factor-name {
             font-size: 0.75rem;
             letter-spacing: 0.12em;
             text-transform: uppercase;
-            opacity: 0.7;
+            opacity: 0.68;
         }
 
         .factor-card .factor-value {
             font-size: 1.2rem;
             font-weight: 600;
             margin-top: 6px;
-            color: #f0f4ff;
+            color: #e0f2fe;
         }
 
         .summary-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 10px;
+            gap: 14px;
+            margin-top: 18px;
         }
 
         .summary-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 12px;
+            background: rgba(15, 23, 42, 0.58);
+            border-radius: 12px;
+            padding: 14px;
+            border: 1px solid rgba(148, 163, 184, 0.12);
         }
 
         .summary-item span {
@@ -771,7 +775,127 @@
             display: block;
             margin-top: 4px;
             font-size: 1.05rem;
-            color: #f1f5ff;
+            color: #e0f2fe;
+        }
+
+        .opponent-section {
+            margin-top: 28px;
+            padding: 20px;
+            border-radius: 18px;
+            background: rgba(30, 41, 59, 0.75);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+        }
+
+        .opponent-section h3 {
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+            color: #bae6fd;
+        }
+
+        .opponent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .metric-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: rgba(15, 23, 42, 0.65);
+            border: 1px solid rgba(148, 163, 184, 0.12);
+        }
+
+        .metric-group span {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .metric-group input[type="range"] {
+            width: 100%;
+        }
+
+        .metric-group input[type="number"],
+        .metric-group select,
+        .metric-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            background: rgba(15, 23, 42, 0.6);
+            color: #e2e8f0;
+            resize: vertical;
+        }
+
+        .metric-group textarea {
+            min-height: 64px;
+        }
+
+        .metric-range-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .insights-panel {
+            margin-top: 24px;
+            padding: 20px;
+            border-radius: 18px;
+            background: rgba(15, 76, 129, 0.18);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+        }
+
+        .insights-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 16px;
+        }
+
+        .archetype-pill {
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: rgba(56, 189, 248, 0.2);
+            color: #bae6fd;
+            font-weight: 600;
+            font-size: 0.88rem;
+        }
+
+        .insight-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+        }
+
+        .insight-card {
+            padding: 14px;
+            border-radius: 14px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.16);
+        }
+
+        .insight-card strong {
+            display: block;
+            margin-bottom: 6px;
+            color: #e0f2fe;
+        }
+
+        .insight-notes {
+            margin-top: 16px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .insight-note {
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: rgba(30, 58, 138, 0.25);
+            border: 1px solid rgba(59, 130, 246, 0.28);
+            font-size: 0.88rem;
+            line-height: 1.4;
         }
 
         .loading {
@@ -965,6 +1089,82 @@
                     </div>
                 </div>
 
+                <div class="opponent-section" id="opponentSection">
+                    <h3 data-i18n="opponent.heading">对手建模</h3>
+                    <div class="opponent-grid">
+                        <div class="metric-group">
+                            <span data-i18n="opponent.aggression.label">激进程度</span>
+                            <div class="metric-range-label">
+                                <small data-i18n="opponent.aggression.low">被动</small>
+                                <small id="opAggressionValue">6/10</small>
+                                <small data-i18n="opponent.aggression.high">激进</small>
+                            </div>
+                            <input type="range" id="opAggressionInput" min="0" max="10" value="6">
+                        </div>
+                        <div class="metric-group">
+                            <span data-i18n="opponent.tightness.label">起手范围</span>
+                            <div class="metric-range-label">
+                                <small data-i18n="opponent.tightness.wide">宽松</small>
+                                <small id="opTightnessValue">5/10</small>
+                                <small data-i18n="opponent.tightness.narrow">紧实</small>
+                            </div>
+                            <input type="range" id="opTightnessInput" min="0" max="10" value="5">
+                        </div>
+                        <div class="metric-group">
+                            <span data-i18n="opponent.bluff.label">诈唬频率</span>
+                            <div class="metric-range-label">
+                                <small data-i18n="opponent.bluff.low">罕见</small>
+                                <small id="opBluffValue">3/10</small>
+                                <small data-i18n="opponent.bluff.high">频繁</small>
+                            </div>
+                            <input type="range" id="opBluffInput" min="0" max="10" value="3">
+                        </div>
+                        <div class="metric-group">
+                            <span data-i18n="opponent.confidence.label">对手自信</span>
+                            <div class="metric-range-label">
+                                <small data-i18n="opponent.confidence.low">犹豫</small>
+                                <small id="opConfidenceValue">6/10</small>
+                                <small data-i18n="opponent.confidence.high">自信</small>
+                            </div>
+                            <input type="range" id="opConfidenceInput" min="0" max="10" value="6">
+                        </div>
+                        <div class="metric-group">
+                            <span data-i18n="opponent.tilt.label">情绪波动</span>
+                            <div class="metric-range-label">
+                                <small data-i18n="opponent.tilt.calm">冷静</small>
+                                <small id="opTiltValue">4/10</small>
+                                <small data-i18n="opponent.tilt.hot">倾向失控</small>
+                            </div>
+                            <input type="range" id="opTiltInput" min="0" max="10" value="4">
+                        </div>
+                        <div class="metric-group">
+                            <span data-i18n="opponent.bet.label">最近下注占底池%</span>
+                            <input type="number" id="opBetPctInput" min="0" max="400" step="1" value="65" data-i18n-placeholder="opponent.bet.placeholder" placeholder="例如 70">
+                        </div>
+                        <div class="metric-group">
+                            <span data-i18n="opponent.action.label">最近动作</span>
+                            <select id="opActionStreet">
+                                <option value="PREFLOP" data-i18n="streets.PREFLOP">翻前 (Preflop)</option>
+                                <option value="FLOP" data-i18n="streets.FLOP">翻牌圈 (Flop)</option>
+                                <option value="TURN" data-i18n="streets.TURN">转牌圈 (Turn)</option>
+                                <option value="RIVER" data-i18n="streets.RIVER">河牌圈 (River)</option>
+                            </select>
+                            <select id="opActionType">
+                                <option value="bet" data-i18n="opponent.action.bet">下注</option>
+                                <option value="raise" data-i18n="opponent.action.raise">加注</option>
+                                <option value="call" data-i18n="opponent.action.call">跟注</option>
+                                <option value="check" data-i18n="opponent.action.check">过牌</option>
+                            </select>
+                            <input type="number" id="opActionAmount" min="0" step="0.01" data-i18n-placeholder="opponent.action.amount" placeholder="例如 80">
+                            <input type="number" id="opActionPot" min="0" step="0.01" data-i18n-placeholder="opponent.action.pot" placeholder="行动前底池">
+                        </div>
+                        <div class="metric-group">
+                            <span data-i18n="opponent.notes.label">额外备注</span>
+                            <textarea id="opNotesInput" data-i18n-placeholder="opponent.notes.placeholder" placeholder="例如：翻牌圈持续下注，河牌紧凶"></textarea>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="button-group">
                     <button id="recommendButton" data-i18n="buttons.recommend">获取决策建议</button>
                     <button id="equityButton" data-i18n="buttons.equity">仅计算胜率</button>
@@ -1006,6 +1206,33 @@
                 </div>
 
                 <div class="explanation-box" id="explanationBox" style="display: none;"></div>
+
+                <div class="insights-panel" id="opponentInsights" style="display: none;">
+                    <div class="insights-header">
+                        <h3 data-i18n="opponent.insights.heading">对手画像</h3>
+                        <span class="archetype-pill" id="opponentArchetype"></span>
+                    </div>
+                    <p id="opponentSummary" style="font-size:0.92rem;line-height:1.6;opacity:0.82;margin-bottom:16px;"></p>
+                    <div class="insight-cards">
+                        <div class="insight-card">
+                            <strong data-i18n="opponent.insights.aggression">激进指数</strong>
+                            <span id="opponentAggressionMetric">-</span>
+                        </div>
+                        <div class="insight-card">
+                            <strong data-i18n="opponent.insights.betting">下注压力</strong>
+                            <span id="opponentBettingMetric">-</span>
+                        </div>
+                        <div class="insight-card">
+                            <strong data-i18n="opponent.insights.psychology">心理压强</strong>
+                            <span id="opponentPsychologyMetric">-</span>
+                        </div>
+                        <div class="insight-card">
+                            <strong data-i18n="opponent.insights.range">范围优势</strong>
+                            <span id="opponentRangeMetric">-</span>
+                        </div>
+                    </div>
+                    <div class="insight-notes" id="opponentNotes"></div>
+                </div>
 
                 <div>
                     <h3 data-i18n="summary.heading">当前输入概览</h3>
@@ -1289,6 +1516,30 @@
         let factorsGrid;
         let errorBox;
         let summaryGrid;
+        let opponentInsightsPanel;
+        let opponentArchetype;
+        let opponentSummary;
+        let opponentNotesContainer;
+        let opponentAggressionMetric;
+        let opponentBettingMetric;
+        let opponentPsychologyMetric;
+        let opponentRangeMetric;
+        let opAggressionInput;
+        let opTightnessInput;
+        let opBluffInput;
+        let opConfidenceInput;
+        let opTiltInput;
+        let opBetPctInput;
+        let opActionStreet;
+        let opActionType;
+        let opActionAmount;
+        let opActionPot;
+        let opNotesInput;
+        let opAggressionValue;
+        let opTightnessValue;
+        let opBluffValue;
+        let opConfidenceValue;
+        let opTiltValue;
 
         const translations = {
             en: {
@@ -1352,7 +1603,8 @@
                         villainStack: 'Villain Stack',
                         street: 'Street',
                         position: 'Position',
-                        risk: 'Risk Preference'
+                        risk: 'Risk Preference',
+                        opponentModel: 'Opponent Read'
                     }
                 },
                 placeholders: {
@@ -1372,6 +1624,58 @@
                     reset: 'Reset Cards',
                     gameManual: '🃏 Game Manual',
                     apiConfig: '⚙️ API'
+                },
+                opponent: {
+                    heading: 'Opponent Model',
+                    aggression: {
+                        label: 'Aggression',
+                        low: 'Passive',
+                        high: 'Hyper aggressive'
+                    },
+                    tightness: {
+                        label: 'Opening Range',
+                        wide: 'Loose',
+                        narrow: 'Tight'
+                    },
+                    bluff: {
+                        label: 'Bluff Frequency',
+                        low: 'Rare',
+                        high: 'Frequent'
+                    },
+                    confidence: {
+                        label: 'Table Confidence',
+                        low: 'Hesitant',
+                        high: 'Confident'
+                    },
+                    tilt: {
+                        label: 'Emotional Tilt',
+                        calm: 'Composed',
+                        hot: 'Near tilt'
+                    },
+                    bet: {
+                        label: 'Latest bet % of pot',
+                        placeholder: 'e.g. 70'
+                    },
+                    action: {
+                        label: 'Latest action',
+                        bet: 'Bet',
+                        raise: 'Raise',
+                        call: 'Call',
+                        check: 'Check',
+                        amount: 'Action amount',
+                        pot: 'Pot before action'
+                    },
+                    notes: {
+                        label: 'Notes',
+                        placeholder: 'e.g. C-bets flop, tight river calls'
+                    },
+                    insights: {
+                        heading: 'Opponent Insights',
+                        aggression: 'Aggression Index',
+                        betting: 'Betting Pressure',
+                        psychology: 'Psychological Pressure',
+                        range: 'Range Advantage'
+                    }
                 },
                 status: {
                     apiLabel: 'API',
@@ -1402,6 +1706,13 @@
                         hand_strength: 'Hand Strength',
                         position_factor: 'Position',
                         stack_to_pot_ratio: 'SPR',
+                        opponent_aggression: 'Opponent Aggression',
+                        opponent_tightness: 'Opponent Tightness',
+                        betting_pressure: 'Betting Pressure',
+                        board_pressure: 'Board Pressure',
+                        range_advantage: 'Range Advantage',
+                        psychological_pressure: 'Psychological Pressure',
+                        bluff_tendency: 'Bluff Tendency',
                         fold_equity: 'Fold Equity',
                         outs: 'Outs',
                         board_wetness: 'Board Texture',
@@ -1567,7 +1878,8 @@
                         villainStack: '对手筹码',
                         street: '当前阶段',
                         position: '你的位置',
-                        risk: '风险偏好'
+                        risk: '风险偏好',
+                        opponentModel: '对手画像'
                     }
                 },
                 placeholders: {
@@ -1587,6 +1899,58 @@
                     reset: '重置牌面',
                     gameManual: '🃏 游戏手册',
                     apiConfig: '⚙️ API配置'
+                },
+                opponent: {
+                    heading: '对手建模',
+                    aggression: {
+                        label: '激进程度',
+                        low: '偏被动',
+                        high: '超激进'
+                    },
+                    tightness: {
+                        label: '起手范围',
+                        wide: '宽松',
+                        narrow: '紧实'
+                    },
+                    bluff: {
+                        label: '诈唬频率',
+                        low: '罕见',
+                        high: '频繁'
+                    },
+                    confidence: {
+                        label: '桌面自信',
+                        low: '犹豫',
+                        high: '自信'
+                    },
+                    tilt: {
+                        label: '情绪波动',
+                        calm: '冷静',
+                        hot: '接近失控'
+                    },
+                    bet: {
+                        label: '最近下注占底池%',
+                        placeholder: '例如 70'
+                    },
+                    action: {
+                        label: '最近动作',
+                        bet: '下注',
+                        raise: '加注',
+                        call: '跟注',
+                        check: '过牌',
+                        amount: '动作金额',
+                        pot: '行动前底池'
+                    },
+                    notes: {
+                        label: '额外备注',
+                        placeholder: '例如：翻牌圈持续下注，河牌趋于紧凶'
+                    },
+                    insights: {
+                        heading: '对手画像',
+                        aggression: '激进指数',
+                        betting: '下注压力',
+                        psychology: '心理压强',
+                        range: '范围优势'
+                    }
                 },
                 status: {
                     apiLabel: '后端',
@@ -1617,6 +1981,13 @@
                         hand_strength: '牌力评分',
                         position_factor: '位置优势',
                         stack_to_pot_ratio: 'SPR',
+                        opponent_aggression: '对手激进度',
+                        opponent_tightness: '对手紧凶度',
+                        betting_pressure: '下注压力',
+                        board_pressure: '牌面压力',
+                        range_advantage: '范围优势',
+                        psychological_pressure: '心理压强',
+                        bluff_tendency: '诈唬倾向',
                         fold_equity: '弃牌率',
                         outs: '补牌数',
                         board_wetness: '公共牌协调度',
@@ -1771,6 +2142,25 @@
 
         const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
 
+        const percentFactorKeys = new Set([
+            'equity',
+            'pot_odds',
+            'hand_strength',
+            'position_factor',
+            'fold_equity',
+            'board_wetness',
+            'betting_pressure',
+            'board_pressure',
+            'range_advantage',
+            'psychological_pressure',
+            'bluff_tendency',
+            'opponent_aggression',
+            'opponent_tightness',
+            'draw_probability',
+            'implied_odds',
+            'pot_commitment'
+        ]);
+
         const state = {
             language: 'zh',
             heroCards: [null, null],
@@ -1779,7 +2169,23 @@
             selectedSlot: null,
             position: 'BTN',
             lastResult: null,
-            apiStatus: 'idle'
+            apiStatus: 'idle',
+            opponent: {
+                aggression: 0.6,
+                tightness: 0.5,
+                bluff: 0.3,
+                confidence: 0.6,
+                tilt: 0.4,
+                betPct: 65,
+                action: {
+                    street: 'PREFLOP',
+                    type: 'bet',
+                    amount: null,
+                    pot: null
+                },
+                notes: ''
+            },
+            opponentProfile: null
         };
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -1802,6 +2208,30 @@
             factorsGrid = document.getElementById('factorsGrid');
             errorBox = document.getElementById('errorBox');
             summaryGrid = document.getElementById('summaryGrid');
+            opponentInsightsPanel = document.getElementById('opponentInsights');
+            opponentArchetype = document.getElementById('opponentArchetype');
+            opponentSummary = document.getElementById('opponentSummary');
+            opponentNotesContainer = document.getElementById('opponentNotes');
+            opponentAggressionMetric = document.getElementById('opponentAggressionMetric');
+            opponentBettingMetric = document.getElementById('opponentBettingMetric');
+            opponentPsychologyMetric = document.getElementById('opponentPsychologyMetric');
+            opponentRangeMetric = document.getElementById('opponentRangeMetric');
+            opAggressionInput = document.getElementById('opAggressionInput');
+            opTightnessInput = document.getElementById('opTightnessInput');
+            opBluffInput = document.getElementById('opBluffInput');
+            opConfidenceInput = document.getElementById('opConfidenceInput');
+            opTiltInput = document.getElementById('opTiltInput');
+            opBetPctInput = document.getElementById('opBetPctInput');
+            opActionStreet = document.getElementById('opActionStreet');
+            opActionType = document.getElementById('opActionType');
+            opActionAmount = document.getElementById('opActionAmount');
+            opActionPot = document.getElementById('opActionPot');
+            opNotesInput = document.getElementById('opNotesInput');
+            opAggressionValue = document.getElementById('opAggressionValue');
+            opTightnessValue = document.getElementById('opTightnessValue');
+            opBluffValue = document.getElementById('opBluffValue');
+            opConfidenceValue = document.getElementById('opConfidenceValue');
+            opTiltValue = document.getElementById('opTiltValue');
 
             // 游戏手册相关元素
             const gameManualBtn = document.getElementById('gameManualBtn');
@@ -2177,10 +2607,125 @@
             updateDeckAvailability();
             clearResult();
             showError('');
+            state.opponent = {
+                aggression: 0.6,
+                tightness: 0.5,
+                bluff: 0.3,
+                confidence: 0.6,
+                tilt: 0.4,
+                betPct: 65,
+                action: {
+                    street: 'PREFLOP',
+                    type: 'bet',
+                    amount: null,
+                    pot: null
+                },
+                notes: ''
+            };
+            if (opAggressionInput) {
+                opAggressionInput.value = 6;
+                opAggressionInput.dispatchEvent(new Event('input'));
+            }
+            if (opTightnessInput) {
+                opTightnessInput.value = 5;
+                opTightnessInput.dispatchEvent(new Event('input'));
+            }
+            if (opBluffInput) {
+                opBluffInput.value = 3;
+                opBluffInput.dispatchEvent(new Event('input'));
+            }
+            if (opConfidenceInput) {
+                opConfidenceInput.value = 6;
+                opConfidenceInput.dispatchEvent(new Event('input'));
+            }
+            if (opTiltInput) {
+                opTiltInput.value = 4;
+                opTiltInput.dispatchEvent(new Event('input'));
+            }
+            if (opBetPctInput) {
+                opBetPctInput.value = 65;
+                opBetPctInput.dispatchEvent(new Event('input'));
+            }
+            if (opActionStreet) {
+                opActionStreet.value = 'PREFLOP';
+                opActionStreet.dispatchEvent(new Event('change'));
+            }
+            if (opActionType) {
+                opActionType.value = 'bet';
+                opActionType.dispatchEvent(new Event('change'));
+            }
+            if (opActionAmount) {
+                opActionAmount.value = '';
+                opActionAmount.dispatchEvent(new Event('input'));
+            }
+            if (opActionPot) {
+                opActionPot.value = '';
+                opActionPot.dispatchEvent(new Event('input'));
+            }
+            if (opNotesInput) {
+                opNotesInput.value = '';
+                state.opponent.notes = '';
+            }
+            refreshSummary();
+        }
+
+        function buildOpponentObservationPayload() {
+            const { action } = state.opponent;
+            if (!action || !action.street || !action.type) {
+                return null;
+            }
+            const payload = {
+                street: action.street,
+                action: action.type
+            };
+            if (Number.isFinite(action.amount) && Number.isFinite(action.pot) && action.pot > 0) {
+                payload.amount = action.amount;
+                payload.pot = action.pot;
+            }
+            return payload;
+        }
+
+        function getOpponentStatsPayload() {
+            const stats = {
+                aggression: state.opponent.aggression,
+                tightness: state.opponent.tightness,
+                bluff_frequency: state.opponent.bluff,
+                recent_bet_pct: state.opponent.betPct,
+                confidence: state.opponent.confidence,
+                tilt: state.opponent.tilt
+            };
+
+            const observation = buildOpponentObservationPayload();
+            if (observation) {
+                stats.observations = [observation];
+            }
+
+            if (state.opponent.notes && state.opponent.notes.trim()) {
+                stats.notes = state.opponent.notes.trim();
+            }
+
+            return stats;
+        }
+
+        function buildOpponentPreviousActions() {
+            const observation = buildOpponentObservationPayload();
+            if (!observation || observation.amount === undefined) {
+                return null;
+            }
+            return [{
+                actor: 'villain',
+                street: observation.street,
+                action: observation.action,
+                amount: observation.amount,
+                pot: observation.pot
+            }];
         }
 
         function gatherGameState() {
-            return {
+            const opponentStats = getOpponentStatsPayload();
+            const previousActions = buildOpponentPreviousActions();
+
+            const payload = {
                 hero_cards: state.heroCards.filter(Boolean).map(card => card.toUpperCase()),
                 board: state.board.filter((card, index) => index < streetBoardCounts[state.street] && card).map(card => card.toUpperCase()),
                 pot_size: parseFloat(document.getElementById('potInput').value) || 0,
@@ -2190,8 +2735,15 @@
                 position: positionSelect.value,
                 street: state.street,
                 villain_range: document.getElementById('rangeInput').value || null,
-                risk_preference: parseFloat(riskSlider.value) || 5
+                risk_preference: parseFloat(riskSlider.value) || 5,
+                opponent_stats: opponentStats
             };
+
+            if (previousActions) {
+                payload.previous_actions = previousActions;
+            }
+
+            return payload;
         }
 
         function showLoading() {
@@ -2212,14 +2764,32 @@
             confidenceValue.textContent = '-';
             evValue.textContent = '-';
             state.lastResult = null;
+            if (opponentInsightsPanel) {
+                opponentInsightsPanel.style.display = 'none';
+                if (opponentArchetype) opponentArchetype.textContent = '';
+                if (opponentSummary) opponentSummary.textContent = '';
+                if (opponentAggressionMetric) opponentAggressionMetric.textContent = '-';
+                if (opponentBettingMetric) opponentBettingMetric.textContent = '-';
+                if (opponentPsychologyMetric) opponentPsychologyMetric.textContent = '-';
+                if (opponentRangeMetric) opponentRangeMetric.textContent = '-';
+                if (opponentNotesContainer) opponentNotesContainer.innerHTML = '';
+            }
+            state.opponentProfile = null;
+        }
+
+        function formatPercent(value, digits = 1) {
+            if (typeof value !== 'number' || Number.isNaN(value)) {
+                return '-';
+            }
+            return `${(value * 100).toFixed(digits)}%`;
         }
 
         function formatFactorValue(key, value) {
             if (value === null || value === undefined) {
                 return '-';
             }
-            if (['equity', 'pot_odds', 'hand_strength', 'position_factor', 'fold_equity', 'board_wetness', 'draw_probability', 'implied_odds', 'pot_commitment'].includes(key)) {
-                return `${(value * 100).toFixed(1)}%`;
+            if (percentFactorKeys.has(key)) {
+                return formatPercent(value);
             }
             if (key === 'outs') {
                 return `${Math.round(value)}`;
@@ -2233,17 +2803,24 @@
             }
             const keys = [
                 'equity',
-                'pot_odds',
                 'hand_strength',
+                'range_advantage',
+                'opponent_aggression',
+                'opponent_tightness',
+                'betting_pressure',
+                'board_wetness',
+                'board_pressure',
+                'psychological_pressure',
+                'fold_equity',
+                'bluff_tendency',
+                'pot_odds',
                 'position_factor',
                 'stack_to_pot_ratio',
-                'fold_equity',
-                'outs',
-                'board_wetness',
-                'draw_probability',
-                'implied_odds',
                 'effective_stack',
-                'pot_commitment'
+                'implied_odds',
+                'pot_commitment',
+                'outs',
+                'draw_probability'
             ];
             factorsGrid.innerHTML = '';
             keys.forEach(key => {
@@ -2266,6 +2843,80 @@
                 card.appendChild(value);
                 factorsGrid.appendChild(card);
             });
+        }
+
+        function renderOpponentInsights(profile, factors) {
+            if (!opponentInsightsPanel) {
+                return;
+            }
+
+            let resolved = profile;
+            if (!resolved && factors) {
+                resolved = {
+                    classification: factors.opponent_classification,
+                    summary: factors.opponent_summary,
+                    notes: factors.opponent_notes,
+                    aggression_index: factors.opponent_aggression,
+                    betting_pressure: factors.betting_pressure,
+                    psychological_pressure: factors.psychological_pressure,
+                    range_advantage: factors.range_advantage
+                };
+            }
+
+            if (!resolved || (!resolved.classification && !resolved.summary)) {
+                opponentInsightsPanel.style.display = 'none';
+                state.opponentProfile = null;
+                return;
+            }
+
+            state.opponentProfile = resolved;
+            opponentInsightsPanel.style.display = 'block';
+
+            if (opponentArchetype) {
+                opponentArchetype.textContent = resolved.classification || '';
+            }
+            if (opponentSummary) {
+                opponentSummary.textContent = resolved.summary || '';
+            }
+            if (opponentAggressionMetric) {
+                opponentAggressionMetric.textContent = formatPercent(resolved.aggression_index ?? factors?.opponent_aggression ?? 0, 1);
+            }
+            if (opponentBettingMetric) {
+                opponentBettingMetric.textContent = formatPercent(resolved.betting_pressure ?? factors?.betting_pressure ?? 0, 1);
+            }
+            if (opponentPsychologyMetric) {
+                opponentPsychologyMetric.textContent = formatPercent(resolved.psychological_pressure ?? factors?.psychological_pressure ?? 0, 1);
+            }
+            if (opponentRangeMetric) {
+                opponentRangeMetric.textContent = formatPercent(resolved.range_advantage ?? factors?.range_advantage ?? 0, 1);
+            }
+
+            if (opponentNotesContainer) {
+                opponentNotesContainer.innerHTML = '';
+                const notes = [];
+                if (Array.isArray(resolved.notes)) {
+                    notes.push(...resolved.notes);
+                } else if (resolved.notes) {
+                    notes.push(resolved.notes);
+                }
+                if (factors?.opponent_notes && Array.isArray(factors.opponent_notes)) {
+                    notes.push(...factors.opponent_notes);
+                }
+
+                if (notes.length === 0) {
+                    const empty = document.createElement('div');
+                    empty.className = 'insight-note';
+                    empty.textContent = state.language === 'zh' ? '暂无更多线索，保持观察。' : 'No additional reads yet — keep observing.';
+                    opponentNotesContainer.appendChild(empty);
+                } else {
+                    notes.slice(0, 4).forEach(note => {
+                        const item = document.createElement('div');
+                        item.className = 'insight-note';
+                        item.textContent = note;
+                        opponentNotesContainer.appendChild(item);
+                    });
+                }
+            }
         }
 
         function getNumericValue(id) {
@@ -2294,7 +2945,8 @@
                 { key: 'villainStack', value: formatChips(getNumericValue('villainStackInput')) },
                 { key: 'street', value: t(`streets.${state.street}`) },
                 { key: 'position', value: positionLabels[state.position][state.language] },
-                { key: 'risk', value: `${riskSlider ? riskSlider.value : 5}/10` }
+                { key: 'risk', value: `${riskSlider ? riskSlider.value : 5}/10` },
+                { key: 'opponentModel', value: getOpponentSummaryText() }
             ];
 
             summaryGrid.innerHTML = '';
@@ -2313,6 +2965,15 @@
                 wrapper.appendChild(strong);
                 summaryGrid.appendChild(wrapper);
             });
+        }
+
+        function getOpponentSummaryText() {
+            const aggressionScore = Math.round((state.opponent.aggression || 0) * 10);
+            const tightnessScore = Math.round((state.opponent.tightness || 0) * 10);
+            if (state.language === 'zh') {
+                return `激进 ${aggressionScore}/10｜范围 ${tightnessScore}/10`;
+            }
+            return `Agg ${aggressionScore}/10 · Range ${tightnessScore}/10`;
         }
 
         function translateAction(action) {
@@ -2354,6 +3015,7 @@
             }
 
             displayFactors(data.all_factors || data.factors_used);
+            renderOpponentInsights(data.opponent_profile, data.all_factors);
             refreshSummary();
         }
 
@@ -2367,6 +3029,7 @@
             explanationBox.textContent = state.language === 'zh' ? '当前手牌对输入范围的胜率' : 'Win probability versus the selected range';
             explanationBox.style.display = 'block';
             factorsGrid.innerHTML = '';
+            renderOpponentInsights(data.opponent_profile || null, null);
             refreshSummary();
         }
 
@@ -2548,6 +3211,88 @@
             refreshSummary();
         }
 
+        function initOpponentControls() {
+            if (!opAggressionInput) {
+                return;
+            }
+
+            const sliderConfigs = [
+                { input: opAggressionInput, display: opAggressionValue, key: 'aggression' },
+                { input: opTightnessInput, display: opTightnessValue, key: 'tightness' },
+                { input: opBluffInput, display: opBluffValue, key: 'bluff' },
+                { input: opConfidenceInput, display: opConfidenceValue, key: 'confidence' },
+                { input: opTiltInput, display: opTiltValue, key: 'tilt' }
+            ];
+
+            sliderConfigs.forEach(({ input, display, key }) => {
+                if (!input) {
+                    return;
+                }
+                const apply = () => {
+                    const rawValue = Number(input.value || 0);
+                    state.opponent[key] = Math.max(0, Math.min(1, rawValue / 10));
+                    if (display) {
+                        display.textContent = `${rawValue}/10`;
+                    }
+                    refreshSummary();
+                };
+                input.addEventListener('input', apply);
+                input.value = Math.round((state.opponent[key] || 0) * 10);
+                apply();
+            });
+
+            if (opBetPctInput) {
+                opBetPctInput.value = state.opponent.betPct;
+                opBetPctInput.addEventListener('input', () => {
+                    const value = Number(opBetPctInput.value || 0);
+                    state.opponent.betPct = Math.max(0, Math.min(400, value));
+                    refreshSummary();
+                });
+            }
+
+            if (opActionStreet) {
+                opActionStreet.value = state.opponent.action.street;
+                opActionStreet.addEventListener('change', () => {
+                    state.opponent.action.street = opActionStreet.value;
+                    refreshSummary();
+                });
+            }
+
+            if (opActionType) {
+                opActionType.value = state.opponent.action.type;
+                opActionType.addEventListener('change', () => {
+                    state.opponent.action.type = opActionType.value;
+                    refreshSummary();
+                });
+            }
+
+            if (opActionAmount) {
+                opActionAmount.value = state.opponent.action.amount ?? '';
+                opActionAmount.addEventListener('input', () => {
+                    const value = parseFloat(opActionAmount.value);
+                    state.opponent.action.amount = Number.isFinite(value) ? value : null;
+                    refreshSummary();
+                });
+            }
+
+            if (opActionPot) {
+                opActionPot.value = state.opponent.action.pot ?? '';
+                opActionPot.addEventListener('input', () => {
+                    const value = parseFloat(opActionPot.value);
+                    state.opponent.action.pot = Number.isFinite(value) ? value : null;
+                    refreshSummary();
+                });
+            }
+
+            if (opNotesInput) {
+                opNotesInput.value = state.opponent.notes || '';
+                opNotesInput.addEventListener('input', () => {
+                    state.opponent.notes = opNotesInput.value;
+                    refreshSummary();
+                });
+            }
+        }
+
         function initHealthCheck(options = {}) {
             const { silent = false } = options;
             state.apiStatus = 'checking';
@@ -2581,6 +3326,7 @@
             initButtons();
             initNumericInputs();
             initRiskSlider();
+            initOpponentControls();
             initLanguageToggle();
             translatePage();
             initHealthCheck();

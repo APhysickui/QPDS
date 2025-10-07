@@ -6,7 +6,8 @@ from .evaluator import HandEvaluator, Card, HandRank, Rank, Suit
 from .calculator import EquityCalculator, Range
 from .engine import (
     FactorEngine, Factors, GameState, Position, Street,
-    DecisionEngine, Decision, Action
+    DecisionEngine, Decision, Action,
+    OpponentModel, OpponentInsights
 )
 
 __all__ = [
@@ -16,5 +17,6 @@ __all__ = [
     'EquityCalculator', 'Range',
     # Engine
     'FactorEngine', 'Factors', 'GameState', 'Position', 'Street',
-    'DecisionEngine', 'Decision', 'Action'
+    'DecisionEngine', 'Decision', 'Action',
+    'OpponentModel', 'OpponentInsights'
 ]

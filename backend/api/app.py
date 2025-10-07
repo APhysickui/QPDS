@@ -273,15 +273,21 @@ def get_factors():
             hero_position=position,
             street=street,
             num_opponents=data.get('num_opponents', 1),
-            villain_range=villain_range
+            villain_range=villain_range,
+            previous_actions=data.get('previous_actions')
         )
 
         opponent_stats = data.get('opponent_stats')
 
         # Calculate factors
         factors = factor_engine.calculate_factors(game_state, opponent_stats)
+        opponent_profile = factor_engine.get_latest_opponent_profile()
 
-        return jsonify(factors.to_dict()), 200
+        payload = factors.to_dict()
+        if opponent_profile:
+            payload['opponent_profile'] = opponent_profile.to_dict()
+
+        return jsonify(payload), 200
 
     except InvalidCardError as exc:
         return jsonify({'error': str(exc)}), 400
@@ -348,7 +354,8 @@ def get_recommendation():
             hero_position=position,
             street=street,
             num_opponents=data.get('num_opponents', 1),
-            villain_range=villain_range
+            villain_range=villain_range,
+            previous_actions=data.get('previous_actions')
         )
 
         # Set risk preference
@@ -363,7 +370,7 @@ def get_recommendation():
         # Calculate factors for additional info
         factors = factor_engine.calculate_factors(game_state, opponent_stats)
 
-        return jsonify({
+        response = {
             'action': decision.action.value,
             'amount': decision.amount,
             'confidence': decision.confidence,
@@ -371,7 +378,16 @@ def get_recommendation():
             'explanation': decision.explanation,
             'factors_used': decision.factors_used,
             'all_factors': factors.to_dict()
-        }), 200
+        }
+
+        if decision.opponent_profile:
+            response['opponent_profile'] = decision.opponent_profile
+
+        opponent_profile = factor_engine.get_latest_opponent_profile()
+        if opponent_profile and not decision.opponent_profile:
+            response['opponent_profile'] = opponent_profile.to_dict()
+
+        return jsonify(response), 200
 
     except InvalidCardError as exc:
         return jsonify({'error': str(exc)}), 400
