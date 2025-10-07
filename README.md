@@ -63,7 +63,7 @@ python3 run.py
 2. 安装 `requirements.txt` 中的所有依赖
 3. 启动后端 API 服务（默认监听 http://localhost:8080）
 
-启动完成后，用浏览器打开 `frontend/index.html` 即可开始使用。保持脚本运行窗口打开，按 `Ctrl+C` 可随时停止服务。
+启动完成后，用浏览器打开 `frontend/index.html` 即可开始使用。保持脚本运行窗口打开，按 `Ctrl+C` 可随时停止服务。若页面提示「无法连接后端服务」，点击右上角 `⚙️ API配置` 并填写 `http://localhost:8080` 即可恢复。
 
 ### 方式二：手动操作
 ```bash
@@ -72,7 +72,7 @@ source venv/bin/activate          # Windows: venv\Scripts\activate
 python -m pip install -r requirements.txt
 python -m backend.api.app         # 启动后端（默认端口 8080）
 ```
-前端同样通过直接打开 `frontend/index.html` 访问。
+前端同样通过直接打开 `frontend/index.html` 访问，如遇连接提示可通过 `⚙️ API配置` 指向 `http://localhost:8080`。
 
 ## ☁️ 部署上线
 - 推荐使用 GitHub Pages + Render 组合：前端静态文件部署到 GitHub Pages，后端 Flask API 托管在 Render。
@@ -221,9 +221,9 @@ python -m pip install lightgbm --no-cache-dir
 
 **Q: 前端无法获取推荐结果**
 A: 请检查：
-- 后端服务是否正常启动（访问 http://localhost:8080/health 应返回 `{"status": "ok"}`）
+- 后端服务是否正常启动（访问 http://localhost:8080/health 应返回 `{"status": "healthy", "service": "QPDS API"}`）
 - 浏览器控制台是否有跨域或网络错误
-- `frontend/index.html` 中的 `API_URL` 是否与后端端口一致
+- 页面右上角的 `⚙️ API` 配置是否指向正在运行的后端（本地为 `http://localhost:8080`，线上请填写 Render 的 HTTPS 地址）
 
 **Q: 界面显示异常或翻译缺失**
 A: 刷新页面或清除浏览器缓存，确保 JavaScript 正常加载。
