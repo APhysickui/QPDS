@@ -217,7 +217,7 @@
 
         .layout {
             display: grid;
-            grid-template-columns: minmax(320px, 360px) minmax(0, 1fr);
+            grid-template-columns: repeat(2, minmax(340px, 1fr));
             gap: 26px;
             align-items: start;
         }
@@ -231,6 +231,10 @@
             box-shadow: 0 26px 52px rgba(15, 23, 42, 0.5);
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: 100%;
         }
 
         .panel::before {
@@ -953,73 +957,101 @@
         }
 
         .analysis-panel {
+            grid-column: 1 / -1;
+            background: linear-gradient(160deg, rgba(26, 24, 60, 0.95), rgba(13, 11, 34, 0.94));
+            border-radius: 26px;
+            padding: 32px;
+            border: 1px solid rgba(148, 118, 255, 0.32);
+            box-shadow: 0 30px 58px rgba(8, 6, 24, 0.55);
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 28px;
+        }
+
+        .analysis-top {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 18px;
         }
 
         .result-banner {
-            background: linear-gradient(135deg, rgba(45, 43, 85, 0.9), rgba(24, 18, 52, 0.85));
-            border-radius: 18px;
-            padding: 22px;
-            text-align: center;
-            color: var(--text-primary);
-            border: 1px solid rgba(100, 244, 255, 0.28);
-            box-shadow: 0 24px 48px rgba(12, 9, 32, 0.55);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 18px;
         }
 
-        .result-banner .action-label {
-            font-size: 0.9rem;
-            letter-spacing: 0.12em;
+        .analysis-metric {
+            background: rgba(24, 21, 54, 0.78);
+            border-radius: 14px;
+            padding: 16px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .analysis-metric-label {
+            font-size: 0.78rem;
             text-transform: uppercase;
+            letter-spacing: 0.12em;
             color: var(--text-muted);
         }
 
-        .result-banner .action-value {
-            font-size: 2rem;
+        .analysis-metric-value {
+            font-size: 1.45rem;
             font-weight: 700;
-            margin-top: 8px;
-            text-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+            color: var(--text-primary);
+            text-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
         }
 
-        .result-details {
+        .analysis-body {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 10px;
-            margin-top: 12px;
-            text-align: left;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
         }
 
-        .result-detail {
-            background: rgba(37, 33, 74, 0.65);
-            border-radius: 12px;
-            padding: 12px;
-            border: 1px solid rgba(148, 163, 184, 0.18);
+        .analysis-column {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
         }
 
-        .result-detail span {
-            display: block;
-            font-size: 0.78rem;
-            letter-spacing: 0.08em;
-            opacity: 0.68;
+        .analysis-box {
+            background: rgba(20, 18, 48, 0.78);
+            border-radius: 18px;
+            padding: 20px 22px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+        }
+
+        .analysis-box-title {
+            font-size: 0.82rem;
             text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--text-secondary);
+            margin-bottom: 14px;
         }
 
-        .result-detail strong {
-            display: block;
-            margin-top: 4px;
-            font-size: 1.05rem;
-            color: var(--accent-cyan);
+        @media (max-width: 1024px) {
+            .analysis-panel {
+                padding: 26px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .analysis-panel {
+                padding: 22px 18px;
+            }
         }
 
         .explanation-box {
-            background: rgba(32, 30, 70, 0.72);
-            border-radius: 14px;
+            background: rgba(26, 23, 60, 0.82);
+            border-radius: 12px;
             padding: 16px;
             font-size: 0.94rem;
             line-height: 1.6;
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(148, 163, 184, 0.18);
             color: var(--text-secondary);
         }
 
@@ -1153,9 +1185,9 @@
 
         .insights-header {
             display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 16px;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 12px;
         }
 
         .archetype-pill {
@@ -1528,64 +1560,83 @@
 
                 <div class="error-box" id="errorBox"></div>
             </section>
-            <section class="panel analysis-panel" id="analysisPanel">
+            <section class="analysis-panel" id="analysisPanel">
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
                     <span data-i18n="loading">正在为你量化牌局...</span>
                 </div>
 
-                <div class="result-banner" id="resultBanner" style="display: none;">
-                    <div class="action-label" data-i18n="result.action">推荐行动</div>
-                    <div class="action-value" id="actionValue">-</div>
-                    <div class="result-details">
-                        <div class="result-detail">
-                            <span data-i18n="result.confidence">置信度</span>
-                            <strong id="confidenceValue">-</strong>
+                <div class="analysis-top">
+                    <div class="analysis-metric">
+                        <span class="analysis-metric-label" data-i18n="analysis.stage">当前阶段</span>
+                        <div class="analysis-metric-value" id="stageValue">-</div>
+                    </div>
+                    <div class="analysis-metric">
+                        <span class="analysis-metric-label" data-i18n="analysis.risk">风险偏好</span>
+                        <div class="analysis-metric-value" id="riskMetricValue">-</div>
+                    </div>
+                    <div class="result-banner" id="resultBanner" style="display: none;">
+                        <div class="analysis-metric">
+                            <span class="analysis-metric-label" data-i18n="result.action">推荐行动</span>
+                            <div class="analysis-metric-value" id="actionValue">-</div>
                         </div>
-                        <div class="result-detail">
-                            <span data-i18n="result.ev">预期盈利</span>
-                            <strong id="evValue">-</strong>
+                        <div class="analysis-metric">
+                            <span class="analysis-metric-label" data-i18n="result.confidence">置信度</span>
+                            <div class="analysis-metric-value" id="confidenceValue">-</div>
+                        </div>
+                        <div class="analysis-metric">
+                            <span class="analysis-metric-label" data-i18n="result.ev">预期盈利</span>
+                            <div class="analysis-metric-value" id="evValue">-</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="explanation-box" id="explanationBox" style="display: none;"></div>
-
-                <div class="insights-panel" id="opponentInsights" style="display: none;">
-                    <div class="insights-header">
-                        <h3 data-i18n="opponent.insights.heading">对手画像</h3>
-                        <span class="archetype-pill" id="opponentArchetype"></span>
+                <div class="analysis-body">
+                    <div class="analysis-column">
+                        <div class="analysis-box">
+                            <div class="analysis-box-title" data-i18n="analysis.explanation">策略解读</div>
+                            <div class="explanation-box" id="explanationBox" style="display: none;"></div>
+                        </div>
+                        <div class="analysis-box">
+                            <div class="analysis-box-title" data-i18n="analysis.opponent">对手画像</div>
+                            <div class="insights-panel" id="opponentInsights" style="display: none;">
+                                <div class="insights-header">
+                                    <span class="archetype-pill" id="opponentArchetype"></span>
+                                </div>
+                                <p id="opponentSummary" style="font-size:0.92rem;line-height:1.6;opacity:0.82;margin-bottom:16px;"></p>
+                                <div class="insight-cards">
+                                    <div class="insight-card">
+                                        <strong data-i18n="opponent.insights.aggression">激进指数</strong>
+                                        <span id="opponentAggressionMetric">-</span>
+                                    </div>
+                                    <div class="insight-card">
+                                        <strong data-i18n="opponent.insights.betting">下注压力</strong>
+                                        <span id="opponentBettingMetric">-</span>
+                                    </div>
+                                    <div class="insight-card">
+                                        <strong data-i18n="opponent.insights.psychology">心理压强</strong>
+                                        <span id="opponentPsychologyMetric">-</span>
+                                    </div>
+                                    <div class="insight-card">
+                                        <strong data-i18n="opponent.insights.range">范围优势</strong>
+                                        <span id="opponentRangeMetric">-</span>
+                                    </div>
+                                </div>
+                                <div class="insight-notes" id="opponentNotes"></div>
+                            </div>
+                        </div>
                     </div>
-                    <p id="opponentSummary" style="font-size:0.92rem;line-height:1.6;opacity:0.82;margin-bottom:16px;"></p>
-                    <div class="insight-cards">
-                        <div class="insight-card">
-                            <strong data-i18n="opponent.insights.aggression">激进指数</strong>
-                            <span id="opponentAggressionMetric">-</span>
+
+                    <div class="analysis-column">
+                        <div class="analysis-box">
+                            <div class="analysis-box-title" data-i18n="summary.heading">当前输入概览</div>
+                            <div class="summary-grid" id="summaryGrid"></div>
                         </div>
-                        <div class="insight-card">
-                            <strong data-i18n="opponent.insights.betting">下注压力</strong>
-                            <span id="opponentBettingMetric">-</span>
-                        </div>
-                        <div class="insight-card">
-                            <strong data-i18n="opponent.insights.psychology">心理压强</strong>
-                            <span id="opponentPsychologyMetric">-</span>
-                        </div>
-                        <div class="insight-card">
-                            <strong data-i18n="opponent.insights.range">范围优势</strong>
-                            <span id="opponentRangeMetric">-</span>
+                        <div class="analysis-box">
+                            <div class="analysis-box-title" data-i18n="factors.heading">关键因子</div>
+                            <div class="factors-grid" id="factorsGrid"></div>
                         </div>
                     </div>
-                    <div class="insight-notes" id="opponentNotes"></div>
-                </div>
-
-                <div>
-                    <h3 data-i18n="summary.heading">当前输入概览</h3>
-                    <div class="summary-grid" id="summaryGrid"></div>
-                </div>
-
-                <div>
-                    <h3 data-i18n="factors.heading">关键因子</h3>
-                    <div class="factors-grid" id="factorsGrid"></div>
                 </div>
             </section>
         </div>
@@ -1868,6 +1919,8 @@
         let opponentBettingMetric;
         let opponentPsychologyMetric;
         let opponentRangeMetric;
+        let stageValueEl;
+        let riskMetricValueEl;
         let opAggressionInput;
         let opTightnessInput;
         let opBluffInput;
@@ -2045,6 +2098,12 @@
                     checking: 'checking…',
                     connected: 'online',
                     failed: 'unreachable'
+                },
+                analysis: {
+                    stage: 'Stage',
+                    risk: 'Risk Preference',
+                    explanation: 'Strategy Breakdown',
+                    opponent: 'Opponent Insights'
                 },
                 prompts: {
                     apiBase: 'Enter backend API base URL (https://your-service.onrender.com)',
@@ -2340,6 +2399,12 @@
                     connected: '已连接',
                     failed: '无法连接'
                 },
+                analysis: {
+                    stage: '当前阶段',
+                    risk: '风险偏好',
+                    explanation: '策略解读',
+                    opponent: '对手画像'
+                },
                 prompts: {
                     apiBase: '请输入后端 API 地址（例如 https://your-service.onrender.com）',
                     apiBaseInvalid: '请输入合法的 http(s) 地址。',
@@ -2598,6 +2663,8 @@
             opponentBettingMetric = document.getElementById('opponentBettingMetric');
             opponentPsychologyMetric = document.getElementById('opponentPsychologyMetric');
             opponentRangeMetric = document.getElementById('opponentRangeMetric');
+            stageValueEl = document.getElementById('stageValue');
+            riskMetricValueEl = document.getElementById('riskMetricValue');
             opAggressionInput = document.getElementById('opAggressionInput');
             opTightnessInput = document.getElementById('opTightnessInput');
             opBluffInput = document.getElementById('opBluffInput');
@@ -3333,6 +3400,14 @@
                 { key: 'opponentModel', value: getOpponentSummaryText() }
             ];
 
+            if (stageValueEl) {
+                stageValueEl.textContent = t(`streets.${state.street}`);
+            }
+
+            if (riskMetricValueEl) {
+                riskMetricValueEl.textContent = `${riskSlider ? riskSlider.value : 5}/10`;
+            }
+
             if (!summaryGrid) {
                 return;
             }
@@ -3395,7 +3470,7 @@
                 evValue.textContent = '-';
             }
 
-            resultBanner.style.display = 'block';
+            resultBanner.style.display = 'grid';
 
             if (data.explanation) {
                 explanationBox.textContent = data.explanation;
@@ -3415,7 +3490,7 @@
             actionValue.textContent = `${percent}%`;
             confidenceValue.textContent = '-';
             evValue.textContent = '-';
-            resultBanner.style.display = 'block';
+            resultBanner.style.display = 'grid';
             explanationBox.textContent = state.language === 'zh' ? '当前手牌对输入范围的胜率' : 'Win probability versus the selected range';
             explanationBox.style.display = 'block';
             factorsGrid.innerHTML = '';
