@@ -217,8 +217,9 @@
 
         .layout {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-            gap: 28px;
+            grid-template-columns: minmax(320px, 360px) minmax(0, 1fr);
+            gap: 26px;
+            align-items: start;
         }
 
         .panel {
@@ -856,148 +857,6 @@
             color: var(--text-muted);
         }
 
-        .status-float {
-            position: fixed;
-            top: 160px;
-            right: 24px;
-            width: 220px;
-            background: linear-gradient(165deg, rgba(21, 19, 52, 0.92), rgba(12, 11, 36, 0.94));
-            border-radius: 18px;
-            padding: 16px 18px 20px;
-            border: 1px solid rgba(148, 118, 255, 0.28);
-            box-shadow: 0 20px 40px rgba(8, 6, 24, 0.55);
-            backdrop-filter: blur(14px);
-            z-index: 20;
-        }
-
-        .status-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .status-title {
-            font-size: 0.82rem;
-            text-transform: uppercase;
-            letter-spacing: 0.14em;
-            color: var(--text-secondary);
-        }
-
-        .status-chip {
-            padding: 4px 10px;
-            border-radius: 999px;
-            background: rgba(100, 244, 255, 0.18);
-            border: 1px solid rgba(100, 244, 255, 0.32);
-            font-size: 0.72rem;
-            color: var(--accent-cyan);
-        }
-
-        .status-section {
-            margin-bottom: 14px;
-        }
-
-        .status-label {
-            font-size: 0.72rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-
-        .status-cards {
-            display: flex;
-            gap: 6px;
-        }
-
-        .status-card {
-            width: 36px;
-            height: 52px;
-            border-radius: 8px;
-            background: rgba(31, 28, 66, 0.85);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.92rem;
-            font-family: var(--font-code);
-            color: var(--text-primary);
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-        }
-
-        .status-card--h { color: #ff7d9c; }
-        .status-card--d { color: var(--accent-gold); }
-        .status-card--c { color: var(--accent-purple); }
-        .status-card--s { color: var(--accent-cyan); }
-        .status-card--empty {
-            opacity: 0.3;
-        }
-
-        .status-risk {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .status-risk-bar {
-            flex: 1;
-            height: 6px;
-            border-radius: 999px;
-            background: rgba(45, 43, 85, 0.75);
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(148, 163, 184, 0.18);
-        }
-
-        .status-risk-bar span {
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            background: linear-gradient(90deg, rgba(179, 98, 255, 0.55), rgba(100, 244, 255, 0.68));
-        }
-
-        .status-risk-value {
-            font-size: 0.78rem;
-            color: var(--text-secondary);
-        }
-
-        .status-metrics {
-            list-style: none;
-            margin: 14px 0 0;
-            padding: 0;
-            display: grid;
-            gap: 8px;
-        }
-
-        .status-metrics li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-            color: var(--text-primary);
-            background: rgba(24, 21, 54, 0.68);
-            border-radius: 8px;
-            padding: 6px 8px;
-            border: 1px solid rgba(148, 163, 184, 0.16);
-        }
-
-        .status-metrics li span {
-            font-size: 0.7rem;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        .status-metrics li strong {
-            font-size: 0.86rem;
-            color: var(--text-primary);
-        }
-
-        @media (max-width: 1400px) {
-            .status-float {
-                display: none;
-            }
-        }
 
         .button-group button {
             flex: 1 1 180px;
@@ -1732,8 +1591,6 @@
         </div>
     </div>
 
-    <aside class="status-float" id="statusPanel" aria-live="polite" aria-label="Table status"></aside>
-
     <!-- 游戏手册模态框 -->
     <div class="modal-overlay" id="gameManualModal">
         <div class="modal-content">
@@ -2011,7 +1868,6 @@
         let opponentBettingMetric;
         let opponentPsychologyMetric;
         let opponentRangeMetric;
-        let statusPanel;
         let opAggressionInput;
         let opTightnessInput;
         let opBluffInput;
@@ -2189,10 +2045,6 @@
                     checking: 'checking…',
                     connected: 'online',
                     failed: 'unreachable'
-                },
-                statusPanel: {
-                    title: 'Table Status',
-                    risk: 'Risk Preference'
                 },
                 prompts: {
                     apiBase: 'Enter backend API base URL (https://your-service.onrender.com)',
@@ -2488,10 +2340,6 @@
                     connected: '已连接',
                     failed: '无法连接'
                 },
-                statusPanel: {
-                    title: '牌局状态',
-                    risk: '风险偏好'
-                },
                 prompts: {
                     apiBase: '请输入后端 API 地址（例如 https://your-service.onrender.com）',
                     apiBaseInvalid: '请输入合法的 http(s) 地址。',
@@ -2750,7 +2598,6 @@
             opponentBettingMetric = document.getElementById('opponentBettingMetric');
             opponentPsychologyMetric = document.getElementById('opponentPsychologyMetric');
             opponentRangeMetric = document.getElementById('opponentRangeMetric');
-            statusPanel = document.getElementById('statusPanel');
             opAggressionInput = document.getElementById('opAggressionInput');
             opTightnessInput = document.getElementById('opTightnessInput');
             opBluffInput = document.getElementById('opBluffInput');
@@ -3386,79 +3233,6 @@
             });
         }
 
-        function renderCardBadge(card) {
-            const suits = { s: '♠', h: '♥', d: '♦', c: '♣' };
-            if (!card) {
-                return '<span class="status-card status-card--empty">--</span>';
-            }
-            const rank = card.slice(0, 1);
-            const suitCode = (card.slice(1, 2) || '').toLowerCase();
-            const symbol = suits[suitCode] || '';
-            const suitClass = suitCode ? `status-card--${suitCode}` : 'status-card--empty';
-            return `<span class="status-card ${suitClass}">${rank}${symbol}</span>`;
-        }
-
-        function renderStatusPanel(summaryData) {
-            if (!statusPanel) {
-                return;
-            }
-
-            const heroCards = state.heroCards.map(card => card && card.toUpperCase()).filter(Boolean);
-            const heroBadges = heroCards.length
-                ? heroCards.map(renderCardBadge).join('')
-                : [renderCardBadge(null), renderCardBadge(null)].join('');
-
-            const boardBadges = [];
-            for (let i = 0; i < 5; i += 1) {
-                const card = state.board[i];
-                boardBadges.push(renderCardBadge(card ? card.toUpperCase() : null));
-            }
-
-            const stageLabel = t(`streets.${state.street}`);
-            const riskValue = riskSlider ? Number(riskSlider.value) : 5;
-            const riskPercent = Math.max(0, Math.min(100, (riskValue / 10) * 100));
-
-            const summaryLabels = translations[state.language].summary.items;
-            const metricKeys = ['pot', 'toCall', 'heroStack', 'villainStack', 'position', 'opponentModel'];
-            const metrics = metricKeys
-                .map((key) => {
-                    const entry = summaryData.find(item => item.key === key);
-                    if (!entry) {
-                        return '';
-                    }
-                    const label = summaryLabels[key] || key;
-                    const value = entry.value !== undefined && entry.value !== null && entry.value !== '' ? entry.value : '-';
-                    return `<li><span>${label}</span><strong>${value}</strong></li>`;
-                })
-                .filter(Boolean)
-                .join('');
-
-            statusPanel.innerHTML = `
-                <div class="status-header">
-                    <span class="status-title">${t('statusPanel.title')}</span>
-                    <span class="status-chip">${stageLabel}</span>
-                </div>
-                <div class="status-section">
-                    <div class="status-label">${t('state.hero')}</div>
-                    <div class="status-cards">${heroBadges}</div>
-                </div>
-                <div class="status-section">
-                    <div class="status-label">${t('state.board')}</div>
-                    <div class="status-cards">${boardBadges.join('')}</div>
-                </div>
-                <div class="status-section">
-                    <div class="status-label">${t('statusPanel.risk')}</div>
-                    <div class="status-risk">
-                        <div class="status-risk-bar"><span style="width: ${riskPercent}%;"></span></div>
-                        <span class="status-risk-value">${riskValue}/10</span>
-                    </div>
-                </div>
-                <ul class="status-metrics">
-                    ${metrics || ''}
-                </ul>
-            `;
-        }
-
         function renderOpponentInsights(profile, factors) {
             if (!opponentInsightsPanel) {
                 return;
@@ -3558,8 +3332,6 @@
                 { key: 'risk', value: `${riskSlider ? riskSlider.value : 5}/10` },
                 { key: 'opponentModel', value: getOpponentSummaryText() }
             ];
-
-            renderStatusPanel(summaryData);
 
             if (!summaryGrid) {
                 return;
