@@ -85,13 +85,13 @@ class Factors:
     # Opponent factors
     opponent_aggression: float  # [0, 1] - Opponent's aggression level
     opponent_tightness: float   # [0, 1] - How tight opponent plays
-    betting_pressure: float     # [0, 1] - Bet sizing pressure exerted
-    board_pressure: float       # [0, 1] - Pressure created by board texture vs range
-    range_advantage: float      # [0, 1] - Opponent range advantage estimation
-    psychological_pressure: float  # [0, 1] - Momentum/stack pressure
-    bluff_tendency: float       # [0, 1] - Estimated bluff frequency
-    opponent_classification: str  # Human-readable archetype
-    opponent_summary: str        # Short summary string
+    betting_pressure: float = 0.0     # [0, 1] - Bet sizing pressure exerted
+    board_pressure: float = 0.0       # [0, 1] - Pressure created by board texture vs range
+    range_advantage: float = 0.5      # [0, 1] - Opponent range advantage estimation
+    psychological_pressure: float = 0.0  # [0, 1] - Momentum/stack pressure
+    bluff_tendency: float = 0.0       # [0, 1] - Estimated bluff frequency
+    opponent_classification: str = ''  # Human-readable archetype
+    opponent_summary: str = ''        # Short summary string
     opponent_notes: List[str] = field(default_factory=list)
 
     # Meta factors
