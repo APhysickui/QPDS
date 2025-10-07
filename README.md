@@ -75,6 +75,7 @@ python -m backend.api.app         # 启动后端（默认端口 8080）
 前端同样通过直接打开 `frontend/index.html` 访问，如遇连接提示可通过 `⚙️ API配置` 指向 `http://localhost:8080`。
 
 ## ☁️ 部署上线
+- 可以线上尝试下这个系统：https://aphysickui.github.io/QPDS/
 - 推荐使用 GitHub Pages + Render 组合：前端静态文件部署到 GitHub Pages，后端 Flask API 托管在 Render。
 - 页面右上角新增 `⚙️ API` 按钮，可在浏览器内填写 Render 提供的 HTTPS 地址，并保存在本地浏览器。
 - 完整上线步骤与注意事项见 `docs/deployment/github-pages-render.md`。
