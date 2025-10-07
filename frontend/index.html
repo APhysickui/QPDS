@@ -217,15 +217,15 @@
 
         .layout {
             display: grid;
-            grid-template-columns: minmax(320px, 0.95fr) minmax(0, 1.25fr);
-            gap: 22px;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+            gap: 28px;
         }
 
         .panel {
             background: linear-gradient(165deg, rgba(30, 41, 59, 0.88), rgba(15, 23, 42, 0.96));
             backdrop-filter: blur(16px);
             border-radius: 22px;
-            padding: 24px 26px;
+            padding: 28px;
             border: 1px solid rgba(148, 163, 184, 0.22);
             box-shadow: 0 26px 52px rgba(15, 23, 42, 0.5);
             position: relative;
@@ -270,7 +270,6 @@
 
         #lessonPanel > h2::before { content: '♣'; color: var(--accent-pink); }
         #statePanel > h2::before { content: '♠'; }
-        #deckPanel > h2::before { content: '♦'; color: var(--accent-gold); }
 
         .lesson-list {
             display: grid;
@@ -838,6 +837,168 @@
             margin-top: 20px;
         }
 
+        .deck-section {
+            margin-top: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .deck-section h3::before {
+            content: '♦';
+            color: var(--accent-gold);
+        }
+
+        .deck-hint {
+            font-size: 0.9rem;
+            opacity: 0.75;
+            line-height: 1.5;
+            color: var(--text-muted);
+        }
+
+        .status-float {
+            position: fixed;
+            top: 120px;
+            right: 36px;
+            width: 280px;
+            background: linear-gradient(165deg, rgba(25, 21, 56, 0.92), rgba(17, 15, 42, 0.95));
+            border-radius: 20px;
+            padding: 20px 22px 24px;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            box-shadow: 0 28px 56px rgba(10, 8, 30, 0.55);
+            z-index: 20;
+            backdrop-filter: blur(16px);
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 18px;
+        }
+
+        .status-title {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-secondary);
+        }
+
+        .status-chip {
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: rgba(100, 244, 255, 0.16);
+            border: 1px solid rgba(100, 244, 255, 0.35);
+            font-size: 0.82rem;
+            color: var(--accent-cyan);
+        }
+
+        .status-section {
+            margin-bottom: 16px;
+        }
+
+        .status-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .status-cards {
+            display: flex;
+            gap: 8px;
+        }
+
+        .status-card {
+            width: 42px;
+            height: 58px;
+            border-radius: 10px;
+            background: rgba(31, 28, 66, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-family: var(--font-code);
+            color: var(--text-primary);
+            text-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+        }
+
+        .status-card--h { color: #ff7d9c; }
+        .status-card--d { color: var(--accent-gold); }
+        .status-card--c { color: var(--accent-purple); }
+        .status-card--s { color: var(--accent-cyan); }
+        .status-card--empty {
+            opacity: 0.35;
+        }
+
+        .status-risk {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-risk-bar {
+            flex: 1;
+            height: 6px;
+            border-radius: 999px;
+            background: rgba(45, 43, 85, 0.8);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .status-risk-bar span {
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: linear-gradient(90deg, rgba(179, 98, 255, 0.6), rgba(100, 244, 255, 0.75));
+        }
+
+        .status-risk-value {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .status-metrics {
+            list-style: none;
+            margin: 18px 0 0;
+            padding: 0;
+            display: grid;
+            gap: 10px;
+        }
+
+        .status-metrics li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.86rem;
+            color: var(--text-primary);
+            background: rgba(24, 21, 54, 0.72);
+            border-radius: 10px;
+            padding: 8px 10px;
+            border: 1px solid rgba(148, 163, 184, 0.18);
+        }
+
+        .status-metrics li span {
+            font-size: 0.78rem;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .status-metrics li strong {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 1400px) {
+            .status-float {
+                display: none;
+            }
+        }
+
         .button-group button {
             flex: 1 1 180px;
             padding: 12px 16px;
@@ -862,12 +1023,6 @@
             background: rgba(37, 33, 74, 0.55);
             color: var(--text-muted);
             border-color: rgba(148, 163, 184, 0.25);
-        }
-
-        .deck-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
         }
 
         .deck-grid {
@@ -1233,10 +1388,6 @@
             .layout {
                 grid-template-columns: 1fr;
             }
-
-            .deck-panel {
-                order: 3;
-            }
         }
 
         @media (max-width: 640px) {
@@ -1391,6 +1542,12 @@
                     <div class="card-slots" id="boardSlots"></div>
                 </div>
 
+                <div class="section deck-section" id="deckSection">
+                    <h3 data-i18n="deck.heading">牌堆（点击选牌）</h3>
+                    <p class="deck-hint" data-i18n="deck.hint">先点击空槽再点选卡牌；已选卡牌会自动灰化，点击槽位右上角可清除。</p>
+                    <div class="deck-grid" id="deckGrid"></div>
+                </div>
+
                 <div class="section">
                     <h3 data-i18n="state.parameters">筹码与参数</h3>
                     <div class="inputs-grid">
@@ -1512,17 +1669,6 @@
 
                 <div class="error-box" id="errorBox"></div>
             </section>
-
-            <section class="panel deck-panel" id="deckPanel">
-                <div>
-                    <h2 data-i18n="deck.heading">牌堆 (点击选择卡牌)</h2>
-                    <p data-i18n="deck.hint" style="font-size:0.9rem;opacity:0.75;line-height:1.5;margin-top:6px;">
-                        先点击空槽再点选卡牌；已选卡牌会自动灰化，点击槽位右上角可清除。
-                    </p>
-                </div>
-                <div class="deck-grid" id="deckGrid"></div>
-            </section>
-
             <section class="panel analysis-panel" id="analysisPanel">
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
@@ -1585,6 +1731,8 @@
             </section>
         </div>
     </div>
+
+    <aside class="status-float" id="statusPanel" aria-live="polite" aria-label="Table status"></aside>
 
     <!-- 游戏手册模态框 -->
     <div class="modal-overlay" id="gameManualModal">
@@ -1863,6 +2011,7 @@
         let opponentBettingMetric;
         let opponentPsychologyMetric;
         let opponentRangeMetric;
+        let statusPanel;
         let opAggressionInput;
         let opTightnessInput;
         let opBluffInput;
@@ -2040,6 +2189,10 @@
                     checking: 'checking…',
                     connected: 'online',
                     failed: 'unreachable'
+                },
+                statusPanel: {
+                    title: 'Table Status',
+                    risk: 'Risk Preference'
                 },
                 prompts: {
                     apiBase: 'Enter backend API base URL (https://your-service.onrender.com)',
@@ -2335,6 +2488,10 @@
                     connected: '已连接',
                     failed: '无法连接'
                 },
+                statusPanel: {
+                    title: '牌局状态',
+                    risk: '风险偏好'
+                },
                 prompts: {
                     apiBase: '请输入后端 API 地址（例如 https://your-service.onrender.com）',
                     apiBaseInvalid: '请输入合法的 http(s) 地址。',
@@ -2593,6 +2750,7 @@
             opponentBettingMetric = document.getElementById('opponentBettingMetric');
             opponentPsychologyMetric = document.getElementById('opponentPsychologyMetric');
             opponentRangeMetric = document.getElementById('opponentRangeMetric');
+            statusPanel = document.getElementById('statusPanel');
             opAggressionInput = document.getElementById('opAggressionInput');
             opTightnessInput = document.getElementById('opTightnessInput');
             opBluffInput = document.getElementById('opBluffInput');
@@ -3228,6 +3386,79 @@
             });
         }
 
+        function renderCardBadge(card) {
+            const suits = { s: '♠', h: '♥', d: '♦', c: '♣' };
+            if (!card) {
+                return '<span class="status-card status-card--empty">--</span>';
+            }
+            const rank = card.slice(0, 1);
+            const suitCode = (card.slice(1, 2) || '').toLowerCase();
+            const symbol = suits[suitCode] || '';
+            const suitClass = suitCode ? `status-card--${suitCode}` : 'status-card--empty';
+            return `<span class="status-card ${suitClass}">${rank}${symbol}</span>`;
+        }
+
+        function renderStatusPanel(summaryData) {
+            if (!statusPanel) {
+                return;
+            }
+
+            const heroCards = state.heroCards.map(card => card && card.toUpperCase()).filter(Boolean);
+            const heroBadges = heroCards.length
+                ? heroCards.map(renderCardBadge).join('')
+                : [renderCardBadge(null), renderCardBadge(null)].join('');
+
+            const boardBadges = [];
+            for (let i = 0; i < 5; i += 1) {
+                const card = state.board[i];
+                boardBadges.push(renderCardBadge(card ? card.toUpperCase() : null));
+            }
+
+            const stageLabel = t(`streets.${state.street}`);
+            const riskValue = riskSlider ? Number(riskSlider.value) : 5;
+            const riskPercent = Math.max(0, Math.min(100, (riskValue / 10) * 100));
+
+            const summaryLabels = translations[state.language].summary.items;
+            const metricKeys = ['pot', 'toCall', 'heroStack', 'villainStack', 'position', 'opponentModel'];
+            const metrics = metricKeys
+                .map((key) => {
+                    const entry = summaryData.find(item => item.key === key);
+                    if (!entry) {
+                        return '';
+                    }
+                    const label = summaryLabels[key] || key;
+                    const value = entry.value !== undefined && entry.value !== null && entry.value !== '' ? entry.value : '-';
+                    return `<li><span>${label}</span><strong>${value}</strong></li>`;
+                })
+                .filter(Boolean)
+                .join('');
+
+            statusPanel.innerHTML = `
+                <div class="status-header">
+                    <span class="status-title">${t('statusPanel.title')}</span>
+                    <span class="status-chip">${stageLabel}</span>
+                </div>
+                <div class="status-section">
+                    <div class="status-label">${t('state.hero')}</div>
+                    <div class="status-cards">${heroBadges}</div>
+                </div>
+                <div class="status-section">
+                    <div class="status-label">${t('state.board')}</div>
+                    <div class="status-cards">${boardBadges.join('')}</div>
+                </div>
+                <div class="status-section">
+                    <div class="status-label">${t('statusPanel.risk')}</div>
+                    <div class="status-risk">
+                        <div class="status-risk-bar"><span style="width: ${riskPercent}%;"></span></div>
+                        <span class="status-risk-value">${riskValue}/10</span>
+                    </div>
+                </div>
+                <ul class="status-metrics">
+                    ${metrics || ''}
+                </ul>
+            `;
+        }
+
         function renderOpponentInsights(profile, factors) {
             if (!opponentInsightsPanel) {
                 return;
@@ -3316,10 +3547,6 @@
         }
 
         function refreshSummary() {
-            if (!summaryGrid) {
-                return;
-            }
-
             const summaryLabels = translations[state.language].summary.items;
             const summaryData = [
                 { key: 'pot', value: formatChips(getNumericValue('potInput')) },
@@ -3331,6 +3558,12 @@
                 { key: 'risk', value: `${riskSlider ? riskSlider.value : 5}/10` },
                 { key: 'opponentModel', value: getOpponentSummaryText() }
             ];
+
+            renderStatusPanel(summaryData);
+
+            if (!summaryGrid) {
+                return;
+            }
 
             summaryGrid.innerHTML = '';
 
