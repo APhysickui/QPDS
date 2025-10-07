@@ -95,8 +95,8 @@ class Factors:
     opponent_notes: List[str] = field(default_factory=list)
 
     # Meta factors
-    street: int                # Current street (0-3)
-    pot_commitment: float      # [0, 1] - How committed we are
+    street: int = 0                # Current street (0-3)
+    pot_commitment: float = 0.0      # [0, 1] - How committed we are
 
     def to_dict(self) -> Dict:
         """Convert to dictionary"""
