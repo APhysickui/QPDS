@@ -278,8 +278,9 @@
 
         .lesson-list {
             display: grid;
-            gap: 12px;
-            margin-top: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 18px;
         }
 
         .lesson-item {
@@ -337,6 +338,44 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
             color: #f7f9fc;
+        }
+
+        .modal-content.compact {
+            max-width: 640px;
+            padding: 26px 30px 24px;
+        }
+
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .modal-actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .modal-actions button {
+            padding: 10px 18px;
+            border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            background: rgba(24, 21, 54, 0.65);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .modal-actions button.primary {
+            background: linear-gradient(135deg, rgba(179, 98, 255, 0.6), rgba(100, 244, 255, 0.45));
+            border-color: rgba(100, 244, 255, 0.4);
+        }
+
+        .modal-actions button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(10, 8, 30, 0.45);
         }
 
         .modal-header {
@@ -1033,6 +1072,47 @@
             margin-bottom: 14px;
         }
 
+        .card-badges-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .card-badges-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+        }
+
+        .card-badges {
+            display: flex;
+            gap: 6px;
+        }
+
+        .card-badge {
+            min-width: 38px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: rgba(31, 28, 66, 0.85);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            font-family: var(--font-code);
+            font-size: 0.95rem;
+            text-align: center;
+            color: var(--text-primary);
+            text-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+        }
+
+        .card-badge--empty {
+            opacity: 0.35;
+        }
+
+        .card-badge--h { color: #ff7d9c; }
+        .card-badge--d { color: var(--accent-gold); }
+        .card-badge--c { color: var(--accent-purple); }
+        .card-badge--s { color: var(--accent-cyan); }
+
         @media (max-width: 1024px) {
             .analysis-panel {
                 padding: 26px;
@@ -1459,6 +1539,10 @@
                             <input type="number" id="villainStackInput" min="0" step="0.01" value="500" data-i18n-placeholder="placeholders.villainStack">
                         </label>
                         <label class="field-label">
+                            <span data-i18n="fields.numOpponents">在局对手数</span>
+                            <input type="number" id="numOpponentsInput" min="1" max="8" value="1">
+                        </label>
+                        <label class="field-label">
                             <span data-i18n="fields.position">你的位置</span>
                             <select id="positionSelect"></select>
                         </label>
@@ -1476,85 +1560,10 @@
                     </div>
                 </div>
 
-                <div class="opponent-section" id="opponentSection">
-                    <h3 data-i18n="opponent.heading">对手建模</h3>
-                    <div class="opponent-grid">
-                        <div class="metric-group">
-                            <span data-i18n="opponent.aggression.label">激进程度</span>
-                            <div class="metric-range-label">
-                                <small data-i18n="opponent.aggression.low">被动</small>
-                                <small id="opAggressionValue">6/10</small>
-                                <small data-i18n="opponent.aggression.high">激进</small>
-                            </div>
-                            <input type="range" id="opAggressionInput" min="0" max="10" value="6">
-                        </div>
-                        <div class="metric-group">
-                            <span data-i18n="opponent.tightness.label">起手范围</span>
-                            <div class="metric-range-label">
-                                <small data-i18n="opponent.tightness.wide">宽松</small>
-                                <small id="opTightnessValue">5/10</small>
-                                <small data-i18n="opponent.tightness.narrow">紧实</small>
-                            </div>
-                            <input type="range" id="opTightnessInput" min="0" max="10" value="5">
-                        </div>
-                        <div class="metric-group">
-                            <span data-i18n="opponent.bluff.label">诈唬频率</span>
-                            <div class="metric-range-label">
-                                <small data-i18n="opponent.bluff.low">罕见</small>
-                                <small id="opBluffValue">3/10</small>
-                                <small data-i18n="opponent.bluff.high">频繁</small>
-                            </div>
-                            <input type="range" id="opBluffInput" min="0" max="10" value="3">
-                        </div>
-                        <div class="metric-group">
-                            <span data-i18n="opponent.confidence.label">对手自信</span>
-                            <div class="metric-range-label">
-                                <small data-i18n="opponent.confidence.low">犹豫</small>
-                                <small id="opConfidenceValue">6/10</small>
-                                <small data-i18n="opponent.confidence.high">自信</small>
-                            </div>
-                            <input type="range" id="opConfidenceInput" min="0" max="10" value="6">
-                        </div>
-                        <div class="metric-group">
-                            <span data-i18n="opponent.tilt.label">情绪波动</span>
-                            <div class="metric-range-label">
-                                <small data-i18n="opponent.tilt.calm">冷静</small>
-                                <small id="opTiltValue">4/10</small>
-                                <small data-i18n="opponent.tilt.hot">倾向失控</small>
-                            </div>
-                            <input type="range" id="opTiltInput" min="0" max="10" value="4">
-                        </div>
-                        <div class="metric-group">
-                            <span data-i18n="opponent.bet.label">最近下注占底池%</span>
-                            <input type="number" id="opBetPctInput" min="0" max="400" step="1" value="65" data-i18n-placeholder="opponent.bet.placeholder" placeholder="例如 70">
-                        </div>
-                        <div class="metric-group">
-                            <span data-i18n="opponent.action.label">最近动作</span>
-                            <select id="opActionStreet">
-                                <option value="PREFLOP" data-i18n="streets.PREFLOP">翻前 (Preflop)</option>
-                                <option value="FLOP" data-i18n="streets.FLOP">翻牌圈 (Flop)</option>
-                                <option value="TURN" data-i18n="streets.TURN">转牌圈 (Turn)</option>
-                                <option value="RIVER" data-i18n="streets.RIVER">河牌圈 (River)</option>
-                            </select>
-                            <select id="opActionType">
-                                <option value="bet" data-i18n="opponent.action.bet">下注</option>
-                                <option value="raise" data-i18n="opponent.action.raise">加注</option>
-                                <option value="call" data-i18n="opponent.action.call">跟注</option>
-                                <option value="check" data-i18n="opponent.action.check">过牌</option>
-                            </select>
-                            <input type="number" id="opActionAmount" min="0" step="0.01" data-i18n-placeholder="opponent.action.amount" placeholder="例如 80">
-                            <input type="number" id="opActionPot" min="0" step="0.01" data-i18n-placeholder="opponent.action.pot" placeholder="行动前底池">
-                        </div>
-                        <div class="metric-group">
-                            <span data-i18n="opponent.notes.label">额外备注</span>
-                            <textarea id="opNotesInput" data-i18n-placeholder="opponent.notes.placeholder" placeholder="例如：翻牌圈持续下注，河牌紧凶"></textarea>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="button-group">
                     <button id="recommendButton" data-i18n="buttons.recommend">获取决策建议</button>
                     <button id="equityButton" data-i18n="buttons.equity">仅计算胜率</button>
+                    <button id="opponentModalBtn" class="ghost" data-i18n="buttons.opponentConfig">配置对手画像</button>
                     <button id="resetButton" class="ghost" data-i18n="buttons.reset">重置牌面</button>
                 </div>
 
@@ -1593,6 +1602,17 @@
 
                 <div class="analysis-body">
                     <div class="analysis-column">
+                        <div class="analysis-box">
+                            <div class="analysis-box-title" data-i18n="analysis.cards">牌面概览</div>
+                            <div class="card-badges-group">
+                                <div class="card-badges-label" data-i18n="analysis.hero">你的底牌</div>
+                                <div class="card-badges" id="analysisHeroCards"></div>
+                            </div>
+                            <div class="card-badges-group">
+                                <div class="card-badges-label" data-i18n="analysis.board">公共牌</div>
+                                <div class="card-badges" id="analysisBoardCards"></div>
+                            </div>
+                        </div>
                         <div class="analysis-box">
                             <div class="analysis-box-title" data-i18n="analysis.explanation">策略解读</div>
                             <div class="explanation-box" id="explanationBox" style="display: none;"></div>
@@ -1765,11 +1785,11 @@
                     </div>
                 </div>
 
-                <div class="position-tips">
-                    <h4 data-i18n="manual.positionStrategy">位置策略要点</h4>
-                    <ul>
-                        <li data-i18n="manual.tip1">前位需要更强的起手牌，因为后面还有很多玩家要行动</li>
-                        <li data-i18n="manual.tip2">后位可以玩更多投机性手牌，观察对手行动后再决策</li>
+            <div class="position-tips">
+                <h4 data-i18n="manual.positionStrategy">位置策略要点</h4>
+                <ul>
+                    <li data-i18n="manual.tip1">前位需要更强的起手牌，因为后面还有很多玩家要行动</li>
+                    <li data-i18n="manual.tip2">后位可以玩更多投机性手牌，观察对手行动后再决策</li>
                         <li data-i18n="manual.tip3">按钮位是最有利位置，可以用更宽的范围加注和偷盲</li>
                         <li data-i18n="manual.tip4">盲注位置翻后不利，但翻前已有投入要考虑底池赔率</li>
                     </ul>
@@ -1832,6 +1852,95 @@
                 <div class="hand-tips">
                     <p data-i18n="manual.handTips">💡 "s"表示同花色，"o"表示不同花色。新手建议：前位只玩顶级强牌，后位可以适当放宽。</p>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="opponentModal">
+        <div class="modal-content compact">
+            <div class="modal-header">
+                <h2 class="modal-title" data-i18n="opponentModal.title">对手画像配置</h2>
+                <button class="modal-close" id="closeOpponentModal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="opponent-grid">
+                    <div class="metric-group">
+                        <span data-i18n="opponent.aggression.label">激进程度</span>
+                        <div class="metric-range-label">
+                            <small data-i18n="opponent.aggression.low">被动</small>
+                            <small id="opAggressionValue">6/10</small>
+                            <small data-i18n="opponent.aggression.high">激进</small>
+                        </div>
+                        <input type="range" id="opAggressionInput" min="0" max="10" value="6">
+                    </div>
+                    <div class="metric-group">
+                        <span data-i18n="opponent.tightness.label">起手范围</span>
+                        <div class="metric-range-label">
+                            <small data-i18n="opponent.tightness.wide">宽松</small>
+                            <small id="opTightnessValue">5/10</small>
+                            <small data-i18n="opponent.tightness.narrow">紧实</small>
+                        </div>
+                        <input type="range" id="opTightnessInput" min="0" max="10" value="5">
+                    </div>
+                    <div class="metric-group">
+                        <span data-i18n="opponent.bluff.label">诈唬频率</span>
+                        <div class="metric-range-label">
+                            <small data-i18n="opponent.bluff.low">罕见</small>
+                            <small id="opBluffValue">3/10</small>
+                            <small data-i18n="opponent.bluff.high">频繁</small>
+                        </div>
+                        <input type="range" id="opBluffInput" min="0" max="10" value="3">
+                    </div>
+                    <div class="metric-group">
+                        <span data-i18n="opponent.confidence.label">桌面自信</span>
+                        <div class="metric-range-label">
+                            <small data-i18n="opponent.confidence.low">犹豫</small>
+                            <small id="opConfidenceValue">6/10</small>
+                            <small data-i18n="opponent.confidence.high">自信</small>
+                        </div>
+                        <input type="range" id="opConfidenceInput" min="0" max="10" value="6">
+                    </div>
+                    <div class="metric-group">
+                        <span data-i18n="opponent.tilt.label">情绪波动</span>
+                        <div class="metric-range-label">
+                            <small data-i18n="opponent.tilt.calm">冷静</small>
+                            <small id="opTiltValue">4/10</small>
+                            <small data-i18n="opponent.tilt.hot">接近失控</small>
+                        </div>
+                        <input type="range" id="opTiltInput" min="0" max="10" value="4">
+                    </div>
+                    <div class="metric-group">
+                        <span data-i18n="opponent.bet.label">最近下注占底池%</span>
+                        <input type="number" id="opBetPctInput" min="0" max="400" step="1" value="65" data-i18n-placeholder="opponent.bet.placeholder" placeholder="例如 70">
+                    </div>
+                    <div class="metric-group">
+                        <span data-i18n="opponent.action.label">最近动作</span>
+                        <select id="opActionStreet">
+                            <option value="PREFLOP" data-i18n="streets.PREFLOP">翻前 (Preflop)</option>
+                            <option value="FLOP" data-i18n="streets.FLOP">翻牌圈 (Flop)</option>
+                            <option value="TURN" data-i18n="streets.TURN">转牌圈 (Turn)</option>
+                            <option value="RIVER" data-i18n="streets.RIVER">河牌圈 (River)</option>
+                        </select>
+                        <select id="opActionType">
+                            <option value="bet" data-i18n="opponent.action.bet">下注</option>
+                            <option value="raise" data-i18n="opponent.action.raise">加注</option>
+                            <option value="call" data-i18n="opponent.action.call">跟注</option>
+                            <option value="check" data-i18n="opponent.action.check">过牌</option>
+                        </select>
+                        <input type="number" id="opActionAmount" min="0" step="0.01" data-i18n-placeholder="opponent.action.amount" placeholder="例如 80">
+                        <input type="number" id="opActionPot" min="0" step="0.01" data-i18n-placeholder="opponent.action.pot" placeholder="行动前底池">
+                    </div>
+                    <div class="metric-group">
+                        <span data-i18n="opponent.notes.label">额外备注</span>
+                        <textarea id="opNotesInput" data-i18n-placeholder="opponent.notes.placeholder" placeholder="例如：翻牌圈持续下注，河牌趋于紧凶"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button id="opponentModalCancel" data-i18n="opponentModal.cancel">取消</button>
+                <button id="opponentModalSave" class="primary" data-i18n="opponentModal.apply">应用设置</button>
             </div>
         </div>
     </div>
@@ -1921,6 +2030,15 @@
         let opponentRangeMetric;
         let stageValueEl;
         let riskMetricValueEl;
+        let analysisHeroCards;
+        let analysisBoardCards;
+        let numOpponentsInput;
+        let opponentModal;
+        let opponentModalBtn;
+        let opponentModalClose;
+        let opponentModalCancel;
+        let opponentModalSave;
+        let opponentDraft = null;
         let opAggressionInput;
         let opTightnessInput;
         let opBluffInput;
@@ -2007,6 +2125,7 @@
                     toCall: 'Bet to Call',
                     heroStack: 'Your Stack',
                     villainStack: 'Villain Stack',
+                    numOpponents: 'Opponents',
                     position: 'Your Position',
                     villainRange: 'Villain Range'
                 },
@@ -2019,6 +2138,7 @@
                         villainStack: 'Villain Stack',
                         street: 'Street',
                         position: 'Position',
+                        numOpponents: 'Opponents',
                         risk: 'Risk Preference',
                         opponentModel: 'Opponent Read'
                     }
@@ -2039,7 +2159,8 @@
                     equity: 'Equity Only',
                     reset: 'Reset Cards',
                     gameManual: '🃏 Game Manual',
-                    apiConfig: '⚙️ API'
+                    apiConfig: '⚙️ API',
+                    opponentConfig: 'Opponent Model'
                 },
                 opponent: {
                     heading: 'Opponent Model',
@@ -2102,6 +2223,9 @@
                 analysis: {
                     stage: 'Stage',
                     risk: 'Risk Preference',
+                    cards: 'Table Cards',
+                    hero: 'Hero Cards',
+                    board: 'Board',
                     explanation: 'Strategy Breakdown',
                     opponent: 'Opponent Insights'
                 },
@@ -2143,6 +2267,11 @@
                         implied_odds: 'Implied Odds',
                         pot_commitment: 'Pot Commitment'
                     }
+                },
+                opponentModal: {
+                    title: 'Opponent Modelling',
+                    apply: 'Apply Settings',
+                    cancel: 'Cancel'
                 },
                 errors: {
                     missingCards: 'Please select two unique hole cards before running an analysis.',
@@ -2307,6 +2436,7 @@
                     toCall: '需要跟注',
                     heroStack: '你的筹码',
                     villainStack: '对手筹码',
+                    numOpponents: '在局对手数',
                     position: '你的位置',
                     villainRange: '对手范围'
                 },
@@ -2319,6 +2449,7 @@
                         villainStack: '对手筹码',
                         street: '当前阶段',
                         position: '你的位置',
+                        numOpponents: '在局对手',
                         risk: '风险偏好',
                         opponentModel: '对手画像'
                     }
@@ -2339,7 +2470,8 @@
                     equity: '仅计算胜率',
                     reset: '重置牌面',
                     gameManual: '🃏 游戏手册',
-                    apiConfig: '⚙️ API配置'
+                    apiConfig: '⚙️ API配置',
+                    opponentConfig: '配置对手画像'
                 },
                 opponent: {
                     heading: '对手建模',
@@ -2402,6 +2534,9 @@
                 analysis: {
                     stage: '当前阶段',
                     risk: '风险偏好',
+                    cards: '牌面概览',
+                    hero: '你的底牌',
+                    board: '公共牌',
                     explanation: '策略解读',
                     opponent: '对手画像'
                 },
@@ -2443,6 +2578,11 @@
                         implied_odds: '隐含赔率',
                         pot_commitment: '底池投入度'
                     }
+                },
+                opponentModal: {
+                    title: '对手画像配置',
+                    apply: '应用设置',
+                    cancel: '取消'
                 },
                 errors: {
                     missingCards: '请先选择两张唯一底牌，再进行分析。',
@@ -2615,6 +2755,7 @@
             street: 'PREFLOP',
             selectedSlot: null,
             position: 'BTN',
+            numOpponents: 1,
             lastResult: null,
             apiStatus: 'idle',
             opponent: {
@@ -2655,6 +2796,7 @@
             factorsGrid = document.getElementById('factorsGrid');
             errorBox = document.getElementById('errorBox');
             summaryGrid = document.getElementById('summaryGrid');
+            numOpponentsInput = document.getElementById('numOpponentsInput');
             opponentInsightsPanel = document.getElementById('opponentInsights');
             opponentArchetype = document.getElementById('opponentArchetype');
             opponentSummary = document.getElementById('opponentSummary');
@@ -2665,6 +2807,13 @@
             opponentRangeMetric = document.getElementById('opponentRangeMetric');
             stageValueEl = document.getElementById('stageValue');
             riskMetricValueEl = document.getElementById('riskMetricValue');
+            analysisHeroCards = document.getElementById('analysisHeroCards');
+            analysisBoardCards = document.getElementById('analysisBoardCards');
+            opponentModal = document.getElementById('opponentModal');
+            opponentModalBtn = document.getElementById('opponentModalBtn');
+            opponentModalClose = document.getElementById('closeOpponentModal');
+            opponentModalCancel = document.getElementById('opponentModalCancel');
+            opponentModalSave = document.getElementById('opponentModalSave');
             opAggressionInput = document.getElementById('opAggressionInput');
             opTightnessInput = document.getElementById('opTightnessInput');
             opBluffInput = document.getElementById('opBluffInput');
@@ -2725,6 +2874,47 @@
                     gameManualModal.classList.remove('show');
                 }
             });
+
+            if (opponentModalBtn && opponentModal) {
+                opponentModalBtn.addEventListener('click', () => {
+                    opponentDraft = cloneOpponentState(state.opponent);
+                    syncOpponentControls();
+                    opponentModal.classList.add('show');
+                });
+            }
+
+            const closeOpponentModal = () => {
+                if (opponentModal) {
+                    opponentModal.classList.remove('show');
+                }
+                opponentDraft = null;
+            };
+
+            if (opponentModalClose) {
+                opponentModalClose.addEventListener('click', closeOpponentModal);
+            }
+
+            if (opponentModalCancel) {
+                opponentModalCancel.addEventListener('click', closeOpponentModal);
+            }
+
+            if (opponentModal) {
+                opponentModal.addEventListener('click', (event) => {
+                    if (event.target === opponentModal) {
+                        closeOpponentModal();
+                    }
+                });
+            }
+
+            if (opponentModalSave) {
+                opponentModalSave.addEventListener('click', () => {
+                    if (opponentDraft) {
+                        state.opponent = cloneOpponentState(opponentDraft);
+                        refreshSummary();
+                    }
+                    closeOpponentModal();
+                });
+            }
 
             bootstrap();
         });
@@ -3191,6 +3381,7 @@
                 street: state.street,
                 villain_range: document.getElementById('rangeInput').value || null,
                 risk_preference: parseFloat(riskSlider.value) || 5,
+                num_opponents: state.numOpponents,
                 opponent_stats: opponentStats
             };
 
@@ -3382,9 +3573,88 @@
             return parseFloat(el.value) || 0;
         }
 
+        function cloneOpponentState(source) {
+            return {
+                aggression: source.aggression ?? 0.6,
+                tightness: source.tightness ?? 0.5,
+                bluff: source.bluff ?? 0.3,
+                confidence: source.confidence ?? 0.6,
+                tilt: source.tilt ?? 0.4,
+                betPct: source.betPct ?? 65,
+                action: {
+                    street: source.action?.street || 'PREFLOP',
+                    type: source.action?.type || 'bet',
+                    amount: source.action?.amount ?? null,
+                    pot: source.action?.pot ?? null
+                },
+                notes: source.notes || ''
+            };
+        }
+
+        function createCardBadgeElement(cardCode) {
+            const suits = { s: '♠', h: '♥', d: '♦', c: '♣' };
+            const badge = document.createElement('span');
+            badge.className = 'card-badge';
+            if (!cardCode) {
+                badge.classList.add('card-badge--empty');
+                badge.textContent = '--';
+                return badge;
+            }
+            const upper = cardCode.toUpperCase();
+            const rank = upper.slice(0, 1);
+            const suitCode = upper.slice(1, 2).toLowerCase();
+            const symbol = suits[suitCode] || '';
+            badge.textContent = `${rank}${symbol}`;
+            if (suitCode) {
+                badge.classList.add(`card-badge--${suitCode}`);
+            }
+            return badge;
+        }
+
+        function renderAnalysisCards() {
+            if (!analysisHeroCards || !analysisBoardCards) {
+                return;
+            }
+
+            const heroCards = state.heroCards.map(card => card ? card.toUpperCase() : null);
+            analysisHeroCards.innerHTML = '';
+            heroCards.forEach(card => {
+                analysisHeroCards.appendChild(createCardBadgeElement(card));
+            });
+            while (analysisHeroCards.childElementCount < 2) {
+                analysisHeroCards.appendChild(createCardBadgeElement(null));
+            }
+
+            const boardCards = state.board.map(card => card ? card.toUpperCase() : null);
+            analysisBoardCards.innerHTML = '';
+            const required = 5;
+            for (let i = 0; i < required; i += 1) {
+                analysisBoardCards.appendChild(createCardBadgeElement(boardCards[i] || null));
+            }
+        }
+
+        function roundToMultiple(value, base = 5) {
+            if (!Number.isFinite(value)) {
+                return 0;
+            }
+            const sign = value >= 0 ? 1 : -1;
+            let rounded = Math.round(Math.abs(value) / base) * base;
+            if (rounded === 0 && value !== 0) {
+                rounded = base;
+            }
+            return rounded * sign;
+        }
+
         function formatChips(amount) {
-            const fixed = Number(amount).toFixed(2);
-            return fixed.replace(/\.00$/, '');
+            if (amount === null || amount === undefined || amount === '') {
+                return '-';
+            }
+            const num = Number(amount);
+            if (!Number.isFinite(num)) {
+                return '-';
+            }
+            const rounded = roundToMultiple(num, 5);
+            return `${rounded}`;
         }
 
         function refreshSummary() {
@@ -3396,6 +3666,7 @@
                 { key: 'villainStack', value: formatChips(getNumericValue('villainStackInput')) },
                 { key: 'street', value: t(`streets.${state.street}`) },
                 { key: 'position', value: positionLabels[state.position][state.language] },
+                { key: 'numOpponents', value: `${state.numOpponents}` },
                 { key: 'risk', value: `${riskSlider ? riskSlider.value : 5}/10` },
                 { key: 'opponentModel', value: getOpponentSummaryText() }
             ];
@@ -3408,11 +3679,12 @@
                 riskMetricValueEl.textContent = `${riskSlider ? riskSlider.value : 5}/10`;
             }
 
+            renderAnalysisCards();
+
             if (!summaryGrid) {
                 return;
             }
 
-        if (summaryGrid) {
             summaryGrid.innerHTML = '';
 
             summaryData.forEach(({ key, value }) => {
@@ -3429,7 +3701,6 @@
                 wrapper.appendChild(strong);
                 summaryGrid.appendChild(wrapper);
             });
-        }
         }
 
         function getOpponentSummaryText() {
@@ -3643,12 +3914,19 @@
         }
 
         function initNumericInputs() {
-            ['potInput', 'toCallInput', 'heroStackInput', 'villainStackInput'].forEach(id => {
+            ['potInput', 'toCallInput', 'heroStackInput', 'villainStackInput', 'numOpponentsInput'].forEach(id => {
                 const el = document.getElementById(id);
                 if (!el) {
                     return;
                 }
-                el.addEventListener('input', refreshSummary);
+                el.addEventListener('input', () => {
+                    if (id === 'numOpponentsInput') {
+                        const value = Math.max(1, Math.min(8, Math.round(Number(el.value) || 1)));
+                        state.numOpponents = value;
+                        el.value = value;
+                    }
+                    refreshSummary();
+                });
             });
         }
 
@@ -3694,67 +3972,128 @@
                     return;
                 }
                 const apply = () => {
-                    const rawValue = Number(input.value || 0);
-                    state.opponent[key] = Math.max(0, Math.min(1, rawValue / 10));
+                    if (!opponentDraft) {
+                        opponentDraft = cloneOpponentState(state.opponent);
+                    }
+                    const rawValue = Math.max(0, Math.min(10, Number(input.value || 0)));
+                    opponentDraft[key] = rawValue / 10;
                     if (display) {
                         display.textContent = `${rawValue}/10`;
                     }
-                    refreshSummary();
                 };
                 input.addEventListener('input', apply);
-                input.value = Math.round((state.opponent[key] || 0) * 10);
-                apply();
             });
 
             if (opBetPctInput) {
-                opBetPctInput.value = state.opponent.betPct;
                 opBetPctInput.addEventListener('input', () => {
-                    const value = Number(opBetPctInput.value || 0);
-                    state.opponent.betPct = Math.max(0, Math.min(400, value));
-                    refreshSummary();
+                    if (!opponentDraft) {
+                        opponentDraft = cloneOpponentState(state.opponent);
+                    }
+                    const value = Math.max(0, Math.min(400, Number(opBetPctInput.value || 0)));
+                    opponentDraft.betPct = value;
                 });
             }
 
             if (opActionStreet) {
-                opActionStreet.value = state.opponent.action.street;
                 opActionStreet.addEventListener('change', () => {
-                    state.opponent.action.street = opActionStreet.value;
-                    refreshSummary();
+                    if (!opponentDraft) {
+                        opponentDraft = cloneOpponentState(state.opponent);
+                    }
+                    opponentDraft.action.street = opActionStreet.value;
                 });
             }
 
             if (opActionType) {
-                opActionType.value = state.opponent.action.type;
                 opActionType.addEventListener('change', () => {
-                    state.opponent.action.type = opActionType.value;
-                    refreshSummary();
+                    if (!opponentDraft) {
+                        opponentDraft = cloneOpponentState(state.opponent);
+                    }
+                    opponentDraft.action.type = opActionType.value;
                 });
             }
 
             if (opActionAmount) {
-                opActionAmount.value = state.opponent.action.amount ?? '';
                 opActionAmount.addEventListener('input', () => {
+                    if (!opponentDraft) {
+                        opponentDraft = cloneOpponentState(state.opponent);
+                    }
                     const value = parseFloat(opActionAmount.value);
-                    state.opponent.action.amount = Number.isFinite(value) ? value : null;
-                    refreshSummary();
+                    opponentDraft.action.amount = Number.isFinite(value) ? value : null;
                 });
             }
 
             if (opActionPot) {
-                opActionPot.value = state.opponent.action.pot ?? '';
                 opActionPot.addEventListener('input', () => {
+                    if (!opponentDraft) {
+                        opponentDraft = cloneOpponentState(state.opponent);
+                    }
                     const value = parseFloat(opActionPot.value);
-                    state.opponent.action.pot = Number.isFinite(value) ? value : null;
-                    refreshSummary();
+                    opponentDraft.action.pot = Number.isFinite(value) ? value : null;
                 });
             }
 
             if (opNotesInput) {
-                opNotesInput.value = state.opponent.notes || '';
                 opNotesInput.addEventListener('input', () => {
-                    state.opponent.notes = opNotesInput.value;
-                    refreshSummary();
+                    if (!opponentDraft) {
+                        opponentDraft = cloneOpponentState(state.opponent);
+                    }
+                    opponentDraft.notes = opNotesInput.value;
                 });
+            }
+
+            syncOpponentControls();
+        }
+
+        function syncOpponentControls() {
+            if (!opAggressionInput) {
+                return;
+            }
+
+            if (!opponentDraft) {
+                opponentDraft = cloneOpponentState(state.opponent);
+            }
+
+            const sliderConfigs = [
+                { input: opAggressionInput, display: opAggressionValue, key: 'aggression' },
+                { input: opTightnessInput, display: opTightnessValue, key: 'tightness' },
+                { input: opBluffInput, display: opBluffValue, key: 'bluff' },
+                { input: opConfidenceInput, display: opConfidenceValue, key: 'confidence' },
+                { input: opTiltInput, display: opTiltValue, key: 'tilt' }
+            ];
+
+            sliderConfigs.forEach(({ input, display, key }) => {
+                if (!input) {
+                    return;
+                }
+                const rawValue = Math.round((opponentDraft[key] || 0) * 10);
+                input.value = rawValue;
+                if (display) {
+                    display.textContent = `${rawValue}/10`;
+                }
+            });
+
+            if (opBetPctInput) {
+                opBetPctInput.value = opponentDraft.betPct ?? 65;
+            }
+
+            if (opActionStreet) {
+                opActionStreet.value = opponentDraft.action?.street || 'PREFLOP';
+            }
+
+            if (opActionType) {
+                opActionType.value = opponentDraft.action?.type || 'bet';
+            }
+
+            if (opActionAmount) {
+                opActionAmount.value = opponentDraft.action?.amount ?? '';
+            }
+
+            if (opActionPot) {
+                opActionPot.value = opponentDraft.action?.pot ?? '';
+            }
+
+            if (opNotesInput) {
+                opNotesInput.value = opponentDraft.notes || '';
             }
         }
 
