@@ -366,13 +366,13 @@
         }
 
         .modal-content.medium {
-            max-width: 880px;
-            padding: 32px 40px 30px;
+            max-width: 1080px;
+            padding: 34px 48px 32px;
         }
 
         .modal-content.wide {
-            max-width: 920px;
-            padding: 34px 42px 30px;
+            max-width: 1220px;
+            padding: 36px 52px 34px;
         }
 
         .modal-body {
@@ -1066,15 +1066,15 @@
 
         .analysis-overview {
             display: grid;
-            grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
-            gap: 20px;
+            grid-template-columns: minmax(0, 1.6fr) minmax(300px, 1fr);
+            gap: clamp(20px, 3vw, 36px);
             align-items: stretch;
         }
 
         .overview-card {
             background: rgba(20, 18, 48, 0.78);
             border-radius: 18px;
-            padding: 20px 22px;
+            padding: clamp(22px, 2.6vw, 32px);
             border: 1px solid rgba(148, 163, 184, 0.2);
             box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
             display: flex;
@@ -1091,62 +1091,66 @@
 
         .overview-items {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 14px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: clamp(18px, 2.2vw, 28px);
         }
 
         .overview-item {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: 120px minmax(0, 1fr);
+            gap: 14px;
+            align-items: center;
         }
 
         .overview-item span {
-            font-size: 0.78rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.12em;
             color: var(--text-muted);
+            white-space: nowrap;
         }
 
         .badge-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 10px;
         }
 
         .badge-row .card-badge {
-            background: rgba(37, 33, 74, 0.65);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            border-radius: 10px;
-            padding: 6px 10px;
-            font-size: 0.94rem;
+            background: rgba(37, 33, 74, 0.72);
+            border: 1px solid rgba(148, 163, 184, 0.24);
+            border-radius: 12px;
+            padding: 8px 14px;
+            font-size: 1rem;
             font-weight: 600;
             letter-spacing: 0.06em;
             color: var(--text-primary);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 44px;
+            min-width: 52px;
         }
 
         .overview-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: clamp(12px, 1.8vw, 20px);
+            align-content: start;
         }
 
         .overview-button {
-            padding: 16px 18px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, rgba(45, 43, 85, 0.85), rgba(28, 20, 58, 0.9));
-            border: 1px solid rgba(148, 163, 184, 0.18);
+            padding: 18px 22px;
+            border-radius: 18px;
+            background: linear-gradient(140deg, rgba(45, 43, 85, 0.9), rgba(28, 20, 58, 0.94));
+            border: 1px solid rgba(148, 163, 184, 0.22);
             color: var(--text-primary);
-            font-size: 0.98rem;
+            font-size: 1.02rem;
             font-weight: 600;
             letter-spacing: 0.05em;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 16px;
             transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
             cursor: pointer;
         }
@@ -1161,6 +1165,32 @@
             font-size: 0.78rem;
             color: var(--text-muted);
             letter-spacing: 0.08em;
+        }
+
+        #analysisSummaryModal .modal-body {
+            gap: clamp(18px, 2vw, 26px);
+        }
+
+        #analysisStrategyModal .modal-body {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: clamp(18px, 2.4vw, 32px);
+            align-items: start;
+        }
+
+        #analysisOpponentModal .modal-body {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: clamp(18px, 2.4vw, 32px);
+        }
+
+        #analysisOpponentModal .insight-cards {
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: clamp(12px, 2vw, 20px);
+        }
+
+        #analysisOpponentModal .insight-card {
+            padding: 18px;
         }
 
         .opponent-callout {
@@ -1671,6 +1701,19 @@
             .analysis-overview {
                 grid-template-columns: 1fr;
             }
+
+            .overview-items {
+                grid-template-columns: 1fr;
+            }
+
+            .overview-item {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 10px;
+            }
+
+            .overview-item span {
+                white-space: normal;
+            }
         }
 
         @media (max-width: 960px) {
@@ -1692,6 +1735,14 @@
             }
 
             .metric-action .action-grid {
+                grid-template-columns: 1fr;
+            }
+
+            #analysisStrategyModal .modal-body {
+                grid-template-columns: 1fr;
+            }
+
+            .overview-actions {
                 grid-template-columns: 1fr;
             }
         }
