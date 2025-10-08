@@ -219,12 +219,13 @@
         .layout {
             display: grid;
             grid-template-columns:
-                clamp(280px, 24vw, 360px)
-                clamp(520px, 44vw, 720px)
-                clamp(320px, 30vw, 400px);
+                clamp(300px, 23vw, 380px)
+                clamp(560px, 48vw, 820px)
+                clamp(300px, 23vw, 380px);
             grid-template-areas: 'guide main side';
             gap: clamp(22px, 3vw, 42px);
             align-items: start;
+            justify-content: center;
         }
 
         #lessonPanel {
@@ -362,6 +363,16 @@
         .modal-content.compact {
             max-width: 760px;
             padding: 30px 36px 26px;
+        }
+
+        .modal-content.medium {
+            max-width: 880px;
+            padding: 32px 40px 30px;
+        }
+
+        .modal-content.wide {
+            max-width: 920px;
+            padding: 34px 42px 30px;
         }
 
         .modal-body {
@@ -1053,6 +1064,105 @@
             scrollbar-width: thin;
         }
 
+        .analysis-overview {
+            display: grid;
+            grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .overview-card {
+            background: rgba(20, 18, 48, 0.78);
+            border-radius: 18px;
+            padding: 20px 22px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .overview-title {
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--text-secondary);
+        }
+
+        .overview-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+        }
+
+        .overview-item {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .overview-item span {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+        }
+
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .badge-row .card-badge {
+            background: rgba(37, 33, 74, 0.65);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 10px;
+            padding: 6px 10px;
+            font-size: 0.94rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            color: var(--text-primary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+        }
+
+        .overview-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .overview-button {
+            padding: 16px 18px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(45, 43, 85, 0.85), rgba(28, 20, 58, 0.9));
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            color: var(--text-primary);
+            font-size: 0.98rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+
+        .overview-button:hover {
+            transform: translateY(-3px);
+            border-color: rgba(100, 244, 255, 0.35);
+            box-shadow: 0 18px 36px rgba(11, 16, 42, 0.45);
+        }
+
+        .overview-button .hint {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+        }
+
         .opponent-callout {
             background: rgba(37, 33, 74, 0.82);
             border-radius: 18px;
@@ -1557,6 +1667,10 @@
                 max-height: none;
                 overflow: visible;
             }
+
+            .analysis-overview {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 960px) {
@@ -1843,65 +1957,109 @@
                     </div>
                 </div>
 
-                <div class="analysis-body">
-                    <div class="analysis-column">
-                        <div class="analysis-box">
-                            <div class="analysis-box-title" data-i18n="analysis.cards">牌面概览</div>
-                            <div class="card-badges-group">
-                                <div class="card-badges-label" data-i18n="analysis.hero">你的底牌</div>
-                                <div class="card-badges" id="analysisHeroCards"></div>
+                <div class="analysis-overview">
+                    <div class="overview-card">
+                        <div class="overview-title" data-i18n="analysis.quick.cards">牌面概览</div>
+                        <div class="overview-items">
+                            <div class="overview-item">
+                                <span data-i18n="analysis.hero">你的底牌</span>
+                                <div class="badge-row" id="analysisHeroCards"></div>
                             </div>
-                            <div class="card-badges-group">
-                                <div class="card-badges-label" data-i18n="analysis.board">公共牌</div>
-                                <div class="card-badges" id="analysisBoardCards"></div>
-                            </div>
-                        </div>
-                        <div class="analysis-box">
-                            <div class="analysis-box-title" data-i18n="analysis.explanation">策略解读</div>
-                            <div class="explanation-box" id="explanationBox" style="display: none;"></div>
-                        </div>
-                        <div class="analysis-box">
-                            <div class="analysis-box-title" data-i18n="analysis.opponent">对手画像</div>
-                            <div class="insights-panel" id="opponentInsights" style="display: none;">
-                                <div class="insights-header">
-                                    <span class="archetype-pill" id="opponentArchetype"></span>
-                                </div>
-                                <p id="opponentSummary" style="font-size:0.92rem;line-height:1.6;opacity:0.82;margin-bottom:16px;"></p>
-                                <div class="insight-cards">
-                                    <div class="insight-card">
-                                        <strong data-i18n="opponent.insights.aggression">激进指数</strong>
-                                        <span id="opponentAggressionMetric">-</span>
-                                    </div>
-                                    <div class="insight-card">
-                                        <strong data-i18n="opponent.insights.betting">下注压力</strong>
-                                        <span id="opponentBettingMetric">-</span>
-                                    </div>
-                                    <div class="insight-card">
-                                        <strong data-i18n="opponent.insights.psychology">心理压强</strong>
-                                        <span id="opponentPsychologyMetric">-</span>
-                                    </div>
-                                    <div class="insight-card">
-                                        <strong data-i18n="opponent.insights.range">范围优势</strong>
-                                        <span id="opponentRangeMetric">-</span>
-                                    </div>
-                                </div>
-                                <div class="insight-notes" id="opponentNotes"></div>
+                            <div class="overview-item">
+                                <span data-i18n="analysis.board">公共牌</span>
+                                <div class="badge-row" id="analysisBoardCards"></div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="analysis-column">
-                        <div class="analysis-box">
-                            <div class="analysis-box-title" data-i18n="summary.heading">当前输入概览</div>
-                            <div class="summary-grid" id="summaryGrid"></div>
-                        </div>
-                        <div class="analysis-box">
-                            <div class="analysis-box-title" data-i18n="factors.heading">关键因子</div>
-                            <div class="factors-grid" id="factorsGrid"></div>
-                        </div>
+                    <div class="overview-actions">
+                        <button class="overview-button" id="analysisSummaryBtn">
+                            <span data-i18n="analysis.quick.summary">查看输入总览</span>
+                            <span class="hint" data-i18n="analysis.quick.summaryHint">Summary</span>
+                        </button>
+                        <button class="overview-button" id="analysisStrategyBtn">
+                            <span data-i18n="analysis.quick.strategy">策略解读详情</span>
+                            <span class="hint" data-i18n="analysis.quick.strategyHint">Playbook</span>
+                        </button>
+                        <button class="overview-button" id="analysisOpponentBtn">
+                            <span data-i18n="analysis.quick.opponent">对手画像洞察</span>
+                            <span class="hint" data-i18n="analysis.quick.opponentHint">Villain profile</span>
+                        </button>
                     </div>
                 </div>
             </section>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="analysisSummaryModal">
+        <div class="modal-content medium">
+            <div class="modal-header">
+                <h2 class="modal-title" data-i18n="analysisModal.summaryTitle">当前输入概览</h2>
+                <button class="modal-close" id="closeAnalysisSummary">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="analysis-box">
+                    <div class="analysis-box-title" data-i18n="summary.heading">当前输入概览</div>
+                    <div class="summary-grid" id="summaryGrid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="analysisStrategyModal">
+        <div class="modal-content medium">
+            <div class="modal-header">
+                <h2 class="modal-title" data-i18n="analysisModal.strategyTitle">策略解读</h2>
+                <button class="modal-close" id="closeAnalysisStrategy">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="analysis-box">
+                    <div class="analysis-box-title" data-i18n="analysis.explanation">策略解读</div>
+                    <div class="explanation-box" id="explanationBox" style="display: none;"></div>
+                </div>
+                <div class="analysis-box">
+                    <div class="analysis-box-title" data-i18n="factors.heading">关键因子</div>
+                    <div class="factors-grid" id="factorsGrid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="analysisOpponentModal">
+        <div class="modal-content wide">
+            <div class="modal-header">
+                <h2 class="modal-title" data-i18n="analysisModal.opponentTitle">对手画像洞察</h2>
+                <button class="modal-close" id="closeAnalysisOpponent">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="analysis-box">
+                    <div class="analysis-box-title" data-i18n="analysis.opponent">对手画像</div>
+                    <div class="insights-panel" id="opponentInsights" style="display: none;">
+                        <div class="insights-header">
+                            <span class="archetype-pill" id="opponentArchetype"></span>
+                        </div>
+                        <p id="opponentSummary" style="font-size:0.92rem;line-height:1.6;opacity:0.82;margin-bottom:16px;"></p>
+                        <div class="insight-cards">
+                            <div class="insight-card">
+                                <strong data-i18n="opponent.insights.aggression">激进指数</strong>
+                                <span id="opponentAggressionMetric">-</span>
+                            </div>
+                            <div class="insight-card">
+                                <strong data-i18n="opponent.insights.betting">下注压力</strong>
+                                <span id="opponentBettingMetric">-</span>
+                            </div>
+                            <div class="insight-card">
+                                <strong data-i18n="opponent.insights.psychology">心理压强</strong>
+                                <span id="opponentPsychologyMetric">-</span>
+                            </div>
+                            <div class="insight-card">
+                                <strong data-i18n="opponent.insights.range">范围优势</strong>
+                                <span id="opponentRangeMetric">-</span>
+                            </div>
+                        </div>
+                        <div class="insight-notes" id="opponentNotes"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -2291,6 +2449,15 @@
         let riskMetricValueEl;
         let analysisHeroCards;
         let analysisBoardCards;
+        let analysisSummaryModal;
+        let analysisStrategyModal;
+        let analysisOpponentModal;
+        let closeAnalysisSummaryBtn;
+        let closeAnalysisStrategyBtn;
+        let closeAnalysisOpponentBtn;
+        let analysisSummaryBtn;
+        let analysisStrategyBtn;
+        let analysisOpponentBtn;
         let numOpponentsInput;
         let opponentModal;
         let opponentModalBtn;
@@ -2487,7 +2654,21 @@
                     hero: 'Hero Cards',
                     board: 'Board',
                     explanation: 'Strategy Breakdown',
-                    opponent: 'Opponent Insights'
+                    opponent: 'Opponent Insights',
+                    quick: {
+                        cards: 'Table Snapshot',
+                        summary: 'View Input Overview',
+                        summaryHint: 'Summary',
+                        strategy: 'Strategy Insights',
+                        strategyHint: 'Playbook',
+                        opponent: 'Opponent Insights',
+                        opponentHint: 'Villain profile'
+                    }
+                },
+                analysisModal: {
+                    summaryTitle: 'Input Overview',
+                    strategyTitle: 'Strategy Breakdown',
+                    opponentTitle: 'Opponent Insights'
                 },
                 prompts: {
                     apiBase: 'Enter backend API base URL (https://your-service.onrender.com)',
@@ -2799,7 +2980,21 @@
                     hero: '你的底牌',
                     board: '公共牌',
                     explanation: '策略解读',
-                    opponent: '对手画像'
+                    opponent: '对手画像',
+                    quick: {
+                        cards: '牌面概览',
+                        summary: '查看输入总览',
+                        summaryHint: 'Summary',
+                        strategy: '策略解读详情',
+                        strategyHint: 'Playbook',
+                        opponent: '对手画像洞察',
+                        opponentHint: 'Villain profile'
+                    }
+                },
+                analysisModal: {
+                    summaryTitle: '当前输入概览',
+                    strategyTitle: '策略解读',
+                    opponentTitle: '对手画像洞察'
                 },
                 prompts: {
                     apiBase: '请输入后端 API 地址（例如 https://your-service.onrender.com）',
@@ -3070,6 +3265,15 @@
             riskMetricValueEl = document.getElementById('riskMetricValue');
             analysisHeroCards = document.getElementById('analysisHeroCards');
             analysisBoardCards = document.getElementById('analysisBoardCards');
+            analysisSummaryModal = document.getElementById('analysisSummaryModal');
+            analysisStrategyModal = document.getElementById('analysisStrategyModal');
+            analysisOpponentModal = document.getElementById('analysisOpponentModal');
+            closeAnalysisSummaryBtn = document.getElementById('closeAnalysisSummary');
+            closeAnalysisStrategyBtn = document.getElementById('closeAnalysisStrategy');
+            closeAnalysisOpponentBtn = document.getElementById('closeAnalysisOpponent');
+            analysisSummaryBtn = document.getElementById('analysisSummaryBtn');
+            analysisStrategyBtn = document.getElementById('analysisStrategyBtn');
+            analysisOpponentBtn = document.getElementById('analysisOpponentBtn');
             opponentModal = document.getElementById('opponentModal');
             opponentModalBtn = document.getElementById('opponentModalBtn');
             opponentModalClose = document.getElementById('closeOpponentModal');
@@ -3113,6 +3317,24 @@
                 localStorage.setItem('qpds_visited', 'true');
             });
 
+            const closeAnalysisSummary = () => {
+                if (analysisSummaryModal) {
+                    analysisSummaryModal.classList.remove('show');
+                }
+            };
+
+            const closeAnalysisStrategy = () => {
+                if (analysisStrategyModal) {
+                    analysisStrategyModal.classList.remove('show');
+                }
+            };
+
+            const closeAnalysisOpponent = () => {
+                if (analysisOpponentModal) {
+                    analysisOpponentModal.classList.remove('show');
+                }
+            };
+
             // 游戏手册事件监听
             gameManualBtn.addEventListener('click', () => {
                 gameManualModal.classList.add('show');
@@ -3129,10 +3351,85 @@
                 }
             });
 
+            if (analysisSummaryBtn && analysisSummaryModal) {
+                analysisSummaryBtn.addEventListener('click', () => {
+                    analysisSummaryModal.classList.add('show');
+                });
+            }
+
+            if (closeAnalysisSummaryBtn) {
+                closeAnalysisSummaryBtn.addEventListener('click', closeAnalysisSummary);
+            }
+
+            if (analysisSummaryModal) {
+                analysisSummaryModal.addEventListener('click', (event) => {
+                    if (event.target === analysisSummaryModal) {
+                        closeAnalysisSummary();
+                    }
+                });
+            }
+
+            if (analysisStrategyBtn && analysisStrategyModal) {
+                analysisStrategyBtn.addEventListener('click', () => {
+                    analysisStrategyModal.classList.add('show');
+                });
+            }
+
+            if (closeAnalysisStrategyBtn) {
+                closeAnalysisStrategyBtn.addEventListener('click', closeAnalysisStrategy);
+            }
+
+            if (analysisStrategyModal) {
+                analysisStrategyModal.addEventListener('click', (event) => {
+                    if (event.target === analysisStrategyModal) {
+                        closeAnalysisStrategy();
+                    }
+                });
+            }
+
+            if (analysisOpponentBtn && analysisOpponentModal) {
+                analysisOpponentBtn.addEventListener('click', () => {
+                    analysisOpponentModal.classList.add('show');
+                });
+            }
+
+            if (closeAnalysisOpponentBtn) {
+                closeAnalysisOpponentBtn.addEventListener('click', closeAnalysisOpponent);
+            }
+
+            if (analysisOpponentModal) {
+                analysisOpponentModal.addEventListener('click', (event) => {
+                    if (event.target === analysisOpponentModal) {
+                        closeAnalysisOpponent();
+                    }
+                });
+            }
+
             // ESC键关闭模态框
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && gameManualModal.classList.contains('show')) {
+                if (e.key !== 'Escape') {
+                    return;
+                }
+
+                if (gameManualModal.classList.contains('show')) {
                     gameManualModal.classList.remove('show');
+                }
+
+                if (analysisSummaryModal && analysisSummaryModal.classList.contains('show')) {
+                    closeAnalysisSummary();
+                }
+
+                if (analysisStrategyModal && analysisStrategyModal.classList.contains('show')) {
+                    closeAnalysisStrategy();
+                }
+
+                if (analysisOpponentModal && analysisOpponentModal.classList.contains('show')) {
+                    closeAnalysisOpponent();
+                }
+
+                if (opponentModal && opponentModal.classList.contains('show')) {
+                    opponentModal.classList.remove('show');
+                    opponentDraft = null;
                 }
             });
 
