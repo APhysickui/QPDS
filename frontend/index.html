@@ -36,7 +36,7 @@
             background: radial-gradient(circle at top left, rgba(100, 244, 255, 0.18), rgba(179, 98, 255, 0.05) 45%, transparent 70%),
                         linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 55%, var(--bg-tertiary) 100%);
             min-height: 100vh;
-            padding: 32px 28px 56px;
+            padding: clamp(28px, 4vw, 56px) clamp(24px, 5vw, 72px) clamp(44px, 6vw, 96px);
             color: var(--text-primary);
             position: relative;
             overflow-x: hidden;
@@ -67,8 +67,9 @@
         }
 
         .app {
-            max-width: 1280px;
-            margin: 0 auto 40px auto;
+            max-width: clamp(1180px, 94vw, 1760px);
+            margin: 0 auto;
+            padding: 0 clamp(12px, 1.8vw, 36px) 48px;
             position: relative;
         }
 
@@ -217,9 +218,12 @@
 
         .layout {
             display: grid;
-            grid-template-columns: minmax(300px, 1fr) minmax(520px, 1.2fr) minmax(320px, 1fr);
+            grid-template-columns:
+                clamp(280px, 24vw, 360px)
+                clamp(520px, 44vw, 720px)
+                clamp(320px, 30vw, 400px);
             grid-template-areas: 'guide main side';
-            gap: 26px;
+            gap: clamp(22px, 3vw, 42px);
             align-items: start;
         }
 
@@ -716,6 +720,29 @@
             font-size: 1.2rem;
             color: var(--accent-pink);
             text-shadow: 0 0 10px rgba(255, 126, 219, 0.55);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: clamp(16px, 2.2vw, 28px);
+            margin-bottom: clamp(20px, 2.8vw, 36px);
+        }
+
+        #statePanel .cards-grid .section {
+            margin-bottom: 0;
+        }
+
+        .card-panel {
+            background: rgba(26, 27, 65, 0.7);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 20px;
+            padding: clamp(16px, 2vw, 24px);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 18px 30px rgba(9, 10, 32, 0.35);
+        }
+
+        .card-panel h3 {
+            margin-bottom: clamp(10px, 1.2vw, 16px);
         }
 
         .stage-options {
@@ -1483,7 +1510,35 @@
             display: block;
         }
 
-        @media (max-width: 1400px) {
+        @media (min-width: 1500px) {
+            .layout {
+                grid-template-columns:
+                    clamp(320px, 22vw, 420px)
+                    clamp(680px, 50vw, 880px)
+                    clamp(320px, 22vw, 420px);
+                gap: clamp(28px, 3.5vw, 48px);
+            }
+
+            .panel {
+                padding: clamp(28px, 2.1vw, 36px);
+            }
+
+            .analysis-panel {
+                max-height: clamp(70vh, 82vh, 860px);
+            }
+        }
+
+        @media (min-width: 1100px) {
+            .button-group {
+                flex-wrap: nowrap;
+            }
+
+            .button-group button {
+                flex: 1 1 0;
+            }
+        }
+
+        @media (max-width: 1320px) {
             .layout {
                 grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
                 grid-template-areas:
@@ -1683,14 +1738,15 @@
                     </div>
                 </div>
 
-                <div class="section">
-                    <h3 data-i18n="state.hero">你的底牌</h3>
-                    <div class="card-slots" id="heroSlots"></div>
-                </div>
-
-                <div class="section">
-                    <h3 data-i18n="state.board">公共牌</h3>
-                    <div class="card-slots" id="boardSlots"></div>
+                <div class="cards-grid">
+                    <div class="section card-panel">
+                        <h3 data-i18n="state.hero">你的底牌</h3>
+                        <div class="card-slots" id="heroSlots"></div>
+                    </div>
+                    <div class="section card-panel">
+                        <h3 data-i18n="state.board">公共牌</h3>
+                        <div class="card-slots" id="boardSlots"></div>
+                    </div>
                 </div>
 
                 <div class="section deck-section" id="deckSection">
