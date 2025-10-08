@@ -217,9 +217,24 @@
 
         .layout {
             display: grid;
-            grid-template-columns: repeat(2, minmax(340px, 1fr));
+            grid-template-columns: minmax(260px, 320px) minmax(0, 1fr) minmax(300px, 360px);
+            grid-template-areas: 'guide main side';
             gap: 26px;
             align-items: start;
+        }
+
+        #lessonPanel {
+            grid-area: guide;
+            position: sticky;
+            top: 24px;
+        }
+
+        #statePanel {
+            grid-area: main;
+        }
+
+        #analysisPanel {
+            grid-area: side;
         }
 
         .panel {
@@ -996,15 +1011,68 @@
         }
 
         .analysis-panel {
-            grid-column: 1 / -1;
             background: linear-gradient(160deg, rgba(26, 24, 60, 0.95), rgba(13, 11, 34, 0.94));
-            border-radius: 26px;
-            padding: 32px;
+            border-radius: 24px;
+            padding: 28px;
             border: 1px solid rgba(148, 118, 255, 0.32);
             box-shadow: 0 30px 58px rgba(8, 6, 24, 0.55);
             display: flex;
             flex-direction: column;
-            gap: 28px;
+            gap: 24px;
+            position: sticky;
+            top: 24px;
+            max-height: calc(100vh - 48px);
+            overflow: auto;
+            scrollbar-width: thin;
+        }
+
+        .opponent-callout {
+            background: rgba(37, 33, 74, 0.82);
+            border-radius: 18px;
+            padding: 18px 20px;
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .opponent-callout-text {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .opponent-callout-text p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.72);
+            line-height: 1.5;
+        }
+
+        .callout-label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: var(--text-secondary);
+        }
+
+        .callout-button {
+            padding: 12px 20px;
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(135deg, rgba(100, 244, 255, 0.9), rgba(179, 98, 255, 0.9));
+            color: #0b1025;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 16px 32px rgba(19, 12, 44, 0.45);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .callout-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 24px 40px rgba(19, 12, 44, 0.55);
         }
 
         .analysis-top {
@@ -1355,9 +1423,39 @@
             display: block;
         }
 
-        @media (max-width: 1024px) {
+        @media (max-width: 1400px) {
+            .layout {
+                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+                grid-template-areas:
+                    'guide main'
+                    'side side';
+            }
+
+            #lessonPanel {
+                position: sticky;
+                top: 20px;
+            }
+
+            #analysisPanel {
+                position: relative;
+                top: auto;
+                max-height: none;
+                overflow: visible;
+            }
+        }
+
+        @media (max-width: 960px) {
             .layout {
                 grid-template-columns: 1fr;
+                grid-template-areas:
+                    'guide'
+                    'main'
+                    'side';
+            }
+
+            #lessonPanel {
+                position: relative;
+                top: auto;
             }
         }
 
@@ -1378,6 +1476,16 @@
 
             .button-group button {
                 flex: 1 1 100%;
+            }
+
+            .opponent-callout {
+                flex-direction: column;
+                gap: 14px;
+            }
+
+            .callout-button {
+                width: 100%;
+                text-align: center;
             }
         }
     </style>
@@ -1563,7 +1671,6 @@
                 <div class="button-group">
                     <button id="recommendButton" data-i18n="buttons.recommend">获取决策建议</button>
                     <button id="equityButton" data-i18n="buttons.equity">仅计算胜率</button>
-                    <button id="opponentModalBtn" class="ghost" data-i18n="buttons.opponentConfig">配置对手画像</button>
                     <button id="resetButton" class="ghost" data-i18n="buttons.reset">重置牌面</button>
                 </div>
 
@@ -1573,6 +1680,14 @@
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
                     <span data-i18n="loading">正在为你量化牌局...</span>
+                </div>
+
+                <div class="opponent-callout" id="opponentCallout">
+                    <div class="opponent-callout-text">
+                        <span class="callout-label" data-i18n="opponent.heading">对手建模</span>
+                        <p data-i18n="opponent.calloutHint">梳理对手的打法画像，系统会即时刷新策略建议与对局解读。</p>
+                    </div>
+                    <button id="opponentModalBtn" class="callout-button" data-i18n="buttons.opponentConfig">配置对手画像</button>
                 </div>
 
                 <div class="analysis-top">
@@ -2164,6 +2279,7 @@
                 },
                 opponent: {
                     heading: 'Opponent Model',
+                    calloutHint: 'Tune villain tendencies so the recommendations stay on point.',
                     aggression: {
                         label: 'Aggression',
                         low: 'Passive',
@@ -2475,6 +2591,7 @@
                 },
                 opponent: {
                     heading: '对手建模',
+                    calloutHint: '梳理对手打法画像，系统会即时刷新策略解读。',
                     aggression: {
                         label: '激进程度',
                         low: '偏被动',
