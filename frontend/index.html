@@ -366,13 +366,13 @@
         }
 
         .modal-content.medium {
-            max-width: 1080px;
-            padding: 34px 48px 32px;
+            max-width: 1024px;
+            padding: 34px 46px 32px;
         }
 
         .modal-content.wide {
-            max-width: 1220px;
-            padding: 36px 52px 34px;
+            max-width: 1140px;
+            padding: 36px 50px 34px;
         }
 
         .modal-body {
@@ -1065,41 +1065,43 @@
         }
 
         .analysis-overview {
-            display: grid;
-            grid-template-columns: minmax(0, 1.6fr) minmax(300px, 1fr);
-            gap: clamp(20px, 3vw, 36px);
+            display: flex;
+            flex-wrap: wrap;
+            gap: clamp(20px, 3vw, 40px);
             align-items: stretch;
         }
 
         .overview-card {
-            background: rgba(20, 18, 48, 0.78);
-            border-radius: 18px;
-            padding: clamp(22px, 2.6vw, 32px);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+            background: rgba(20, 18, 48, 0.82);
+            border-radius: 20px;
+            padding: clamp(24px, 3vw, 34px);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), 0 20px 38px rgba(9, 12, 32, 0.35);
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: clamp(18px, 2.2vw, 26px);
+            flex: 1 1 620px;
+            min-width: min(620px, 100%);
         }
 
         .overview-title {
-            font-size: 0.82rem;
+            font-size: 0.84rem;
             text-transform: uppercase;
-            letter-spacing: 0.14em;
+            letter-spacing: 0.16em;
             color: var(--text-secondary);
         }
 
         .overview-items {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: clamp(18px, 2.2vw, 28px);
+            display: flex;
+            flex-direction: column;
+            gap: clamp(14px, 1.6vw, 22px);
         }
 
         .overview-item {
-            display: grid;
-            grid-template-columns: 120px minmax(0, 1fr);
-            gap: 14px;
+            display: flex;
             align-items: center;
+            gap: clamp(14px, 1.8vw, 28px);
+            flex-wrap: wrap;
         }
 
         .overview-item span {
@@ -1107,20 +1109,22 @@
             text-transform: uppercase;
             letter-spacing: 0.12em;
             color: var(--text-muted);
-            white-space: nowrap;
+            min-width: 130px;
+            flex: 0 0 auto;
         }
 
         .badge-row {
             display: flex;
+            flex: 1 1 auto;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: clamp(8px, 1.4vw, 16px);
         }
 
         .badge-row .card-badge {
-            background: rgba(37, 33, 74, 0.72);
+            background: rgba(37, 33, 74, 0.74);
             border: 1px solid rgba(148, 163, 184, 0.24);
             border-radius: 12px;
-            padding: 8px 14px;
+            padding: 10px 16px;
             font-size: 1rem;
             font-weight: 600;
             letter-spacing: 0.06em;
@@ -1128,29 +1132,31 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 52px;
+            min-width: 54px;
         }
 
         .overview-actions {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: clamp(12px, 1.8vw, 20px);
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: clamp(14px, 2vw, 22px);
             align-content: start;
+            flex: 1 1 360px;
+            min-width: min(360px, 100%);
         }
 
         .overview-button {
-            padding: 18px 22px;
+            padding: clamp(18px, 2.6vw, 26px);
             border-radius: 18px;
-            background: linear-gradient(140deg, rgba(45, 43, 85, 0.9), rgba(28, 20, 58, 0.94));
-            border: 1px solid rgba(148, 163, 184, 0.22);
+            background: linear-gradient(140deg, rgba(45, 43, 85, 0.92), rgba(28, 20, 58, 0.96));
+            border: 1px solid rgba(148, 163, 184, 0.24);
             color: var(--text-primary);
-            font-size: 1.02rem;
+            font-size: 1.04rem;
             font-weight: 600;
             letter-spacing: 0.05em;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 16px;
+            gap: clamp(12px, 1.6vw, 22px);
             transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
             cursor: pointer;
         }
@@ -1174,23 +1180,23 @@
         #analysisStrategyModal .modal-body {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: clamp(18px, 2.4vw, 32px);
+            gap: clamp(18px, 2.2vw, 32px);
             align-items: start;
         }
 
         #analysisOpponentModal .modal-body {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr);
-            gap: clamp(18px, 2.4vw, 32px);
+            display: flex;
+            flex-direction: column;
+            gap: clamp(18px, 2.2vw, 32px);
         }
 
         #analysisOpponentModal .insight-cards {
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: clamp(12px, 2vw, 20px);
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: clamp(14px, 2vw, 22px);
         }
 
         #analysisOpponentModal .insight-card {
-            padding: 18px;
+            padding: clamp(18px, 2vw, 24px);
         }
 
         .opponent-callout {
@@ -1699,16 +1705,12 @@
             }
 
             .analysis-overview {
-                grid-template-columns: 1fr;
+                flex-direction: column;
             }
 
-            .overview-items {
-                grid-template-columns: 1fr;
-            }
-
-            .overview-item {
-                grid-template-columns: minmax(0, 1fr);
-                gap: 10px;
+            .overview-card,
+            .overview-actions {
+                min-width: 100%;
             }
 
             .overview-item span {
