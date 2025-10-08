@@ -1275,10 +1275,77 @@
             color: #bae6fd;
         }
 
-        .opponent-grid {
+        .opponent-layout {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        .trait-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 18px;
+        }
+
+        .detail-column {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .metric-slider .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .metric-slider .metric-value {
+            font-size: 0.95rem;
+            color: #f8fafc;
+            background: rgba(100, 244, 255, 0.12);
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .metric-scale {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .metric-scale small {
+            font-size: 0.78rem;
+            color: rgba(226, 232, 240, 0.75);
+            white-space: nowrap;
+        }
+
+        .metric-scale input[type="range"] {
+            flex: 1;
+        }
+
+        .metric-field input[type="number"] {
+            font-size: 0.95rem;
+        }
+
+        .metric-action .action-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .metric-action select,
+        .metric-action input {
+            width: 100%;
+        }
+
+        .metric-notes textarea {
+            min-height: 140px;
         }
 
         .metric-group {
@@ -1314,13 +1381,6 @@
 
         .metric-group textarea {
             min-height: 64px;
-        }
-
-        .metric-range-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            opacity: 0.8;
         }
 
         .insights-panel {
@@ -1457,6 +1517,14 @@
                 position: relative;
                 top: auto;
             }
+
+            .opponent-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .metric-action .action-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 640px) {
@@ -1486,6 +1554,10 @@
             .callout-button {
                 width: 100%;
                 text-align: center;
+            }
+
+            .trait-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -1979,76 +2051,92 @@
             </div>
 
             <div class="modal-body">
-                <div class="opponent-grid">
-                    <div class="metric-group">
-                        <span data-i18n="opponent.aggression.label">激进程度</span>
-                        <div class="metric-range-label">
-                            <small data-i18n="opponent.aggression.low">被动</small>
-                            <small id="opAggressionValue">6/10</small>
-                            <small data-i18n="opponent.aggression.high">激进</small>
+                <div class="opponent-layout">
+                    <div class="trait-grid">
+                        <div class="metric-group metric-slider">
+                            <div class="metric-header">
+                                <span data-i18n="opponent.aggression.label">激进程度</span>
+                                <strong class="metric-value" id="opAggressionValue">6/10</strong>
+                            </div>
+                            <div class="metric-scale">
+                                <small data-i18n="opponent.aggression.low">被动</small>
+                                <input type="range" id="opAggressionInput" min="0" max="10" value="6">
+                                <small data-i18n="opponent.aggression.high">激进</small>
+                            </div>
                         </div>
-                        <input type="range" id="opAggressionInput" min="0" max="10" value="6">
-                    </div>
-                    <div class="metric-group">
-                        <span data-i18n="opponent.tightness.label">起手范围</span>
-                        <div class="metric-range-label">
-                            <small data-i18n="opponent.tightness.wide">宽松</small>
-                            <small id="opTightnessValue">5/10</small>
-                            <small data-i18n="opponent.tightness.narrow">紧实</small>
+                        <div class="metric-group metric-slider">
+                            <div class="metric-header">
+                                <span data-i18n="opponent.tightness.label">起手范围</span>
+                                <strong class="metric-value" id="opTightnessValue">5/10</strong>
+                            </div>
+                            <div class="metric-scale">
+                                <small data-i18n="opponent.tightness.wide">宽松</small>
+                                <input type="range" id="opTightnessInput" min="0" max="10" value="5">
+                                <small data-i18n="opponent.tightness.narrow">紧实</small>
+                            </div>
                         </div>
-                        <input type="range" id="opTightnessInput" min="0" max="10" value="5">
-                    </div>
-                    <div class="metric-group">
-                        <span data-i18n="opponent.bluff.label">诈唬频率</span>
-                        <div class="metric-range-label">
-                            <small data-i18n="opponent.bluff.low">罕见</small>
-                            <small id="opBluffValue">3/10</small>
-                            <small data-i18n="opponent.bluff.high">频繁</small>
+                        <div class="metric-group metric-slider">
+                            <div class="metric-header">
+                                <span data-i18n="opponent.bluff.label">诈唬频率</span>
+                                <strong class="metric-value" id="opBluffValue">3/10</strong>
+                            </div>
+                            <div class="metric-scale">
+                                <small data-i18n="opponent.bluff.low">罕见</small>
+                                <input type="range" id="opBluffInput" min="0" max="10" value="3">
+                                <small data-i18n="opponent.bluff.high">频繁</small>
+                            </div>
                         </div>
-                        <input type="range" id="opBluffInput" min="0" max="10" value="3">
-                    </div>
-                    <div class="metric-group">
-                        <span data-i18n="opponent.confidence.label">桌面自信</span>
-                        <div class="metric-range-label">
-                            <small data-i18n="opponent.confidence.low">犹豫</small>
-                            <small id="opConfidenceValue">6/10</small>
-                            <small data-i18n="opponent.confidence.high">自信</small>
+                        <div class="metric-group metric-slider">
+                            <div class="metric-header">
+                                <span data-i18n="opponent.confidence.label">桌面自信</span>
+                                <strong class="metric-value" id="opConfidenceValue">6/10</strong>
+                            </div>
+                            <div class="metric-scale">
+                                <small data-i18n="opponent.confidence.low">犹豫</small>
+                                <input type="range" id="opConfidenceInput" min="0" max="10" value="6">
+                                <small data-i18n="opponent.confidence.high">自信</small>
+                            </div>
                         </div>
-                        <input type="range" id="opConfidenceInput" min="0" max="10" value="6">
-                    </div>
-                    <div class="metric-group">
-                        <span data-i18n="opponent.tilt.label">情绪波动</span>
-                        <div class="metric-range-label">
-                            <small data-i18n="opponent.tilt.calm">冷静</small>
-                            <small id="opTiltValue">4/10</small>
-                            <small data-i18n="opponent.tilt.hot">接近失控</small>
+                        <div class="metric-group metric-slider">
+                            <div class="metric-header">
+                                <span data-i18n="opponent.tilt.label">情绪波动</span>
+                                <strong class="metric-value" id="opTiltValue">4/10</strong>
+                            </div>
+                            <div class="metric-scale">
+                                <small data-i18n="opponent.tilt.calm">冷静</small>
+                                <input type="range" id="opTiltInput" min="0" max="10" value="4">
+                                <small data-i18n="opponent.tilt.hot">接近失控</small>
+                            </div>
                         </div>
-                        <input type="range" id="opTiltInput" min="0" max="10" value="4">
                     </div>
-                    <div class="metric-group">
-                        <span data-i18n="opponent.bet.label">最近下注占底池%</span>
-                        <input type="number" id="opBetPctInput" min="0" max="400" step="1" value="65" data-i18n-placeholder="opponent.bet.placeholder" placeholder="例如 70">
-                    </div>
-                    <div class="metric-group">
-                        <span data-i18n="opponent.action.label">最近动作</span>
-                        <select id="opActionStreet">
-                            <option value="PREFLOP" data-i18n="streets.PREFLOP">翻前 (Preflop)</option>
-                            <option value="FLOP" data-i18n="streets.FLOP">翻牌圈 (Flop)</option>
-                            <option value="TURN" data-i18n="streets.TURN">转牌圈 (Turn)</option>
-                            <option value="RIVER" data-i18n="streets.RIVER">河牌圈 (River)</option>
-                        </select>
-                        <select id="opActionType">
-                            <option value="bet" data-i18n="opponent.action.bet">下注</option>
-                            <option value="raise" data-i18n="opponent.action.raise">加注</option>
-                            <option value="call" data-i18n="opponent.action.call">跟注</option>
-                            <option value="check" data-i18n="opponent.action.check">过牌</option>
-                        </select>
-                        <input type="number" id="opActionAmount" min="0" step="0.01" data-i18n-placeholder="opponent.action.amount" placeholder="例如 80">
-                        <input type="number" id="opActionPot" min="0" step="0.01" data-i18n-placeholder="opponent.action.pot" placeholder="行动前底池">
-                    </div>
-                    <div class="metric-group">
-                        <span data-i18n="opponent.notes.label">额外备注</span>
-                        <textarea id="opNotesInput" data-i18n-placeholder="opponent.notes.placeholder" placeholder="例如：翻牌圈持续下注，河牌趋于紧凶"></textarea>
+                    <div class="detail-column">
+                        <div class="metric-group metric-field">
+                            <span data-i18n="opponent.bet.label">最近下注占底池%</span>
+                            <input type="number" id="opBetPctInput" min="0" max="400" step="1" value="65" data-i18n-placeholder="opponent.bet.placeholder" placeholder="例如 70">
+                        </div>
+                        <div class="metric-group metric-action">
+                            <span data-i18n="opponent.action.label">最近动作</span>
+                            <div class="action-grid">
+                                <select id="opActionStreet">
+                                    <option value="PREFLOP" data-i18n="streets.PREFLOP">翻前 (Preflop)</option>
+                                    <option value="FLOP" data-i18n="streets.FLOP">翻牌圈 (Flop)</option>
+                                    <option value="TURN" data-i18n="streets.TURN">转牌圈 (Turn)</option>
+                                    <option value="RIVER" data-i18n="streets.RIVER">河牌圈 (River)</option>
+                                </select>
+                                <select id="opActionType">
+                                    <option value="bet" data-i18n="opponent.action.bet">下注</option>
+                                    <option value="raise" data-i18n="opponent.action.raise">加注</option>
+                                    <option value="call" data-i18n="opponent.action.call">跟注</option>
+                                    <option value="check" data-i18n="opponent.action.check">过牌</option>
+                                </select>
+                                <input type="number" id="opActionAmount" min="0" step="0.01" data-i18n-placeholder="opponent.action.amount" placeholder="例如 80">
+                                <input type="number" id="opActionPot" min="0" step="0.01" data-i18n-placeholder="opponent.action.pot" placeholder="行动前底池">
+                            </div>
+                        </div>
+                        <div class="metric-group metric-notes">
+                            <span data-i18n="opponent.notes.label">额外备注</span>
+                            <textarea id="opNotesInput" data-i18n-placeholder="opponent.notes.placeholder" placeholder="例如：翻牌圈持续下注，河牌趋于紧凶"></textarea>
+                        </div>
                     </div>
                 </div>
             </div>
