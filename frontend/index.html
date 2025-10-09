@@ -1241,45 +1241,35 @@
         }
 
         .inputs-grid > .opponent-inline {
-            gap: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
             background: rgba(24, 21, 54, 0.58);
             border: 1px solid rgba(148, 163, 184, 0.2);
             border-radius: 16px;
             padding: clamp(14px, 1.5vw, 20px);
         }
 
-        .opponent-inline-row {
+        .opponent-inline-text {
             display: flex;
-            align-items: center;
-            gap: clamp(12px, 2vw, 24px);
-            width: 100%;
+            flex-direction: column;
+            gap: 4px;
         }
 
-        .opponent-inline-row strong {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #f8fafc;
-            flex: 1 1 auto;
-            min-width: 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .opponent-inline > span:first-child {
+        .opponent-inline-text span {
             font-size: 0.82rem;
             letter-spacing: 0.1em;
             text-transform: uppercase;
             color: var(--text-secondary);
         }
 
-        .inputs-grid > .opponent-inline .callout-button {
-            align-self: flex-start;
+        .opponent-inline .inline-copy {
+            font-size: 0.9rem;
+            color: rgba(226, 232, 240, 0.72);
         }
 
-        .opponent-inline .inline-copy {
-            font-size: 0.85rem;
-            color: rgba(226, 232, 240, 0.72);
+        .inputs-grid > .opponent-inline .callout-button {
+            align-self: flex-start;
         }
 
         .analysis-top {
@@ -2034,12 +2024,11 @@
                             <input type="text" id="rangeInput" data-i18n-placeholder="placeholders.villainRange" placeholder="AA,KK,QQ,AKs">
                         </label>
                         <label class="field-label opponent-inline" id="opponentInline">
-                            <span data-i18n="opponent.heading">对手建模</span>
-                            <div class="opponent-inline-row">
-                                <strong id="opponentInlineSummary">-</strong>
-                                <button class="callout-button" id="opponentInlineBtn" data-i18n="buttons.opponentConfig">配置对手画像</button>
+                            <div class="opponent-inline-text">
+                                <span data-i18n="opponent.heading">对手建模</span>
+                                <small class="inline-copy" data-i18n="opponent.calloutHint">梳理对手画像，系统即时刷新策略解读</small>
                             </div>
-                            <small class="inline-copy" data-i18n="opponent.calloutHint">梳理对手打法画像，系统会即时刷新策略解读。</small>
+                            <button class="callout-button" id="opponentInlineBtn" data-i18n="buttons.opponentConfig">配置对手画像</button>
                         </label>
                     </div>
 
@@ -2104,24 +2093,24 @@
                             </div>
                         </div>
                     </div>
-                <div class="overview-actions">
-                    <button class="overview-button" id="analysisSummaryBtn">
-                        <span data-i18n="analysis.quick.summary">查看输入总览</span>
-                    </button>
-                    <button class="overview-button" id="analysisStrategyBtn">
-                        <span data-i18n="analysis.quick.strategy">策略解读详情</span>
-                    </button>
-                    <button class="overview-button" id="analysisOpponentBtn">
-                        <span data-i18n="analysis.quick.opponent">对手画像洞察</span>
-                    </button>
-                </div>
+                    <div class="overview-actions">
+                        <button class="overview-button" id="analysisSummaryBtn">
+                            <span data-i18n="analysis.quick.summary">查看输入总览</span>
+                        </button>
+                        <button class="overview-button" id="analysisStrategyBtn">
+                            <span data-i18n="analysis.quick.strategy">策略解读详情</span>
+                        </button>
+                        <button class="overview-button" id="analysisOpponentBtn">
+                            <span data-i18n="analysis.quick.opponent">对手画像洞察</span>
+                        </button>
+                    </div>
                 </div>
             </section>
         </div>
     </div>
 
     <div class="modal-overlay" id="analysisSummaryModal">
-        <div class="modal-content medium">
+        <div class="modal-content wide">
             <div class="modal-header">
                 <h2 class="modal-title" data-i18n="analysisModal.summaryTitle">当前输入概览</h2>
                 <button class="modal-close" id="closeAnalysisSummary">&times;</button>
@@ -2136,7 +2125,7 @@
     </div>
 
     <div class="modal-overlay" id="analysisStrategyModal">
-        <div class="modal-content medium">
+        <div class="modal-content wide">
             <div class="modal-header">
                 <h2 class="modal-title" data-i18n="analysisModal.strategyTitle">策略解读</h2>
                 <button class="modal-close" id="closeAnalysisStrategy">&times;</button>
@@ -2594,7 +2583,6 @@
         let opponentModal;
         let opponentModalBtn;
         let opponentInlineBtn;
-        let opponentInlineSummary;
         let opponentModalClose;
         let opponentModalCancel;
         let opponentModalSave;
@@ -3411,7 +3399,6 @@
             opponentModal = document.getElementById('opponentModal');
             opponentModalBtn = document.getElementById('opponentModalBtn');
             opponentInlineBtn = document.getElementById('opponentInlineBtn');
-            opponentInlineSummary = document.getElementById('opponentInlineSummary');
             opponentModalClose = document.getElementById('closeOpponentModal');
             opponentModalCancel = document.getElementById('opponentModalCancel');
             opponentModalSave = document.getElementById('opponentModalSave');
@@ -3432,9 +3419,6 @@
             opConfidenceValue = document.getElementById('opConfidenceValue');
             opTiltValue = document.getElementById('opTiltValue');
 
-            if (opponentInlineSummary) {
-                opponentInlineSummary.textContent = getOpponentSummaryText();
-            }
 
             // 游戏手册相关元素
             const gameManualBtn = document.getElementById('gameManualBtn');
@@ -4392,9 +4376,6 @@
 
             renderAnalysisCards();
 
-            if (opponentInlineSummary) {
-                opponentInlineSummary.textContent = getOpponentSummaryText();
-            }
 
             if (!summaryGrid) {
                 return;
