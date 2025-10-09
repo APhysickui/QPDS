@@ -1406,16 +1406,20 @@
 
         .factors-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: clamp(12px, 1.6vw, 24px);
         }
 
         .factor-card {
             background: rgba(15, 23, 42, 0.6);
             border-radius: 14px;
-            padding: 16px;
+            padding: clamp(16px, 1.5vw, 24px);
             border: 1px solid rgba(148, 163, 184, 0.14);
             box-shadow: inset 0 0 0 1px rgba(34, 211, 238, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: clamp(12px, 1.4vw, 20px);
         }
 
         .factor-card .factor-name {
@@ -1423,19 +1427,21 @@
             letter-spacing: 0.12em;
             text-transform: uppercase;
             opacity: 0.68;
+            flex: 0 0 auto;
         }
 
         .factor-card .factor-value {
             font-size: 1.2rem;
             font-weight: 600;
-            margin-top: 6px;
             color: #e0f2fe;
+            flex: 1 1 auto;
+            text-align: right;
         }
 
         .summary-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: clamp(16px, 1.8vw, 24px);
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: clamp(16px, 1.8vw, 26px);
             margin-top: 18px;
         }
 
@@ -1444,22 +1450,26 @@
             border-radius: 14px;
             padding: clamp(16px, 1.6vw, 22px);
             border: 1px solid rgba(148, 163, 184, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: clamp(12px, 1.4vw, 20px);
         }
 
         .summary-item span {
-            display: block;
             font-size: 0.78rem;
             letter-spacing: 0.08em;
             opacity: 0.7;
             text-transform: uppercase;
             color: var(--text-muted);
+            flex: 0 0 auto;
         }
 
         .summary-item strong {
-            display: block;
-            margin-top: 4px;
             font-size: 1.05rem;
             color: var(--accent-cyan);
+            flex: 1 1 auto;
+            text-align: right;
         }
 
         #analysisSummaryModal .modal-body {
