@@ -862,8 +862,8 @@
 
         .inputs-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
         }
 
         label.field-label {
@@ -1140,8 +1140,6 @@
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: clamp(14px, 2vw, 22px);
             align-content: start;
-            flex: 1 1 360px;
-            min-width: min(360px, 100%);
         }
 
         .overview-button {
@@ -1246,6 +1244,43 @@
         .callout-button:hover {
             transform: translateY(-3px);
             box-shadow: 0 24px 40px rgba(19, 12, 44, 0.55);
+        }
+
+        .inputs-grid > .opponent-inline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: clamp(14px, 2vw, 28px);
+            padding: clamp(14px, 1.5vw, 20px);
+            background: rgba(24, 21, 54, 0.58);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 16px;
+        }
+
+        .opponent-inline-text {
+            display: flex;
+            align-items: baseline;
+            gap: clamp(12px, 1.6vw, 22px);
+            flex-wrap: wrap;
+        }
+
+        .opponent-inline-text span:first-child {
+            font-size: 0.82rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            flex: 0 0 auto;
+        }
+
+        .opponent-inline-text .inline-copy {
+            font-size: 0.9rem;
+            color: rgba(226, 232, 240, 0.8);
+            flex: 1 1 240px;
+        }
+
+        .inputs-grid > .opponent-inline .callout-button {
+            white-space: nowrap;
+            flex: 0 0 auto;
         }
 
         .analysis-top {
@@ -1730,6 +1765,20 @@
             .overview-item span {
                 white-space: normal;
             }
+
+            .inputs-grid > .opponent-inline {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .opponent-inline-text {
+                flex-wrap: wrap;
+            }
+
+            .opponent-inline-text .inline-copy {
+                white-space: normal;
+            }
         }
 
         @media (max-width: 960px) {
@@ -1761,6 +1810,20 @@
             .overview-actions {
                 grid-template-columns: 1fr;
             }
+
+            .inputs-grid > .opponent-inline {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .opponent-inline-text {
+                flex-wrap: wrap;
+            }
+
+            .opponent-inline-text .inline-copy {
+                white-space: normal;
+            }
         }
 
         @media (max-width: 640px) {
@@ -1789,8 +1852,8 @@
 
             .callout-button {
                 width: 100%;
-                text-align: center;
-            }
+            text-align: center;
+        }
 
             .trait-grid {
                 grid-template-columns: 1fr;
@@ -1967,6 +2030,13 @@
                             <span data-i18n="fields.villainRange">对手范围</span>
                             <input type="text" id="rangeInput" data-i18n-placeholder="placeholders.villainRange" placeholder="AA,KK,QQ,AKs">
                         </label>
+                        <label class="field-label opponent-inline" id="opponentInline">
+                            <div class="opponent-inline-text">
+                                <span data-i18n="opponent.heading">对手建模</span>
+                                <small class="inline-copy" data-i18n="opponent.calloutHint">梳理对手打法画像，系统会即时刷新策略解读。</small>
+                            </div>
+                            <button class="callout-button" id="opponentInlineBtn" data-i18n="buttons.opponentConfig">配置对手画像</button>
+                        </label>
                     </div>
 
                     <div class="slider-row">
@@ -1989,14 +2059,6 @@
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
                     <span data-i18n="loading">正在为你量化牌局...</span>
-                </div>
-
-                <div class="opponent-callout" id="opponentCallout">
-                    <div class="opponent-callout-text">
-                        <span class="callout-label" data-i18n="opponent.heading">对手建模</span>
-                        <p data-i18n="opponent.calloutHint">梳理对手的打法画像，系统会即时刷新策略建议与对局解读。</p>
-                    </div>
-                    <button id="opponentModalBtn" class="callout-button" data-i18n="buttons.opponentConfig">配置对手画像</button>
                 </div>
 
                 <div class="analysis-top">
@@ -2528,6 +2590,7 @@
         let numOpponentsInput;
         let opponentModal;
         let opponentModalBtn;
+        let opponentInlineBtn;
         let opponentModalClose;
         let opponentModalCancel;
         let opponentModalSave;
@@ -3343,6 +3406,7 @@
             analysisOpponentBtn = document.getElementById('analysisOpponentBtn');
             opponentModal = document.getElementById('opponentModal');
             opponentModalBtn = document.getElementById('opponentModalBtn');
+            opponentInlineBtn = document.getElementById('opponentInlineBtn');
             opponentModalClose = document.getElementById('closeOpponentModal');
             opponentModalCancel = document.getElementById('opponentModalCancel');
             opponentModalSave = document.getElementById('opponentModalSave');
@@ -3454,10 +3518,18 @@
                 });
             }
 
-            if (analysisOpponentBtn && analysisOpponentModal) {
-                analysisOpponentBtn.addEventListener('click', () => {
+            const openOpponentModal = () => {
+                if (analysisOpponentModal) {
                     analysisOpponentModal.classList.add('show');
-                });
+                }
+            };
+
+            if (analysisOpponentBtn) {
+                analysisOpponentBtn.addEventListener('click', openOpponentModal);
+            }
+
+            if (opponentInlineBtn) {
+                opponentInlineBtn.addEventListener('click', openOpponentModal);
             }
 
             if (closeAnalysisOpponentBtn) {
