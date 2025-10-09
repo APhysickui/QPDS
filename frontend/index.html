@@ -361,8 +361,8 @@
         }
 
         .modal-content.compact {
-            max-width: 820px;
-            padding: clamp(32px, 3.2vw, 44px);
+            max-width: 960px;
+            padding: clamp(32px, 3.2vw, 46px);
         }
 
         .modal-content.medium {
@@ -371,8 +371,8 @@
         }
 
         .modal-content.wide {
-            max-width: 1320px;
-            padding: clamp(36px, 3.6vw, 52px);
+            max-width: 1600px;
+            padding: clamp(40px, 4vw, 60px);
         }
 
         .modal-body {
@@ -1152,9 +1152,9 @@
             font-weight: 600;
             letter-spacing: 0.05em;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            gap: clamp(12px, 1.6vw, 22px);
+            text-align: center;
             transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
             cursor: pointer;
         }
@@ -1163,12 +1163,6 @@
             transform: translateY(-3px);
             border-color: rgba(100, 244, 255, 0.35);
             box-shadow: 0 18px 36px rgba(11, 16, 42, 0.45);
-        }
-
-        .overview-button .hint {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            letter-spacing: 0.08em;
         }
 
         #analysisSummaryModal .modal-body {
@@ -1247,40 +1241,45 @@
         }
 
         .inputs-grid > .opponent-inline {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: clamp(14px, 2vw, 28px);
-            padding: clamp(14px, 1.5vw, 20px);
+            gap: 6px;
             background: rgba(24, 21, 54, 0.58);
             border: 1px solid rgba(148, 163, 184, 0.2);
             border-radius: 16px;
+            padding: clamp(14px, 1.5vw, 20px);
         }
 
-        .opponent-inline-text {
+        .opponent-inline-row {
             display: flex;
-            align-items: baseline;
-            gap: clamp(12px, 1.6vw, 22px);
-            flex-wrap: wrap;
+            align-items: center;
+            gap: clamp(12px, 2vw, 24px);
+            width: 100%;
         }
 
-        .opponent-inline-text span:first-child {
+        .opponent-inline-row strong {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #f8fafc;
+            flex: 1 1 auto;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .opponent-inline > span:first-child {
             font-size: 0.82rem;
             letter-spacing: 0.1em;
             text-transform: uppercase;
             color: var(--text-secondary);
-            flex: 0 0 auto;
-        }
-
-        .opponent-inline-text .inline-copy {
-            font-size: 0.9rem;
-            color: rgba(226, 232, 240, 0.8);
-            flex: 1 1 240px;
         }
 
         .inputs-grid > .opponent-inline .callout-button {
-            white-space: nowrap;
-            flex: 0 0 auto;
+            align-self: flex-start;
+        }
+
+        .opponent-inline .inline-copy {
+            font-size: 0.85rem;
+            color: rgba(226, 232, 240, 0.72);
         }
 
         .analysis-top {
@@ -1346,6 +1345,10 @@
             letter-spacing: 0.14em;
             color: var(--text-secondary);
             margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
         }
 
         .card-badges-group {
@@ -2031,11 +2034,12 @@
                             <input type="text" id="rangeInput" data-i18n-placeholder="placeholders.villainRange" placeholder="AA,KK,QQ,AKs">
                         </label>
                         <label class="field-label opponent-inline" id="opponentInline">
-                            <div class="opponent-inline-text">
-                                <span data-i18n="opponent.heading">对手建模</span>
-                                <small class="inline-copy" data-i18n="opponent.calloutHint">梳理对手打法画像，系统会即时刷新策略解读。</small>
+                            <span data-i18n="opponent.heading">对手建模</span>
+                            <div class="opponent-inline-row">
+                                <strong id="opponentInlineSummary">-</strong>
+                                <button class="callout-button" id="opponentInlineBtn" data-i18n="buttons.opponentConfig">配置对手画像</button>
                             </div>
-                            <button class="callout-button" id="opponentInlineBtn" data-i18n="buttons.opponentConfig">配置对手画像</button>
+                            <small class="inline-copy" data-i18n="opponent.calloutHint">梳理对手打法画像，系统会即时刷新策略解读。</small>
                         </label>
                     </div>
 
@@ -2100,20 +2104,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="overview-actions">
-                        <button class="overview-button" id="analysisSummaryBtn">
-                            <span data-i18n="analysis.quick.summary">查看输入总览</span>
-                            <span class="hint" data-i18n="analysis.quick.summaryHint">Summary</span>
-                        </button>
-                        <button class="overview-button" id="analysisStrategyBtn">
-                            <span data-i18n="analysis.quick.strategy">策略解读详情</span>
-                            <span class="hint" data-i18n="analysis.quick.strategyHint">Playbook</span>
-                        </button>
-                        <button class="overview-button" id="analysisOpponentBtn">
-                            <span data-i18n="analysis.quick.opponent">对手画像洞察</span>
-                            <span class="hint" data-i18n="analysis.quick.opponentHint">Villain profile</span>
-                        </button>
-                    </div>
+                <div class="overview-actions">
+                    <button class="overview-button" id="analysisSummaryBtn">
+                        <span data-i18n="analysis.quick.summary">查看输入总览</span>
+                    </button>
+                    <button class="overview-button" id="analysisStrategyBtn">
+                        <span data-i18n="analysis.quick.strategy">策略解读详情</span>
+                    </button>
+                    <button class="overview-button" id="analysisOpponentBtn">
+                        <span data-i18n="analysis.quick.opponent">对手画像洞察</span>
+                    </button>
+                </div>
                 </div>
             </section>
         </div>
@@ -2161,7 +2162,9 @@
             </div>
             <div class="modal-body">
                 <div class="analysis-box">
-                    <div class="analysis-box-title" data-i18n="analysis.opponent">对手画像</div>
+                    <div class="analysis-box-title" data-i18n="analysis.opponent">对手画像
+                        <button class="ghost-button" id="analysisOpponentConfigBtn" data-i18n="buttons.opponentConfig">配置</button>
+                    </div>
                     <div class="insights-panel" id="opponentInsights" style="display: none;">
                         <div class="insights-header">
                             <span class="archetype-pill" id="opponentArchetype"></span>
@@ -2591,6 +2594,7 @@
         let opponentModal;
         let opponentModalBtn;
         let opponentInlineBtn;
+        let opponentInlineSummary;
         let opponentModalClose;
         let opponentModalCancel;
         let opponentModalSave;
@@ -3407,6 +3411,7 @@
             opponentModal = document.getElementById('opponentModal');
             opponentModalBtn = document.getElementById('opponentModalBtn');
             opponentInlineBtn = document.getElementById('opponentInlineBtn');
+            opponentInlineSummary = document.getElementById('opponentInlineSummary');
             opponentModalClose = document.getElementById('closeOpponentModal');
             opponentModalCancel = document.getElementById('opponentModalCancel');
             opponentModalSave = document.getElementById('opponentModalSave');
@@ -3426,6 +3431,10 @@
             opBluffValue = document.getElementById('opBluffValue');
             opConfidenceValue = document.getElementById('opConfidenceValue');
             opTiltValue = document.getElementById('opTiltValue');
+
+            if (opponentInlineSummary) {
+                opponentInlineSummary.textContent = getOpponentSummaryText();
+            }
 
             // 游戏手册相关元素
             const gameManualBtn = document.getElementById('gameManualBtn');
@@ -3518,18 +3527,27 @@
                 });
             }
 
-            const openOpponentModal = () => {
+            const openOpponentInsights = () => {
                 if (analysisOpponentModal) {
                     analysisOpponentModal.classList.add('show');
                 }
             };
 
+            const openOpponentConfig = () => {
+                if (!opponentModal) {
+                    return;
+                }
+                opponentDraft = cloneOpponentState(state.opponent);
+                syncOpponentControls();
+                opponentModal.classList.add('show');
+            };
+
             if (analysisOpponentBtn) {
-                analysisOpponentBtn.addEventListener('click', openOpponentModal);
+                analysisOpponentBtn.addEventListener('click', openOpponentInsights);
             }
 
             if (opponentInlineBtn) {
-                opponentInlineBtn.addEventListener('click', openOpponentModal);
+                opponentInlineBtn.addEventListener('click', openOpponentConfig);
             }
 
             if (closeAnalysisOpponentBtn) {
@@ -3573,11 +3591,7 @@
             });
 
             if (opponentModalBtn && opponentModal) {
-                opponentModalBtn.addEventListener('click', () => {
-                    opponentDraft = cloneOpponentState(state.opponent);
-                    syncOpponentControls();
-                    opponentModal.classList.add('show');
-                });
+                opponentModalBtn.addEventListener('click', openOpponentConfig);
             }
 
             const closeOpponentModal = () => {
@@ -4377,6 +4391,10 @@
             }
 
             renderAnalysisCards();
+
+            if (opponentInlineSummary) {
+                opponentInlineSummary.textContent = getOpponentSummaryText();
+            }
 
             if (!summaryGrid) {
                 return;
