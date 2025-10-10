@@ -375,6 +375,12 @@
             padding: clamp(40px, 4vw, 60px);
         }
 
+        #analysisSummaryModal .modal-content,
+        #analysisStrategyModal .modal-content,
+        #analysisOpponentModal .modal-content {
+            width: min(94vw, 1480px);
+        }
+
         .modal-body {
             display: flex;
             flex-direction: column;
@@ -1166,25 +1172,28 @@
         }
 
         #analysisSummaryModal .modal-body {
-            gap: clamp(18px, 2vw, 26px);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: clamp(24px, 2.4vw, 36px);
         }
 
         #analysisStrategyModal .modal-body {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: clamp(18px, 2.2vw, 32px);
-            align-items: start;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: clamp(24px, 2.4vw, 36px);
+            align-items: stretch;
         }
 
         #analysisOpponentModal .modal-body {
-            display: flex;
-            flex-direction: column;
-            gap: clamp(18px, 2.2vw, 32px);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: clamp(24px, 2.4vw, 36px);
+            align-items: stretch;
         }
 
         #analysisOpponentModal .insight-cards {
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: clamp(14px, 2vw, 22px);
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: clamp(16px, 2.2vw, 26px);
         }
 
         #analysisOpponentModal .insight-card {
@@ -1242,18 +1251,22 @@
 
         .inputs-grid > .opponent-inline {
             display: flex;
-            flex-direction: column;
-            gap: 8px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: clamp(12px, 1.8vw, 24px);
             background: rgba(24, 21, 54, 0.58);
             border: 1px solid rgba(148, 163, 184, 0.2);
             border-radius: 16px;
             padding: clamp(14px, 1.5vw, 20px);
+            grid-column: span 2;
+            width: min(100%, clamp(320px, 52vw, 640px));
         }
 
         .opponent-inline-text {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
         }
 
         .opponent-inline-text span {
@@ -1269,7 +1282,8 @@
         }
 
         .inputs-grid > .opponent-inline .callout-button {
-            align-self: flex-start;
+            align-self: center;
+            flex-shrink: 0;
         }
 
         .analysis-top {
@@ -1616,6 +1630,29 @@
             border: 1px solid rgba(56, 189, 248, 0.25);
         }
 
+        #analysisOpponentModal .insights-panel {
+            display: grid;
+            grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+            gap: clamp(18px, 2vw, 30px);
+            align-items: start;
+        }
+
+        #analysisOpponentModal .insights-primary {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(12px, 1.6vw, 22px);
+        }
+
+        #analysisOpponentModal .insight-notes {
+            align-self: stretch;
+            margin-top: 0;
+            background: rgba(15, 23, 42, 0.55);
+            border-radius: 16px;
+            border: 1px solid rgba(56, 189, 248, 0.18);
+            padding: clamp(16px, 1.6vw, 22px);
+            gap: clamp(10px, 1.4vw, 16px);
+        }
+
         .insights-header {
             display: flex;
             justify-content: flex-start;
@@ -1806,7 +1843,13 @@
                 grid-template-columns: 1fr;
             }
 
-            #analysisStrategyModal .modal-body {
+            #analysisSummaryModal .modal-body,
+            #analysisStrategyModal .modal-body,
+            #analysisOpponentModal .modal-body {
+                grid-template-columns: 1fr;
+            }
+
+            #analysisOpponentModal .insights-panel {
                 grid-template-columns: 1fr;
             }
 
@@ -2036,7 +2079,7 @@
                         <label class="field-label opponent-inline" id="opponentInline">
                             <div class="opponent-inline-text">
                                 <span data-i18n="opponent.heading">对手建模</span>
-                                <small class="inline-copy" data-i18n="opponent.calloutHint">梳理对手画像，系统即时刷新策略解读</small>
+                                <small class="inline-copy" data-i18n="opponent.calloutHint">梳理对手打法画像,系统会即时刷新策略解读</small>
                             </div>
                             <button class="callout-button" id="opponentInlineBtn" data-i18n="buttons.opponentConfig">配置对手画像</button>
                         </label>
@@ -2165,26 +2208,28 @@
                         <button class="ghost-button" id="analysisOpponentConfigBtn" data-i18n="buttons.opponentConfig">配置</button>
                     </div>
                     <div class="insights-panel" id="opponentInsights" style="display: none;">
-                        <div class="insights-header">
-                            <span class="archetype-pill" id="opponentArchetype"></span>
-                        </div>
-                        <p id="opponentSummary" style="font-size:0.92rem;line-height:1.6;opacity:0.82;margin-bottom:16px;"></p>
-                        <div class="insight-cards">
-                            <div class="insight-card">
-                                <strong data-i18n="opponent.insights.aggression">激进指数</strong>
-                                <span id="opponentAggressionMetric">-</span>
+                        <div class="insights-primary">
+                            <div class="insights-header">
+                                <span class="archetype-pill" id="opponentArchetype"></span>
                             </div>
-                            <div class="insight-card">
-                                <strong data-i18n="opponent.insights.betting">下注压力</strong>
-                                <span id="opponentBettingMetric">-</span>
-                            </div>
-                            <div class="insight-card">
-                                <strong data-i18n="opponent.insights.psychology">心理压强</strong>
-                                <span id="opponentPsychologyMetric">-</span>
-                            </div>
-                            <div class="insight-card">
-                                <strong data-i18n="opponent.insights.range">范围优势</strong>
-                                <span id="opponentRangeMetric">-</span>
+                            <p id="opponentSummary" style="font-size:0.92rem;line-height:1.6;opacity:0.82;"></p>
+                            <div class="insight-cards">
+                                <div class="insight-card">
+                                    <strong data-i18n="opponent.insights.aggression">激进指数</strong>
+                                    <span id="opponentAggressionMetric">-</span>
+                                </div>
+                                <div class="insight-card">
+                                    <strong data-i18n="opponent.insights.betting">下注压力</strong>
+                                    <span id="opponentBettingMetric">-</span>
+                                </div>
+                                <div class="insight-card">
+                                    <strong data-i18n="opponent.insights.psychology">心理压强</strong>
+                                    <span id="opponentPsychologyMetric">-</span>
+                                </div>
+                                <div class="insight-card">
+                                    <strong data-i18n="opponent.insights.range">范围优势</strong>
+                                    <span id="opponentRangeMetric">-</span>
+                                </div>
                             </div>
                         </div>
                         <div class="insight-notes" id="opponentNotes"></div>
@@ -2722,7 +2767,7 @@
                 },
                 opponent: {
                     heading: 'Opponent Model',
-                    calloutHint: 'Tune villain tendencies so the recommendations stay on point.',
+                    calloutHint: 'Shape the villain profile so strategy insights refresh instantly.',
                     aggression: {
                         label: 'Aggression',
                         low: 'Passive',
@@ -3048,7 +3093,7 @@
                 },
                 opponent: {
                     heading: '对手建模',
-                    calloutHint: '梳理对手打法画像，系统会即时刷新策略解读。',
+                    calloutHint: '梳理对手打法画像,系统会即时刷新策略解读',
                     aggression: {
                         label: '激进程度',
                         low: '偏被动',
